@@ -5,8 +5,9 @@ import { useEffect, useRef } from "react";
 const packages = [
   {
     name: "Quick Clip",
-    duration: "30 seconds",
-    ideal: "Social media highlight",
+    duration: "30 sec",
+    color: "#2a6e4a",
+    ideal: "Social media highlight reel",
     includes: [
       "Drone shoot (up to 30 min)",
       "AI-scored best shots",
@@ -18,12 +19,13 @@ const packages = [
   },
   {
     name: "Standard",
-    duration: "60 seconds",
-    ideal: "Property listings, events",
+    duration: "60 sec",
+    color: "#c9342a",
+    ideal: "Property listings, events, promos",
     includes: [
       "Drone shoot (up to 1 hour)",
       "AI-scored best shots",
-      "Cinematic color grade",
+      "Cinematic LUT grade",
       "Background music",
       "Both formats (16:9 + 9:16)",
       "3 aerial photo exports",
@@ -32,7 +34,8 @@ const packages = [
   },
   {
     name: "Premium",
-    duration: "90–120 seconds",
+    duration: "90–120 sec",
+    color: "#d4730f",
     ideal: "Full property tours, commercials",
     includes: [
       "Drone shoot (up to 2 hours)",
@@ -68,69 +71,82 @@ export default function Pricing() {
     <section
       id="pricing"
       ref={sectionRef}
-      className="py-24 md:py-32 bg-aerovibe-dark grid-pattern"
+      className="py-20 md:py-28 bg-av-surface grid-pattern"
     >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="fade-up mb-16">
-          <div className="gold-line mb-4" />
-          <h2 className="text-3xl md:text-5xl font-light tracking-tight">
-            Simple <span className="font-semibold">Pricing</span>
+      <div className="max-w-[1180px] mx-auto px-4 md:px-6">
+        <div className="fade-up mb-12">
+          <div className="accent-bar mb-4" />
+          <h2 className="headline text-3xl md:text-5xl font-bold">
+            Simple <span className="text-av-red">Pricing</span>
           </h2>
-          <p className="text-aerovibe-light mt-4 max-w-lg">
-            Transparent packages. No hidden fees. Custom quotes available for
-            larger projects.
+          <p className="text-av-muted mt-3 max-w-md text-sm leading-relaxed">
+            No hidden fees. No surprise charges. Pick your package, book the
+            shoot, get your content.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {packages.map((p, i) => (
             <div
               key={i}
-              className={`fade-up p-8 border transition-all duration-500 ${
+              className={`fade-up group p-6 rounded-lg border transition-all duration-300 relative overflow-hidden ${
                 p.highlight
-                  ? "border-aerovibe-accent/60 bg-aerovibe-black/80"
-                  : "border-aerovibe-gray/30 bg-aerovibe-black/50 hover:border-aerovibe-accent/30"
+                  ? "border-av-red/40 bg-av-bg/80"
+                  : "border-av-border bg-av-bg/50 hover:border-av-red/20"
               }`}
             >
+              {/* Ambient glow for highlighted */}
               {p.highlight && (
-                <span className="text-[10px] tracking-[0.3em] uppercase text-aerovibe-accent mb-4 block">
-                  Most Popular
-                </span>
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-av-red/[0.04] rounded-full blur-[60px]" />
               )}
-              <h3 className="text-2xl font-semibold mb-1">{p.name}</h3>
-              <p className="text-aerovibe-accent text-sm mb-1">{p.duration}</p>
-              <p className="text-aerovibe-muted text-xs mb-6">{p.ideal}</p>
 
-              <ul className="space-y-3 mb-8">
-                {p.includes.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-start gap-2 text-sm text-aerovibe-light"
-                  >
-                    <svg
-                      className="w-4 h-4 text-aerovibe-accent mt-0.5 shrink-0"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      strokeWidth="2"
+              <div className="relative">
+                {p.highlight && (
+                  <span className="pill bg-av-red/10 border-av-red/30 text-av-red mb-4 inline-block">
+                    Most Popular
+                  </span>
+                )}
+
+                <h3
+                  className="text-2xl font-bold tracking-[2px] uppercase"
+                  style={{ fontFamily: "var(--font-cond)" }}
+                >
+                  {p.name}
+                </h3>
+                <div
+                  className="text-lg font-bold mt-1"
+                  style={{ fontFamily: "var(--font-cond)", color: p.color }}
+                >
+                  {p.duration}
+                </div>
+                <p className="label-mono text-av-muted mt-1 mb-6">
+                  {p.ideal}
+                </p>
+
+                <ul className="space-y-2.5 mb-6">
+                  {p.includes.map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-2 text-sm text-av-light"
                     >
-                      <path d="M5 13l4 4L19 7" />
-                    </svg>
-                    {item}
-                  </li>
-                ))}
-              </ul>
+                      <span className="text-av-red mt-0.5">&#10003;</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
 
-              <a
-                href="#contact"
-                className={`block text-center py-3 text-sm tracking-wider uppercase transition-colors ${
-                  p.highlight
-                    ? "bg-aerovibe-accent text-aerovibe-black hover:bg-aerovibe-accent-light font-semibold"
-                    : "border border-aerovibe-gray hover:border-aerovibe-accent hover:text-aerovibe-accent text-aerovibe-white"
-                }`}
-              >
-                Get Quote
-              </a>
+                <a
+                  href="#contact"
+                  className={`hover-lift block text-center py-3 rounded-sm text-sm tracking-[2px] uppercase transition-all ${
+                    p.highlight
+                      ? "bg-av-red text-av-white font-bold"
+                      : "border border-av-border text-av-text hover:border-av-red hover:text-av-red"
+                  }`}
+                  style={{ fontFamily: "var(--font-cond)" }}
+                >
+                  Get Quote
+                </a>
+              </div>
             </div>
           ))}
         </div>

@@ -1,18 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;800;900&family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --color-aerovibe-black: #0a0a0a;
-  --color-aerovibe-dark: #111111;
-  --color-aerovibe-charcoal: #1a1a1a;
-  --color-aerovibe-gray: #2a2a2a;
-  --color-aerovibe-muted: #666666;
-  --color-aerovibe-light: #999999;
-  --color-aerovibe-white: #fafafa;
-  --color-aerovibe-accent: #c8a96e;
-  --color-aerovibe-accent-light: #dfc598;
-  --color-aerovibe-accent-dim: #8a7348;
-  --font-heading: "Inter", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
+  /* Warm dark palette — RootByte DNA */
+  --color-av-bg: #12110e;
+  --color-av-surface: #1a1916;
+  --color-av-elevated: #222018;
+  --color-av-border: #2e2b24;
+  --color-av-muted: #8a8070;
+  --color-av-light: #b0a898;
+  --color-av-text: #f0ebe0;
+  --color-av-white: #f5f0e8;
+
+  /* Accent system — energetic, not luxury */
+  --color-av-red: #c9342a;
+  --color-av-amber: #d4730f;
+  --color-av-green: #2a6e4a;
+  --color-av-blue: #1a4e8c;
+  --color-av-cyan: #0ea5e9;
+  --color-av-purple: #7832c8;
+
+  /* Fonts — RootByte trio */
+  --font-cond: "Barlow Condensed", sans-serif;
+  --font-serif: "Libre Baskerville", Georgia, serif;
+  --font-mono: "IBM Plex Mono", monospace;
 }
 
 html {
@@ -20,52 +31,95 @@ html {
 }
 
 body {
-  background: var(--color-aerovibe-black);
-  color: var(--color-aerovibe-white);
-  font-family: var(--font-body);
+  background: var(--color-av-bg);
+  color: var(--color-av-text);
+  font-family: var(--font-serif);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
 ::selection {
-  background: var(--color-aerovibe-accent);
-  color: var(--color-aerovibe-black);
+  background: var(--color-av-red);
+  color: var(--color-av-white);
 }
 
-/* Smooth fade-in on scroll */
+/* Scroll animations */
 .fade-up {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .fade-up.visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Video overlay gradient */
-.video-overlay {
-  background: linear-gradient(
-    to bottom,
-    rgba(10, 10, 10, 0.3) 0%,
-    rgba(10, 10, 10, 0) 30%,
-    rgba(10, 10, 10, 0) 50%,
-    rgba(10, 10, 10, 0.8) 80%,
-    rgba(10, 10, 10, 1) 100%
-  );
+/* Condensed headline utility */
+.headline {
+  font-family: var(--font-cond);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 0.95;
 }
 
-/* Gold line accent */
-.gold-line {
-  width: 60px;
-  height: 2px;
-  background: var(--color-aerovibe-accent);
+/* Mono label utility */
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
-/* Subtle grid pattern */
+/* Red accent bar — RootByte signature */
+.accent-bar {
+  width: 40px;
+  height: 3px;
+  background: var(--color-av-red);
+}
+
+/* Category pill */
+.pill {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 100px;
+  border: 1px solid var(--color-av-border);
+  transition: all 0.2s;
+}
+.pill:hover {
+  border-color: var(--color-av-red);
+  color: var(--color-av-red);
+}
+
+/* Button hover lift */
+.hover-lift {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Progress bar at top */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--color-av-red);
+  z-index: 100;
+  transition: width 0.1s;
+}
+
+/* Warm grid pattern */
 .grid-pattern {
-  background-image:
-    linear-gradient(rgba(200, 169, 110, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(200, 169, 110, 0.03) 1px, transparent 1px);
+  background-image: linear-gradient(
+      rgba(201, 52, 42, 0.02) 1px,
+      transparent 1px
+    ),
+    linear-gradient(90deg, rgba(201, 52, 42, 0.02) 1px, transparent 1px);
   background-size: 60px 60px;
 }

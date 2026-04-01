@@ -2,54 +2,85 @@
 
 export default function Hero() {
   return (
-    <section className="relative h-screen flex items-end pb-24 overflow-hidden">
-      {/* Background — placeholder gradient until real drone footage is added */}
+    <section className="relative min-h-screen flex items-center overflow-hidden">
+      {/* Background layers */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-aerovibe-charcoal via-aerovibe-black to-aerovibe-dark" />
-        {/* Animated subtle particles */}
-        <div className="absolute inset-0 grid-pattern opacity-50" />
-        {/* Cinematic grain overlay */}
-        <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc+')]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-av-bg via-av-surface to-av-bg" />
+        <div className="absolute inset-0 grid-pattern" />
+        {/* Ambient glow — like RootByte category cards */}
+        <div className="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-av-red/[0.04] rounded-full blur-[120px]" />
+        <div className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-av-cyan/[0.03] rounded-full blur-[100px]" />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
-        <div className="gold-line mb-6" />
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-light tracking-tight leading-[0.95] mb-6">
-          Cinematic
+      <div className="relative z-10 max-w-[1180px] mx-auto px-4 md:px-6 w-full pt-24 pb-16">
+        {/* Eyebrow */}
+        <div className="flex items-center gap-3 mb-8">
+          <div className="accent-bar" />
+          <span className="label-mono text-av-red">Drone Videography + AI Editing</span>
+        </div>
+
+        {/* Main headline — Barlow Condensed, dramatic */}
+        <h1
+          className="headline text-[clamp(3rem,10vw,7rem)] font-black leading-[0.9] mb-8"
+        >
+          Drone Shots
           <br />
-          <span className="font-semibold">Drone Visuals</span>
+          That Hit{" "}
+          <span className="text-av-red">Different</span>
         </h1>
-        <p className="text-lg md:text-xl text-aerovibe-light max-w-xl mb-10 leading-relaxed">
-          Premium aerial videography and photography.
-          <br />
-          AI-graded. Professionally cut. Ready to publish.
+
+        {/* Subtext — Libre Baskerville for editorial feel */}
+        <p className="text-lg md:text-xl text-av-light max-w-lg mb-10 leading-relaxed">
+          We fly. AI scores every frame. You get cinematic footage —
+          color-graded, cut to length, ready to post.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4">
+
+        {/* CTAs */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-16">
           <a
             href="#contact"
-            className="inline-flex items-center justify-center px-8 py-4 bg-aerovibe-accent text-aerovibe-black font-semibold text-sm tracking-wider uppercase hover:bg-aerovibe-accent-light transition-colors"
+            className="hover-lift inline-flex items-center justify-center px-8 py-4 bg-av-red text-av-white font-bold text-sm tracking-[3px] uppercase rounded-sm"
+            style={{ fontFamily: "var(--font-cond)" }}
           >
             Book a Shoot
           </a>
           <a
             href="#work"
-            className="inline-flex items-center justify-center px-8 py-4 border border-aerovibe-gray text-aerovibe-white text-sm tracking-wider uppercase hover:border-aerovibe-accent hover:text-aerovibe-accent transition-colors"
+            className="hover-lift inline-flex items-center justify-center px-8 py-4 border border-av-border text-av-text text-sm tracking-[3px] uppercase rounded-sm hover:border-av-red hover:text-av-red transition-colors"
+            style={{ fontFamily: "var(--font-cond)" }}
           >
-            View Work
+            See the Work
           </a>
+        </div>
+
+        {/* Stats strip — mono, technical */}
+        <div className="flex flex-wrap gap-8 md:gap-12 border-t border-av-border pt-8">
+          {[
+            { value: "4K", label: "Resolution" },
+            { value: "AI", label: "Scored" },
+            { value: "9:16", label: "Reels Ready" },
+            { value: "<24h", label: "Turnaround" },
+          ].map((stat) => (
+            <div key={stat.label}>
+              <div
+                className="text-2xl md:text-3xl font-bold text-av-red"
+                style={{ fontFamily: "var(--font-cond)", letterSpacing: "2px" }}
+              >
+                {stat.value}
+              </div>
+              <div className="label-mono text-av-muted mt-1">{stat.label}</div>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-aerovibe-muted animate-bounce">
-        <span className="text-[10px] tracking-[0.3em] uppercase">Scroll</span>
-        <svg width="16" height="24" viewBox="0 0 16 24" fill="none">
-          <path
-            d="M8 4v16m0 0l-4-4m4 4l4-4"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          />
+      {/* Scroll hint */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-av-muted animate-bounce">
+        <span className="label-mono" style={{ fontSize: "0.5rem" }}>
+          Scroll
+        </span>
+        <svg width="12" height="16" viewBox="0 0 12 16" fill="none">
+          <path d="M6 2v12m0 0l-3-3m3 3l3-3" stroke="currentColor" strokeWidth="1.5" />
         </svg>
       </div>
     </section>

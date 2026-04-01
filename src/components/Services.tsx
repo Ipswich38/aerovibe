@@ -4,49 +4,36 @@ import { useEffect, useRef } from "react";
 
 const services = [
   {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
-        <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-      </svg>
-    ),
+    icon: "🎬",
     title: "Aerial Video",
+    color: "#c9342a",
     description:
-      "4K cinematic drone footage with professional color grading, music, and editing. Horizontal and vertical formats.",
-    features: ["4K / 1080p", "Cinematic LUTs", "Music + Sound", "30-120 sec"],
+      "4K cinematic drone footage with professional color grading, music, and editing. Horizontal + vertical formats.",
+    tags: ["4K / 1080p", "Cinematic LUTs", "Music", "30-120s"],
   },
   {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
-        <path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-        <circle cx="12" cy="13" r="3" />
-      </svg>
-    ),
+    icon: "📸",
     title: "Aerial Photography",
+    color: "#d4730f",
     description:
-      "High-resolution aerial stills. Print-ready exports from DNG with professional color correction.",
-    features: ["High-Res JPEG", "DNG Processing", "Color Corrected", "Print-Ready"],
+      "High-resolution aerial stills. DNG processing with professional color correction. Print-ready.",
+    tags: ["High-Res", "DNG → JPEG", "Color Corrected", "Print-Ready"],
   },
   {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
-        <path d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-      </svg>
-    ),
+    icon: "📱",
     title: "Social Media Cuts",
+    color: "#2a6e4a",
     description:
-      "Vertical 9:16 edits optimized for Instagram Reels, TikTok, and YouTube Shorts. Fast-paced, scroll-stopping.",
-    features: ["9:16 Vertical", "Quick Cuts", "Trending Audio", "Platform-Ready"],
+      "Vertical 9:16 edits for Instagram Reels, TikTok, and YouTube Shorts. Fast-paced, scroll-stopping.",
+    tags: ["9:16 Vertical", "Quick Cuts", "Platform-Ready", "Trending"],
   },
   {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6">
-        <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-      </svg>
-    ),
+    icon: "🤖",
     title: "AI-Enhanced Editing",
+    color: "#1a4e8c",
     description:
-      "Our AI scores every frame for composition, lighting, and motion. Only the best shots make the final cut.",
-    features: ["Smart Selection", "Auto-Grading", "Scene Scoring", "Quality Control"],
+      "Our AI scores every frame for composition, lighting, and motion. Only the best shots make the cut.",
+    tags: ["Smart Selection", "Auto-Grade", "Scene Scoring", "QC"],
   },
 ];
 
@@ -71,36 +58,46 @@ export default function Services() {
     <section
       id="services"
       ref={sectionRef}
-      className="py-24 md:py-32 bg-aerovibe-dark grid-pattern"
+      className="py-20 md:py-28 bg-av-surface grid-pattern"
     >
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="fade-up mb-16">
-          <div className="gold-line mb-4" />
-          <h2 className="text-3xl md:text-5xl font-light tracking-tight">
-            What We <span className="font-semibold">Deliver</span>
+      <div className="max-w-[1180px] mx-auto px-4 md:px-6">
+        <div className="fade-up mb-12">
+          <div className="accent-bar mb-4" />
+          <h2 className="headline text-3xl md:text-5xl font-bold">
+            What We <span className="text-av-red">Deliver</span>
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {services.map((s, i) => (
             <div
               key={i}
-              className="fade-up group p-6 border border-aerovibe-gray/30 hover:border-aerovibe-accent/40 transition-all duration-500 bg-aerovibe-black/50"
+              className="fade-up group p-5 rounded-lg border border-av-border bg-av-bg/60 hover:border-av-red/30 transition-all duration-300 relative overflow-hidden"
             >
-              <div className="text-aerovibe-accent mb-4">{s.icon}</div>
-              <h3 className="text-lg font-semibold mb-2">{s.title}</h3>
-              <p className="text-sm text-aerovibe-light leading-relaxed mb-4">
-                {s.description}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {s.features.map((f) => (
-                  <span
-                    key={f}
-                    className="text-[10px] tracking-wider uppercase px-2 py-1 border border-aerovibe-gray/40 text-aerovibe-muted"
-                  >
-                    {f}
-                  </span>
-                ))}
+              {/* Subtle ambient glow on hover */}
+              <div
+                className="absolute top-0 right-0 w-[200px] h-[200px] rounded-full blur-[60px] opacity-0 group-hover:opacity-10 transition-opacity"
+                style={{ background: s.color }}
+              />
+
+              <div className="relative">
+                <div className="text-2xl mb-3">{s.icon}</div>
+                <h3
+                  className="text-lg font-bold tracking-[1px] uppercase mb-2"
+                  style={{ fontFamily: "var(--font-cond)" }}
+                >
+                  {s.title}
+                </h3>
+                <p className="text-sm text-av-muted leading-relaxed mb-4">
+                  {s.description}
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {s.tags.map((t) => (
+                    <span key={t} className="pill text-av-muted">
+                      {t}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ))}
