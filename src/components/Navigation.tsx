@@ -5,15 +5,9 @@ import { useState, useEffect } from "react";
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 50);
-      const totalHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -21,90 +15,78 @@ export default function Navigation() {
   const links = [
     { href: "#work", label: "Work" },
     { href: "#services", label: "Services" },
-    { href: "#process", label: "How It Works" },
+    { href: "#process", label: "Process" },
     { href: "#pricing", label: "Pricing" },
-    { href: "#contact", label: "Book" },
   ];
 
   return (
-    <>
-      {/* Red progress bar — RootByte signature */}
-      <div
-        className="progress-bar"
-        style={{ width: `${scrollProgress}%` }}
-      />
-
-      <nav
-        className={`fixed top-[3px] left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-av-bg/95 backdrop-blur-md border-b border-av-border"
-            : "bg-transparent"
-        }`}
-      >
-        <div className="max-w-[1180px] mx-auto px-4 md:px-6 py-3 flex items-center justify-between">
-          {/* Logo */}
-          <a href="#" className="flex items-center gap-2 group">
-            <span
-              className="text-xl font-black tracking-[4px] uppercase text-av-text"
-              style={{ fontFamily: "var(--font-cond)" }}
-            >
-              AERO<span className="text-av-red">VIBE</span>
-            </span>
-          </a>
-
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-6">
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                className="label-mono text-av-muted hover:text-av-red transition-colors"
-              >
-                {l.label}
-              </a>
-            ))}
-            <a
-              href="#contact"
-              className="pill bg-av-red/10 border-av-red/30 text-av-red hover:bg-av-red hover:text-av-white hover:border-av-red transition-all"
-            >
-              Get a Quote
-            </a>
-          </div>
-
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden flex flex-col gap-[5px] p-2"
-            aria-label="Menu"
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? "bg-av-dark/95 backdrop-blur-md"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="max-w-[1200px] mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="#" className="flex items-center gap-1.5">
+          <span
+            className="text-[15px] font-semibold tracking-tight text-av-text"
+            style={{ fontFamily: "var(--font-sans)" }}
           >
-            <span
-              className={`w-5 h-[1.5px] bg-av-text transition-all duration-200 ${menuOpen ? "rotate-45 translate-y-[3.25px]" : ""}`}
-            />
-            <span
-              className={`w-5 h-[1.5px] bg-av-text transition-all duration-200 ${menuOpen ? "opacity-0" : ""}`}
-            />
-            <span
-              className={`w-5 h-[1.5px] bg-av-text transition-all duration-200 ${menuOpen ? "-rotate-45 -translate-y-[3.25px]" : ""}`}
-            />
-          </button>
+            aero<span className="text-av-red">vibe</span>
+          </span>
+        </a>
+
+        {/* Desktop */}
+        <div className="hidden md:flex items-center gap-6">
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className="text-[13px] text-av-light hover:text-av-text transition-colors"
+              style={{ fontFamily: "var(--font-sans)" }}
+            >
+              {l.label}
+            </a>
+          ))}
+          <a href="#contact" className="btn-red">
+            Book a Shoot
+            <svg className="btn-arrow" viewBox="0 0 12 12" fill="none">
+              <path d="M2 6h8m0 0L7 3m3 3L7 9" stroke="currentColor" strokeWidth="1.5" />
+            </svg>
+          </a>
         </div>
 
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div className="md:hidden bg-av-bg/98 backdrop-blur-md border-t border-av-border px-6 py-6 flex flex-col gap-5">
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={() => setMenuOpen(false)}
-                className="label-mono text-av-muted hover:text-av-red transition-colors text-sm"
-              >
-                {l.label}
-              </a>
-            ))}
+        {/* Mobile */}
+        <button
+          onClick={() => setMenuOpen(!menuOpen)}
+          className="md:hidden p-2"
+          aria-label="Menu"
+        >
+          <div className="flex flex-col gap-[4px]">
+            <span className={`w-4 h-[1.5px] bg-av-text transition-all ${menuOpen ? "rotate-45 translate-y-[2.75px]" : ""}`} />
+            <span className={`w-4 h-[1.5px] bg-av-text transition-all ${menuOpen ? "-rotate-45 -translate-y-[2.75px]" : ""}`} />
           </div>
-        )}
-      </nav>
-    </>
+        </button>
+      </div>
+
+      {menuOpen && (
+        <div className="md:hidden bg-av-dark/98 backdrop-blur-md border-t border-av-border-light px-6 py-5 flex flex-col gap-4">
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setMenuOpen(false)}
+              className="text-[13px] text-av-light hover:text-av-text transition-colors"
+            >
+              {l.label}
+            </a>
+          ))}
+          <a href="#contact" onClick={() => setMenuOpen(false)} className="btn-red w-fit">
+            Book a Shoot
+          </a>
+        </div>
+      )}
+    </nav>
   );
 }

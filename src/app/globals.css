@@ -1,28 +1,28 @@
-@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;500;700;800;900&family=IBM+Plex+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Geist:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
 @import "tailwindcss";
 
 @theme {
-  /* Warm dark palette — RootByte DNA */
-  --color-av-bg: #12110e;
-  --color-av-surface: #1a1916;
-  --color-av-elevated: #222018;
-  --color-av-border: #2e2b24;
-  --color-av-muted: #8a8070;
-  --color-av-light: #b0a898;
-  --color-av-text: #f0ebe0;
-  --color-av-white: #f5f0e8;
+  /* smallest.ai-inspired palette — dark with warm undertones */
+  --color-av-bg: #ffffff;
+  --color-av-dark: #191919;
+  --color-av-darker: #0c0c0c;
+  --color-av-surface: #141414;
+  --color-av-elevated: #1e1e1e;
+  --color-av-border: rgba(111, 111, 111, 0.2);
+  --color-av-border-light: rgba(255, 255, 255, 0.1);
+  --color-av-muted: #6f6f6f;
+  --color-av-light: #999999;
+  --color-av-text: #ededed;
+  --color-av-white: #ffffff;
 
-  /* Accent system — energetic, not luxury */
+  /* Accent — warm red from RootByte DNA */
   --color-av-red: #c9342a;
+  --color-av-red-dim: rgba(201, 52, 42, 0.15);
   --color-av-amber: #d4730f;
-  --color-av-green: #2a6e4a;
-  --color-av-blue: #1a4e8c;
-  --color-av-cyan: #0ea5e9;
-  --color-av-purple: #7832c8;
 
-  /* Fonts — RootByte trio */
-  --font-cond: "Barlow Condensed", sans-serif;
-  --font-serif: "Libre Baskerville", Georgia, serif;
+  /* Fonts — serif headlines + geometric sans body (smallest.ai pattern) */
+  --font-serif: "DM Serif Display", "Georgia", serif;
+  --font-sans: "Geist", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
 }
 
@@ -32,8 +32,8 @@ html {
 
 body {
   background: var(--color-av-bg);
-  color: var(--color-av-text);
-  font-family: var(--font-serif);
+  color: var(--color-av-dark);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
@@ -43,111 +43,110 @@ body {
   color: var(--color-av-white);
 }
 
-/* Scroll animations */
-.fade-up {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.fade-up.visible {
-  opacity: 1;
-  transform: translateY(0);
+/* Section with dark insert — smallest.ai signature */
+.dark-section {
+  background: var(--color-av-dark);
+  color: var(--color-av-text);
 }
 
-/* Condensed headline utility */
-.headline {
-  font-family: var(--font-cond);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  line-height: 0.95;
+/* Gradient button — dark variant */
+.btn-dark {
+  background: linear-gradient(180deg, rgb(138, 138, 138) -260%, #191919 100%);
+  border: 1px solid rgba(111, 111, 111, 0.2);
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-dark:hover {
+  background: linear-gradient(180deg, rgb(160, 160, 160) -260%, #252525 100%);
+  transform: translateY(-1px);
 }
 
-/* Mono label utility */
+/* Gradient button — light/white variant */
+.btn-light {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, #fff 100%);
+  border: 1px solid rgba(111, 111, 111, 0.2);
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: #191919;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-light:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, #fff 100%);
+  transform: translateY(-1px);
+}
+
+/* Gradient button — red accent */
+.btn-red {
+  background: linear-gradient(180deg, #d94a3f -20%, #c9342a 100%);
+  border: 1px solid rgba(201, 52, 42, 0.3);
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-red:hover {
+  background: linear-gradient(180deg, #e05a50 -20%, #d43d33 100%);
+  transform: translateY(-1px);
+}
+
+/* Mono label */
 .label-mono {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 2px;
+  font-size: 12px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
 }
 
-/* Red accent bar — RootByte signature */
-.accent-bar {
-  width: 40px;
-  height: 3px;
-  background: var(--color-av-red);
-}
-
-/* Category pill */
+/* Pill badge */
 .pill {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 4px 12px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
   border-radius: 100px;
-  border: 1px solid var(--color-av-border);
-  transition: all 0.2s;
-}
-.pill:hover {
-  border-color: var(--color-av-red);
-  color: var(--color-av-red);
+  border: 1px solid rgba(111, 111, 111, 0.2);
 }
 
-/* Button hover lift */
-.hover-lift {
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.hover-lift:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+/* Inner glow — smallest.ai card effect */
+.inner-glow {
+  box-shadow: inset 0 0 9.6px rgba(255, 255, 255, 0.1);
 }
 
-/* Progress bar at top */
-.progress-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 3px;
-  background: var(--color-av-red);
-  z-index: 100;
-  transition: width 0.1s;
+/* Marquee edge fade */
+.marquee-mask {
+  mask: linear-gradient(90deg, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask: linear-gradient(90deg, transparent 0%, black 15%, black 85%, transparent 100%);
 }
 
-/* Warm grid pattern */
-.grid-pattern {
-  background-image: linear-gradient(
-      rgba(201, 52, 42, 0.02) 1px,
-      transparent 1px
-    ),
-    linear-gradient(90deg, rgba(201, 52, 42, 0.02) 1px, transparent 1px);
-  background-size: 60px 60px;
+/* Arrow icon for buttons */
+.btn-arrow {
+  width: 12px;
+  height: 12px;
+  transition: transform 0.2s;
 }
-
-/* Swiper overrides — DJI-style pagination bullets */
-.aerovibe-bullet {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 100px;
-  background: rgba(240, 235, 224, 0.3);
-  margin: 0 4px !important;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-.aerovibe-bullet-active {
-  background: var(--color-av-red) !important;
-  width: 24px;
-}
-
-/* Swiper container fixes */
-.swiper {
-  height: 100%;
-  width: 100%;
-}
-.swiper-slide {
-  height: 100% !important;
-}
-.swiper-pagination {
-  bottom: 24px !important;
+*:hover > .btn-arrow {
+  transform: translateX(2px);
 }

@@ -7,7 +7,6 @@ const packages = [
   {
     name: "Quick Clip",
     duration: "30 sec",
-    color: "#2a6e4a",
     ideal: "Social media highlight reel",
     includes: [
       "Drone shoot (up to 30 min)",
@@ -21,7 +20,6 @@ const packages = [
   {
     name: "Standard",
     duration: "60 sec",
-    color: "#c9342a",
     ideal: "Property listings, events, promos",
     includes: [
       "Drone shoot (up to 1 hour)",
@@ -36,7 +34,6 @@ const packages = [
   {
     name: "Extended",
     duration: "Custom",
-    color: "#d4730f",
     ideal: "Site ocular, solar panel inspection, custom projects",
     includes: [
       "Flexible shoot duration & coverage",
@@ -52,63 +49,58 @@ const packages = [
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-20 md:py-28 max-w-[1180px] mx-auto px-4 md:px-6">
-      <ScrollReveal>
-        <div className="mb-12">
-          <div className="accent-bar mb-4" />
-          <h2 className="headline text-3xl md:text-5xl font-bold">
-            Simple <span className="text-av-red">Pricing</span>
-          </h2>
-          <p className="text-av-muted mt-3 max-w-md text-sm leading-relaxed">
-            No hidden fees. No surprise charges. Pick your package, book the
-            shoot, get your content.
-          </p>
-        </div>
-      </ScrollReveal>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {packages.map((p, i) => (
-          <ScrollReveal key={i} delay={i * 0.1}>
-            <motion.div
-              whileHover={{ y: -6, transition: { duration: 0.2 } }}
-              className={`p-6 rounded-lg border transition-colors duration-300 relative overflow-hidden h-full ${
-                p.highlight
-                  ? "border-av-red/40 bg-av-surface"
-                  : "border-av-border bg-av-surface/50 hover:border-av-red/20"
-              }`}
+    <section id="pricing" className="dark-section py-24 md:py-32">
+      <div className="max-w-[1200px] mx-auto px-6">
+        <ScrollReveal>
+          <div className="mb-14">
+            <span className="label-mono text-av-muted block mb-4">Pricing</span>
+            <h2
+              className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.1]"
+              style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
             >
-              {p.highlight && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-av-red/[0.04] rounded-full blur-[60px]" />
-              )}
+              Simple, transparent pricing
+            </h2>
+            <p className="text-sm text-av-muted mt-3 max-w-md leading-relaxed">
+              No hidden fees. No surprise charges. Pick your package, book the shoot, get your content.
+            </p>
+          </div>
+        </ScrollReveal>
 
-              <div className="relative">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {packages.map((p, i) => (
+            <ScrollReveal key={i} delay={i * 0.1}>
+              <motion.div
+                whileHover={{ y: -3 }}
+                transition={{ duration: 0.2 }}
+                className={`p-6 rounded-xl border h-full flex flex-col ${
+                  p.highlight
+                    ? "border-av-red/30 inner-glow bg-av-surface"
+                    : "border-av-border-light bg-av-surface/50"
+                }`}
+              >
                 {p.highlight && (
-                  <span className="pill bg-av-red/10 border-av-red/30 text-av-red mb-4 inline-block">
+                  <span className="pill w-fit text-av-red bg-av-red-dim border-av-red/20 mb-4 text-[10px]">
                     Most Popular
                   </span>
                 )}
 
                 <h3
-                  className="text-2xl font-bold tracking-[2px] uppercase"
-                  style={{ fontFamily: "var(--font-cond)" }}
+                  className="text-xl mb-1"
+                  style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
                 >
                   {p.name}
                 </h3>
-                <div
-                  className="text-lg font-bold mt-1"
-                  style={{ fontFamily: "var(--font-cond)", color: p.color }}
-                >
+                <div className="text-sm text-av-red font-medium mb-1">
                   {p.duration}
                 </div>
-                <p className="label-mono text-av-muted mt-1 mb-6">{p.ideal}</p>
+                <p className="text-[11px] text-av-muted uppercase tracking-wider mb-6">
+                  {p.ideal}
+                </p>
 
-                <ul className="space-y-2.5 mb-6">
+                <ul className="space-y-2.5 mb-6 flex-1">
                   {p.includes.map((item) => (
-                    <li
-                      key={item}
-                      className="flex items-start gap-2 text-sm text-av-light"
-                    >
-                      <span className="text-av-red mt-0.5">&#10003;</span>
+                    <li key={item} className="flex items-start gap-2 text-sm text-av-light">
+                      <span className="text-av-red text-xs mt-0.5">✓</span>
                       {item}
                     </li>
                   ))}
@@ -116,61 +108,44 @@ export default function Pricing() {
 
                 <a
                   href="#contact"
-                  className={`hover-lift block text-center py-3 rounded-sm text-sm tracking-[2px] uppercase transition-all ${
-                    p.highlight
-                      ? "bg-av-red text-av-white font-bold"
-                      : "border border-av-border text-av-text hover:border-av-red hover:text-av-red"
-                  }`}
-                  style={{ fontFamily: "var(--font-cond)" }}
+                  className={p.highlight ? "btn-red w-full justify-center" : "btn-dark w-full justify-center"}
                 >
                   Get Quote
+                  <svg className="btn-arrow" viewBox="0 0 12 12" fill="none">
+                    <path d="M2 6h8m0 0L7 3m3 3L7 9" stroke="currentColor" strokeWidth="1.5" />
+                  </svg>
                 </a>
-              </div>
-            </motion.div>
-          </ScrollReveal>
-        ))}
-      </div>
+              </motion.div>
+            </ScrollReveal>
+          ))}
+        </div>
 
-      {/* Print Service — optional add-on */}
-      <ScrollReveal delay={0.3} className="mt-6">
-        <div className="p-6 rounded-lg border border-dashed border-purple-500/20 bg-av-bg/50 hover:border-purple-500/40 transition-colors">
-          <div className="flex flex-col md:flex-row md:items-center gap-6">
-            <div className="flex items-center gap-3 shrink-0">
-              <span className="text-3xl">🖨️</span>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3
-                    className="text-lg font-bold tracking-[2px] uppercase"
-                    style={{ fontFamily: "var(--font-cond)" }}
+        {/* Print add-on */}
+        <ScrollReveal delay={0.3} className="mt-4">
+          <div className="p-5 rounded-xl border border-dashed border-av-border-light bg-av-surface/30">
+            <div className="flex flex-col md:flex-row md:items-center gap-5">
+              <div className="flex items-center gap-3 shrink-0">
+                <span className="text-xl">🖨️</span>
+                <div>
+                  <span
+                    className="text-base text-av-text"
+                    style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
                   >
                     Photo Print Service
-                  </h3>
-                  <span className="pill bg-purple-500/10 border-purple-500/30 text-purple-400">
-                    Add-On
                   </span>
+                  <span className="pill text-av-muted ml-2 text-[10px]">Add-On</span>
                 </div>
-                <p className="text-xs text-av-muted mt-1">
-                  Standalone or bundle with any package
-                </p>
               </div>
+              <p className="flex-1 text-sm text-av-muted leading-relaxed">
+                Get shots printed on quality paper. Works with drone photos or bring your own — we print anything.
+              </p>
+              <a href="#contact" className="btn-dark shrink-0 w-fit">
+                Ask About Prints
+              </a>
             </div>
-
-            <p className="flex-1 text-sm text-av-muted leading-relaxed">
-              Get your favorite aerial shots printed on high-quality photo
-              paper. Works with drone photos or bring your own images —
-              we&apos;ll print anything you want.
-            </p>
-
-            <a
-              href="#contact"
-              className="shrink-0 hover-lift inline-flex items-center justify-center px-6 py-3 border border-purple-500/30 text-purple-400 text-sm tracking-[2px] uppercase rounded-sm hover:bg-purple-500/10 transition-colors"
-              style={{ fontFamily: "var(--font-cond)" }}
-            >
-              Ask About Prints
-            </a>
           </div>
-        </div>
-      </ScrollReveal>
+        </ScrollReveal>
+      </div>
     </section>
   );
 }

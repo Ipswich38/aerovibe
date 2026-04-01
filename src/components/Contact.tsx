@@ -4,53 +4,49 @@ import ScrollReveal from "./ScrollReveal";
 
 export default function Contact() {
   return (
-    <section
-      id="contact"
-      className="py-20 md:py-28 bg-av-surface grid-pattern"
-    >
-      <div className="max-w-[1180px] mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+    <section id="contact" className="py-24 md:py-32 bg-av-bg">
+      <div className="max-w-[1200px] mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
           <ScrollReveal>
             <div>
-              <div className="accent-bar mb-4" />
-              <h2 className="headline text-3xl md:text-5xl font-bold mb-6">
-                Let&apos;s <span className="text-av-red">Shoot</span>
+              <span className="label-mono text-av-muted block mb-4">Contact</span>
+              <h2
+                className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.1] text-av-dark mb-4"
+                style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+              >
+                Let&apos;s shoot
               </h2>
-              <p className="text-av-muted leading-relaxed mb-8 max-w-md text-sm">
+              <p className="text-sm text-av-muted leading-relaxed mb-10 max-w-md">
                 Got a property to sell? Event coming up? Brand that needs aerial
                 content? Drop us a message — we&apos;ll handle the rest.
               </p>
 
-              <div className="space-y-4">
+              <div className="space-y-4 mb-10">
                 <div className="flex items-center gap-3">
-                  <span className="text-av-red">📍</span>
-                  <span className="text-sm text-av-light">Philippines</span>
+                  <span className="text-sm">📍</span>
+                  <span className="text-sm text-av-dark">Philippines</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-av-red">📧</span>
-                  <span className="text-sm text-av-light">
+                  <span className="text-sm">📧</span>
+                  <span className="text-sm text-av-dark">
                     hello@aerovibe.rootbyte.tech
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-av-red">⚡</span>
-                  <span className="text-sm text-av-light">
+                  <span className="text-sm">⚡</span>
+                  <span className="text-sm text-av-muted">
                     Usually reply within 24 hours
                   </span>
                 </div>
               </div>
 
-              {/* Equipment badge */}
-              <div className="mt-10 p-4 rounded-lg border border-av-border bg-av-bg/50 backdrop-blur-sm">
-                <span className="label-mono text-av-red block mb-2">
+              <div className="p-5 rounded-xl border border-av-border bg-gray-50/50">
+                <span className="label-mono text-av-muted block mb-3">
                   Equipment
                 </span>
                 <div className="flex flex-wrap gap-2">
-                  {[
-                    "DJI Drones",
-                    "Photo Printer",
-                  ].map((t) => (
-                    <span key={t} className="pill text-av-muted">
+                  {["DJI Drones", "Photo Printer"].map((t) => (
+                    <span key={t} className="pill text-av-muted bg-white">
                       {t}
                     </span>
                   ))}
@@ -61,12 +57,10 @@ export default function Contact() {
 
           <ScrollReveal delay={0.15}>
             <form
-              className="space-y-5"
+              className="space-y-6"
               onSubmit={(e) => {
                 e.preventDefault();
-                alert(
-                  "Message sent! We'll get back to you within 24 hours."
-                );
+                alert("Message sent! We'll get back to you within 24 hours.");
               }}
             >
               <div>
@@ -76,8 +70,7 @@ export default function Contact() {
                 <input
                   type="text"
                   required
-                  className="w-full bg-transparent border-b border-av-border focus:border-av-red py-3 text-av-text outline-none transition-colors placeholder:text-av-muted/40"
-                  style={{ fontFamily: "var(--font-serif)" }}
+                  className="w-full bg-transparent border-b border-av-border focus:border-av-red py-3 text-av-dark outline-none transition-colors placeholder:text-av-muted/40 text-sm"
                   placeholder="Your name"
                 />
               </div>
@@ -88,8 +81,7 @@ export default function Contact() {
                 <input
                   type="email"
                   required
-                  className="w-full bg-transparent border-b border-av-border focus:border-av-red py-3 text-av-text outline-none transition-colors placeholder:text-av-muted/40"
-                  style={{ fontFamily: "var(--font-serif)" }}
+                  className="w-full bg-transparent border-b border-av-border focus:border-av-red py-3 text-av-dark outline-none transition-colors placeholder:text-av-muted/40 text-sm"
                   placeholder="your@email.com"
                 />
               </div>
@@ -99,33 +91,16 @@ export default function Contact() {
                 </label>
                 <select
                   required
-                  className="w-full bg-transparent border-b border-av-border focus:border-av-red py-3 text-av-text outline-none transition-colors"
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: "0.85rem",
-                  }}
+                  className="w-full bg-transparent border-b border-av-border focus:border-av-red py-3 text-av-dark outline-none transition-colors text-sm"
                 >
-                  <option value="" className="bg-av-bg">
-                    Select type...
-                  </option>
-                  <option value="real-estate" className="bg-av-bg">
-                    🏠 Real Estate
-                  </option>
-                  <option value="event" className="bg-av-bg">
-                    💒 Wedding / Event
-                  </option>
-                  <option value="commercial" className="bg-av-bg">
-                    🏢 Commercial
-                  </option>
-                  <option value="travel" className="bg-av-bg">
-                    🌴 Travel / Lifestyle
-                  </option>
-                  <option value="social" className="bg-av-bg">
-                    📱 Social Media Content
-                  </option>
-                  <option value="other" className="bg-av-bg">
-                    ✨ Other
-                  </option>
+                  <option value="">Select type...</option>
+                  <option value="real-estate">Real Estate</option>
+                  <option value="event">Wedding / Event</option>
+                  <option value="commercial">Commercial</option>
+                  <option value="travel">Travel / Lifestyle</option>
+                  <option value="social">Social Media Content</option>
+                  <option value="inspection">Site Ocular / Inspection</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
               <div>
@@ -135,17 +110,15 @@ export default function Contact() {
                 <textarea
                   rows={4}
                   required
-                  className="w-full bg-transparent border-b border-av-border focus:border-av-red py-3 text-av-text outline-none transition-colors resize-none placeholder:text-av-muted/40"
-                  style={{ fontFamily: "var(--font-serif)" }}
+                  className="w-full bg-transparent border-b border-av-border focus:border-av-red py-3 text-av-dark outline-none transition-colors resize-none placeholder:text-av-muted/40 text-sm"
                   placeholder="Tell us about your project..."
                 />
               </div>
-              <button
-                type="submit"
-                className="hover-lift w-full py-4 bg-av-red text-av-white font-bold text-sm tracking-[3px] uppercase rounded-sm mt-2"
-                style={{ fontFamily: "var(--font-cond)" }}
-              >
+              <button type="submit" className="btn-red w-full justify-center mt-2">
                 Send Message
+                <svg className="btn-arrow" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 6h8m0 0L7 3m3 3L7 9" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
               </button>
             </form>
           </ScrollReveal>

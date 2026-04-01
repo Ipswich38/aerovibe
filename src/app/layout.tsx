@@ -4,11 +4,11 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "AeroVibe — Drone Shots That Hit Different",
   description:
-    "Cinematic drone videography + AI-powered editing. Real estate, events, travel, commercial — we fly, AI scores, you publish.",
+    "Drone videography, aerial photography, and photo prints. We fly, we edit, you get clean content — delivered to your device.",
   openGraph: {
     title: "AeroVibe — Drone Shots That Hit Different",
     description:
-      "Cinematic drone videography + AI-powered editing. Real estate, events, travel, commercial.",
+      "Drone videography, aerial photography, and photo prints.",
     url: "https://aerovibe.rootbyte.tech",
     siteName: "AeroVibe",
     type: "website",
