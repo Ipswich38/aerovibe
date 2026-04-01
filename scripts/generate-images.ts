@@ -173,33 +173,24 @@ async function generateWithGemini(
   }
 
   try {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: `Generate this image: ${prompt}` }] }],
-          generationConfig: {
-            responseModalities: ["IMAGE", "TEXT"],
-            responseMimeType: "text/plain",
-          },
-        }),
-      }
-    );
+    const { GoogleGenAI } = await import("@google/genai");
+    const ai = new GoogleGenAI({ apiKey });
 
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`Gemini API failed: ${res.status} — ${text.slice(0, 120)}`);
-    }
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash-image",
+      contents: `Generate this image with no text or watermarks: ${prompt}`,
+      config: {
+        responseModalities: ["IMAGE", "TEXT"],
+      },
+    });
 
-    const data = await res.json();
-    const parts = data.candidates?.[0]?.content?.parts || [];
-    for (const part of parts) {
-      if (part.inlineData?.data) {
-        const buf = Buffer.from(part.inlineData.data, "base64");
-        fs.writeFileSync(outputPath, buf);
-        return true;
+    if (response.candidates && response.candidates[0]?.content?.parts) {
+      for (const part of response.candidates[0].content.parts) {
+        if (part.inlineData && part.inlineData.data) {
+          const buf = Buffer.from(part.inlineData.data, "base64");
+          fs.writeFileSync(outputPath, buf);
+          return true;
+        }
       }
     }
 

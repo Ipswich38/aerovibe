@@ -1,46 +1,48 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
 import ScrollReveal from "./ScrollReveal";
-import ParallaxImage from "./ParallaxImage";
 
 const projects = [
   {
     title: "Luxury Villa Showcase",
     category: "Real Estate",
     categoryColor: "#c9342a",
-    image: "/images/work/real-estate.png",
     description:
       "Beachfront property aerial tour — slow orbits, reveal shots, golden hour.",
     specs: "4K · 90s · Warm Golden LUT",
+    gradient: "from-[#2a1508] via-[#1a0d05] to-[#12110e]",
+    glow: "bg-amber-600/15",
   },
   {
     title: "Sunset Beach Wedding",
     category: "Events",
     categoryColor: "#d4730f",
-    image: "/images/work/wedding.png",
     description:
       "Golden hour ceremony from above — sweeping establishing shots, intimate details.",
     specs: "4K · 120s · Warm Soft LUT",
+    gradient: "from-[#1a1200] via-[#1a0a05] to-[#12110e]",
+    glow: "bg-orange-500/12",
   },
   {
     title: "Resort Grand Opening",
     category: "Commercial",
     categoryColor: "#1a4e8c",
-    image: "/images/work/commercial.png",
     description:
       "Full property reveal — pools, gardens, architecture. Corporate-cool edit.",
     specs: "1080p · 60s · Cool Crisp LUT",
+    gradient: "from-[#0a0f1a] via-[#05101a] to-[#12110e]",
+    glow: "bg-blue-500/12",
   },
   {
     title: "Island Hopping Reels",
     category: "Travel",
     categoryColor: "#2a6e4a",
-    image: "/images/work/travel.png",
     description:
       "Multi-location aerials — quick cuts, high energy, scroll-stopping vertical.",
     specs: "9:16 · 30s · Vibrant LUT",
+    gradient: "from-[#0a1a0f] via-[#051a10] to-[#12110e]",
+    glow: "bg-emerald-500/12",
   },
 ];
 
@@ -60,20 +62,19 @@ export default function Work() {
         </div>
       </ScrollReveal>
 
-      {/* Featured — full width with parallax (DJI hero-section style) */}
+      {/* Featured — full width with parallax effect */}
       <ScrollReveal className="mb-4">
-        <div className="group relative aspect-[21/9] overflow-hidden rounded-lg border border-av-border hover:border-av-red/30 transition-all duration-500 cursor-pointer">
-          <ParallaxImage
-            src={projects[0].image}
-            alt={projects[0].title}
-            className="absolute inset-0"
-            speed={0.2}
-          />
-          {/* Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-av-bg via-av-bg/30 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-av-bg/50 to-transparent" />
+        <motion.div
+          whileHover={{ scale: 1.005 }}
+          transition={{ duration: 0.4 }}
+          className="group relative aspect-[21/9] overflow-hidden rounded-lg border border-av-border hover:border-av-red/30 transition-colors duration-500 cursor-pointer"
+        >
+          {/* Background — swap with real image */}
+          <div className={`absolute inset-0 bg-gradient-to-br ${projects[0].gradient}`} />
+          <div className="absolute inset-0 grid-pattern opacity-20" />
+          <div className={`absolute top-1/3 right-1/4 w-[400px] h-[400px] ${projects[0].glow} rounded-full blur-[100px] group-hover:blur-[80px] transition-all duration-700`} />
 
-          {/* Content */}
+          {/* Content overlay */}
           <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-10">
             <span
               className="pill w-fit mb-3"
@@ -99,7 +100,7 @@ export default function Work() {
             </span>
           </div>
 
-          {/* Play button — glass morphism (DJI style) */}
+          {/* Play button — glassmorphism */}
           <motion.div
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             whileHover={{ scale: 1.1 }}
@@ -114,22 +115,22 @@ export default function Work() {
               </svg>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       </ScrollReveal>
 
       {/* Grid — 3 remaining projects */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {projects.slice(1).map((p, i) => (
           <ScrollReveal key={i} delay={i * 0.1}>
-            <div className="group relative aspect-[4/3] overflow-hidden rounded-lg border border-av-border hover:border-av-red/30 transition-all duration-500 cursor-pointer">
-              <Image
-                src={p.image}
-                alt={p.title}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, 33vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-av-bg via-av-bg/20 to-transparent" />
+            <motion.div
+              whileHover={{ y: -4 }}
+              transition={{ duration: 0.2 }}
+              className="group relative aspect-[4/3] overflow-hidden rounded-lg border border-av-border hover:border-av-red/30 transition-colors duration-500 cursor-pointer"
+            >
+              {/* Background — swap with real images */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${p.gradient}`} />
+              <div className="absolute inset-0 grid-pattern opacity-15" />
+              <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[250px] h-[250px] ${p.glow} rounded-full blur-[80px] group-hover:blur-[60px] transition-all duration-700`} />
 
               <div className="absolute inset-0 flex flex-col justify-between p-5">
                 <span
@@ -165,7 +166,7 @@ export default function Work() {
                   </svg>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </ScrollReveal>
         ))}
       </div>

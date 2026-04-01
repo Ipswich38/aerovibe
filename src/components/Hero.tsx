@@ -3,27 +3,30 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade, Pagination } from "swiper/modules";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/pagination";
 
 const slides = [
   {
-    image: "/images/hero/hero-1.png",
     tagline: "Aerial storytelling at its finest",
+    gradient: "from-[#1a0a05] via-[#2a1508] to-[#0d1520]",
+    glow: "bg-amber-600/10",
   },
   {
-    image: "/images/hero/hero-2.png",
     tagline: "Real estate that sells itself",
+    gradient: "from-[#15080a] via-[#1a1008] to-[#0a0d15]",
+    glow: "bg-rose-600/8",
   },
   {
-    image: "/images/hero/hero-3.png",
     tagline: "Every island deserves a flyover",
+    gradient: "from-[#051a10] via-[#0a1a18] to-[#050d1a]",
+    glow: "bg-emerald-500/10",
   },
   {
-    image: "/images/hero/hero-4.png",
     tagline: "City lights from above",
+    gradient: "from-[#0a0510] via-[#0d0a1a] to-[#05101a]",
+    glow: "bg-indigo-500/10",
   },
 ];
 
@@ -60,17 +63,13 @@ export default function Hero() {
         {slides.map((s, i) => (
           <SwiperSlide key={i}>
             <div className="relative h-full w-full">
-              <Image
-                src={s.image}
-                alt={s.tagline}
-                fill
-                className="object-cover"
-                sizes="100vw"
-                priority={i === 0}
-              />
-              {/* Dark gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-av-bg via-av-bg/40 to-av-bg/20" />
-              <div className="absolute inset-0 bg-gradient-to-r from-av-bg/60 to-transparent" />
+              {/* Cinematic gradient background — swap with real drone photos */}
+              <div className={`absolute inset-0 bg-gradient-to-br ${s.gradient}`} />
+              <div className="absolute inset-0 grid-pattern opacity-30" />
+              {/* Ambient glow */}
+              <div className={`absolute top-1/3 right-1/4 w-[500px] h-[500px] ${s.glow} rounded-full blur-[150px]`} />
+              {/* Film grain */}
+              <div className="absolute inset-0 opacity-[0.015] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc1IiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI2EpIi8+PC9zdmc+')]" />
             </div>
           </SwiperSlide>
         ))}
