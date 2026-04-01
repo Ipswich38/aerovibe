@@ -40,18 +40,6 @@ export default function Contact() {
                 </div>
               </div>
 
-              <div className="p-5 rounded-xl border border-av-border bg-gray-50/50">
-                <span className="label-mono text-av-muted block mb-3">
-                  Equipment
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {["DJI Drones", "Photo Printer"].map((t) => (
-                    <span key={t} className="pill text-av-muted bg-white">
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
           </ScrollReveal>
 

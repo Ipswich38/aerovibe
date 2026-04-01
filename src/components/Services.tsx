@@ -7,14 +7,14 @@ const services = [
   {
     icon: "🎬",
     title: "Aerial Video",
-    description: "Drone footage with basic color correction and editing. Horizontal and vertical formats available.",
-    tags: ["4K / 1080p", "Color Corrected", "Edited", "30-60s"],
+    description: "Drone footage with editing included. Horizontal and vertical formats available.",
+    tags: ["4K / 1080p", "Edited", "30-60s"],
   },
   {
     icon: "📸",
     title: "Aerial Photography",
-    description: "High-resolution aerial stills with color correction. Digital delivery or optional print.",
-    tags: ["High-Res", "Color Corrected", "Digital Delivery"],
+    description: "High-resolution aerial stills, edited and ready. Digital delivery or optional print.",
+    tags: ["High-Res", "Edited", "Digital Delivery"],
   },
   {
     icon: "📱",

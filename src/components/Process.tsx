@@ -12,7 +12,7 @@ const steps = [
   {
     number: "02",
     title: "We edit",
-    description: "We pick the best shots, do basic color correction, and cut everything to a clean, ready-to-use video.",
+    description: "We pick the best shots, edit everything, and deliver a clean, ready-to-use video.",
   },
   {
     number: "03",

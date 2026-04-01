@@ -11,7 +11,7 @@ const packages = [
     includes: [
       "Drone shoot (up to 30 min)",
       "Best shots selected",
-      "Basic color correction",
+      "Image/video editing included",
       "1 format (16:9 or 9:16)",
       "Delivered via email or AirDrop",
     ],
@@ -24,7 +24,7 @@ const packages = [
     includes: [
       "Drone shoot (up to 1 hour)",
       "Best shots selected",
-      "Basic color correction",
+      "Image/video editing included",
       "Both formats (16:9 + 9:16)",
       "3 aerial photo exports",
       "Delivered via email or AirDrop",
@@ -38,7 +38,7 @@ const packages = [
     includes: [
       "Flexible shoot duration & coverage",
       "Best shots selected",
-      "Basic color correction",
+      "Image/video editing included",
       "Output tailored to your needs",
       "Delivered via email or AirDrop",
       "Scope & pricing based on arrangement",
