@@ -5,32 +5,32 @@ import ScrollReveal from "./ScrollReveal";
 
 const projects = [
   {
-    title: "Luxury Villa Showcase",
-    category: "Real Estate",
-    description: "Beachfront property aerial tour — wide shots, close passes, multiple angles.",
+    title: "Beach Aerial Tour",
+    category: "Travel",
+    description: "Sweeping coastline shots — waves, sand, and crystal-clear water from above.",
     specs: "4K · 60s",
-    gradient: "from-[#2a1508] via-[#1a0d05] to-[#191919]",
+    video: "https://videos.pexels.com/video-files/32950329/14043404_1280_720_60fps.mp4",
   },
   {
-    title: "Sunset Beach Wedding",
+    title: "Outdoor Wedding",
     category: "Events",
     description: "Ceremony captured from above — wide establishing shots and detail passes.",
     specs: "4K · 60s",
-    gradient: "from-[#1a1200] via-[#1a0a05] to-[#191919]",
+    video: "https://videos.pexels.com/video-files/32150713/13707661_1280_720_24fps.mp4",
   },
   {
-    title: "Resort Grand Opening",
+    title: "Solar Panel Inspection",
     category: "Commercial",
-    description: "Full property reveal — pools, gardens, architecture from every angle.",
-    specs: "1080p · 60s",
-    gradient: "from-[#0a0f1a] via-[#05101a] to-[#191919]",
+    description: "Rooftop solar array documented — panel condition, layout, and coverage.",
+    specs: "1080p · Custom",
+    video: "https://videos.pexels.com/video-files/9790192/9790192-hd_1280_720_30fps.mp4",
   },
   {
-    title: "Island Hopping Reels",
-    category: "Travel",
-    description: "Multi-location aerials — quick cuts, vertical format for social media.",
-    specs: "9:16 · 30s",
-    gradient: "from-[#0a1a0f] via-[#051a10] to-[#191919]",
+    title: "Park Aerial View",
+    category: "Lifestyle",
+    description: "Colorful playground and park area — perfect for community or real estate promo.",
+    specs: "4K · 30s",
+    video: "https://videos.pexels.com/video-files/31588924/13461208_1280_720_60fps.mp4",
   },
 ];
 
@@ -43,7 +43,7 @@ export default function Work() {
             <span className="label-mono text-av-muted block mb-4">Selected Work</span>
             <h2
               className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.1]"
-              style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+              style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
             >
               Clean edits, ready to use
             </h2>
@@ -57,14 +57,23 @@ export default function Work() {
             transition={{ duration: 0.3 }}
             className="group relative aspect-[21/9] overflow-hidden rounded-xl inner-glow cursor-pointer"
           >
-            <div className={`absolute inset-0 bg-gradient-to-br ${projects[0].gradient}`} />
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+            >
+              <source src={projects[0].video} type="video/mp4" />
+            </video>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
             <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-10">
               <span className="pill w-fit text-av-muted border-av-border-light mb-3">
                 {projects[0].category}
               </span>
               <h3
                 className="text-xl md:text-2xl mb-1"
-                style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+                style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
               >
                 {projects[0].title}
               </h3>
@@ -87,7 +96,16 @@ export default function Work() {
                 transition={{ duration: 0.2 }}
                 className="group relative aspect-[4/3] overflow-hidden rounded-xl inner-glow cursor-pointer"
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${p.gradient}`} />
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-0 w-full h-full object-cover"
+                >
+                  <source src={p.video} type="video/mp4" />
+                </video>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                 <div className="absolute inset-0 flex flex-col justify-between p-5">
                   <span className="pill w-fit text-av-muted border-av-border-light">
                     {p.category}
@@ -95,7 +113,7 @@ export default function Work() {
                   <div>
                     <h3
                       className="text-lg mb-1"
-                      style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+                      style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
                     >
                       {p.title}
                     </h3>

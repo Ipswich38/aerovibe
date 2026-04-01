@@ -26,7 +26,7 @@ export default function DroneShowcase() {
             <span className="label-mono text-av-muted block mb-4">Equipment</span>
             <h2
               className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.1]"
-              style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+              style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
             >
               Powered by <span className="text-av-red">DJI</span>
             </h2>
@@ -43,7 +43,7 @@ export default function DroneShowcase() {
               <span className="label-mono text-av-muted mb-3">Primary Drone</span>
               <h3
                 className="text-2xl md:text-3xl mb-4"
-                style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+                style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
               >
                 DJI Neo 2
               </h3>

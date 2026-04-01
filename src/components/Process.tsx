@@ -35,7 +35,7 @@ export default function Process() {
             <span className="label-mono text-av-muted block mb-4">Process</span>
             <h2
               className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.1] text-av-dark"
-              style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+              style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
             >
               Simple process, no hassle
             </h2>
@@ -58,7 +58,7 @@ export default function Process() {
                 </div>
                 <h3
                   className="text-xl text-av-dark mb-3"
-                  style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+                  style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
                 >
                   {s.title}
                 </h3>
@@ -80,7 +80,7 @@ export default function Process() {
                   <div className="flex items-center gap-2">
                     <h3
                       className="text-lg text-av-dark"
-                      style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+                      style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
                     >
                       {printAddon.title}
                     </h3>

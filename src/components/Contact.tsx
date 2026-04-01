@@ -12,7 +12,7 @@ export default function Contact() {
               <span className="label-mono text-av-muted block mb-4">Contact</span>
               <h2
                 className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.1] text-av-dark mb-4"
-                style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+                style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
               >
                 Let&apos;s shoot
               </h2>

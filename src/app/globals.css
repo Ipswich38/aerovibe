@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Geist:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -20,8 +20,7 @@
   --color-av-red-dim: rgba(201, 52, 42, 0.15);
   --color-av-amber: #d4730f;
 
-  /* Fonts — serif headlines + geometric sans body (smallest.ai pattern) */
-  --font-serif: "DM Serif Display", "Georgia", serif;
+  /* Fonts — geometric sans throughout */
   --font-sans: "Geist", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
 }

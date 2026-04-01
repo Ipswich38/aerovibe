@@ -45,7 +45,7 @@ export default function Services() {
             <span className="label-mono text-av-muted block mb-4">Services</span>
             <h2
               className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.1] text-av-dark"
-              style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+              style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
             >
               What we deliver
             </h2>
@@ -63,7 +63,7 @@ export default function Services() {
                 <div className="text-2xl mb-4">{s.icon}</div>
                 <h3
                   className="text-lg text-av-dark mb-2"
-                  style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+                  style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
                 >
                   {s.title}
                 </h3>

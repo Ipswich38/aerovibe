@@ -56,7 +56,7 @@ export default function Pricing() {
             <span className="label-mono text-av-muted block mb-4">Pricing</span>
             <h2
               className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.1]"
-              style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+              style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
             >
               Simple, transparent pricing
             </h2>
@@ -86,7 +86,7 @@ export default function Pricing() {
 
                 <h3
                   className="text-xl mb-1"
-                  style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+                  style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
                 >
                   {p.name}
                 </h3>
@@ -129,7 +129,7 @@ export default function Pricing() {
                 <div>
                   <span
                     className="text-base text-av-text"
-                    style={{ fontFamily: "var(--font-serif)", fontWeight: 400 }}
+                    style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
                   >
                     Photo Print Service
                   </span>
