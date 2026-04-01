@@ -17,7 +17,7 @@ const services = [
     title: "Aerial Photography",
     color: "#d4730f",
     description:
-      "High-resolution aerial stills. DNG processing with professional color correction. Print-ready.",
+      "High-resolution aerial stills. DNG processing with professional color correction. Print-ready or digital delivery.",
     tags: ["High-Res", "DNG → JPEG", "Color Corrected", "Print-Ready"],
   },
   {
@@ -36,6 +36,22 @@ const services = [
       "Our AI scores every frame for composition, lighting, and motion. Only the best shots make the cut.",
     tags: ["Smart Selection", "Auto-Grade", "Scene Scoring", "QC"],
   },
+  {
+    icon: "📲",
+    title: "Fast Delivery",
+    color: "#0ea5e9",
+    description:
+      "All content sent directly to you via email or AirDrop. No waiting for uploads, no cloud links to expire. Your content, your device.",
+    tags: ["Email", "AirDrop", "Same-Day", "All Formats"],
+  },
+  {
+    icon: "🖨️",
+    title: "Photo Prints",
+    color: "#7832c8",
+    description:
+      "Optional add-on: get aerial shots printed on quality paper. Or bring any photo — we print it. No studio appointment needed.",
+    tags: ["Add-On", "Any Photo", "On-The-Spot", "High Quality"],
+  },
 ];
 
 export default function Services() {
@@ -51,7 +67,7 @@ export default function Services() {
           </div>
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {services.map((s, i) => (
             <ScrollReveal key={i} delay={i * 0.1}>
               <motion.div

@@ -15,6 +15,7 @@ const packages = [
       "Cinematic color grade",
       "Background music",
       "1 format (16:9 or 9:16)",
+      "Delivered via email or AirDrop",
     ],
     highlight: false,
   },
@@ -30,6 +31,7 @@ const packages = [
       "Background music",
       "Both formats (16:9 + 9:16)",
       "3 aerial photo exports",
+      "Delivered via email or AirDrop",
     ],
     highlight: true,
   },
@@ -45,6 +47,7 @@ const packages = [
       "Licensed background music",
       "Both formats (16:9 + 9:16)",
       "10 aerial photo exports",
+      "Delivered via email or AirDrop",
       "1 revision included",
     ],
     highlight: false,
@@ -131,6 +134,47 @@ export default function Pricing() {
           </ScrollReveal>
         ))}
       </div>
+
+      {/* Print Service — optional add-on */}
+      <ScrollReveal delay={0.3} className="mt-6">
+        <div className="p-6 rounded-lg border border-dashed border-purple-500/20 bg-av-bg/50 hover:border-purple-500/40 transition-colors">
+          <div className="flex flex-col md:flex-row md:items-center gap-6">
+            <div className="flex items-center gap-3 shrink-0">
+              <span className="text-3xl">🖨️</span>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h3
+                    className="text-lg font-bold tracking-[2px] uppercase"
+                    style={{ fontFamily: "var(--font-cond)" }}
+                  >
+                    Photo Print Service
+                  </h3>
+                  <span className="pill bg-purple-500/10 border-purple-500/30 text-purple-400">
+                    Add-On
+                  </span>
+                </div>
+                <p className="text-xs text-av-muted mt-1">
+                  Standalone or bundle with any package
+                </p>
+              </div>
+            </div>
+
+            <p className="flex-1 text-sm text-av-muted leading-relaxed">
+              Get your favorite aerial shots printed on high-quality photo
+              paper. Works with drone photos or bring your own images —
+              we&apos;ll print anything you want.
+            </p>
+
+            <a
+              href="#contact"
+              className="shrink-0 hover-lift inline-flex items-center justify-center px-6 py-3 border border-purple-500/30 text-purple-400 text-sm tracking-[2px] uppercase rounded-sm hover:bg-purple-500/10 transition-colors"
+              style={{ fontFamily: "var(--font-cond)" }}
+            >
+              Ask About Prints
+            </a>
+          </div>
+        </div>
+      </ScrollReveal>
     </section>
   );
 }
