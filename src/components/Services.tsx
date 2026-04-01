@@ -9,39 +9,31 @@ const services = [
     title: "Aerial Video",
     color: "#c9342a",
     description:
-      "4K cinematic drone footage with professional color grading, music, and editing. Horizontal + vertical formats.",
-    tags: ["4K / 1080p", "Cinematic LUTs", "Music", "30-120s"],
+      "Drone footage with basic color correction and editing. Horizontal and vertical formats available.",
+    tags: ["4K / 1080p", "Color Corrected", "Edited", "30-60s"],
   },
   {
     icon: "📸",
     title: "Aerial Photography",
     color: "#d4730f",
     description:
-      "High-resolution aerial stills. DNG processing with professional color correction. Print-ready or digital delivery.",
-    tags: ["High-Res", "DNG → JPEG", "Color Corrected", "Print-Ready"],
+      "High-resolution aerial stills with color correction. Digital delivery or optional print.",
+    tags: ["High-Res", "Color Corrected", "Digital Delivery"],
   },
   {
     icon: "📱",
     title: "Social Media Cuts",
     color: "#2a6e4a",
     description:
-      "Vertical 9:16 edits for Instagram Reels, TikTok, and YouTube Shorts. Fast-paced, scroll-stopping.",
-    tags: ["9:16 Vertical", "Quick Cuts", "Platform-Ready", "Trending"],
-  },
-  {
-    icon: "🤖",
-    title: "AI-Enhanced Editing",
-    color: "#1a4e8c",
-    description:
-      "Our AI scores every frame for composition, lighting, and motion. Only the best shots make the cut.",
-    tags: ["Smart Selection", "Auto-Grade", "Scene Scoring", "QC"],
+      "Vertical 9:16 edits ready for Instagram Reels, TikTok, and YouTube Shorts.",
+    tags: ["9:16 Vertical", "Quick Cuts", "Platform-Ready"],
   },
   {
     icon: "📲",
     title: "Fast Delivery",
     color: "#0ea5e9",
     description:
-      "All content sent directly to you via email or AirDrop. No waiting for uploads, no cloud links to expire. Your content, your device.",
+      "All content sent directly to you via email or AirDrop. No waiting for uploads, no cloud links to expire.",
     tags: ["Email", "AirDrop", "Same-Day", "All Formats"],
   },
   {
@@ -49,8 +41,8 @@ const services = [
     title: "Photo Prints",
     color: "#7832c8",
     description:
-      "Optional add-on: get aerial shots printed on quality paper. Or bring any photo — we print it. No studio appointment needed.",
-    tags: ["Add-On", "Any Photo", "On-The-Spot", "High Quality"],
+      "Optional add-on: get aerial shots printed on quality paper. Or bring any photo — we print it.",
+    tags: ["Add-On", "Any Photo", "On-The-Spot"],
   },
 ];
 

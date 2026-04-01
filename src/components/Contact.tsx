@@ -40,17 +40,15 @@ export default function Contact() {
                 </div>
               </div>
 
-              {/* Tech stack badge */}
+              {/* Equipment badge */}
               <div className="mt-10 p-4 rounded-lg border border-av-border bg-av-bg/50 backdrop-blur-sm">
                 <span className="label-mono text-av-red block mb-2">
-                  Powered By
+                  Equipment
                 </span>
                 <div className="flex flex-wrap gap-2">
                   {[
-                    "DJI Neo 2",
-                    "Gemini Vision AI",
-                    "FFmpeg",
-                    "Cinematic LUTs",
+                    "DJI Drones",
+                    "Photo Printer",
                   ].map((t) => (
                     <span key={t} className="pill text-av-muted">
                       {t}

@@ -10,39 +10,31 @@ const steps = [
     title: "We Fly",
     color: "#c9342a",
     description:
-      "DJI Neo & Neo 2 drones capture your location from every angle. Orbits, reveals, flyovers, slow-mo details — we get it all.",
+      "DJI drones capture your location from multiple angles — wide shots, close-ups, different heights. We cover everything.",
   },
   {
     number: "02",
-    emoji: "🧠",
-    title: "AI Scores",
-    color: "#1a4e8c",
-    description:
-      "Every frame gets analyzed — composition, lighting, horizon, motion smoothness. Bad shots? Gone. Only the best make the cut.",
-  },
-  {
-    number: "03",
-    emoji: "🎨",
+    emoji: "✂️",
     title: "We Edit",
     color: "#d4730f",
     description:
-      "Cinematic LUT grading, background music with timed fades, precise pacing. Your footage goes from raw to wow.",
+      "We pick the best shots, do basic color correction, and cut everything to a clean, ready-to-use video.",
   },
   {
-    number: "04",
+    number: "03",
     emoji: "📲",
     title: "You Get It",
     color: "#2a6e4a",
     description:
-      "Final content delivered via email or AirDrop — your choice. 4K horizontal, 9:16 vertical, print-ready stills. All formats, one shoot.",
+      "Final content delivered via email or AirDrop — your choice. Video, photos, or both. All formats, one shoot.",
   },
   {
-    number: "05",
+    number: "04",
     emoji: "🖨️",
     title: "Print It",
     color: "#7832c8",
     description:
-      "Optional add-on: get your favorite aerial shots printed on the spot. Bring your own photos too — we print anything. No studio needed.",
+      "Optional: get your favorite shots printed on quality paper. Bring your own photos too — we print anything.",
     optional: true,
   },
 ];
@@ -60,15 +52,15 @@ export default function Process() {
             How It <span className="text-av-red">Works</span>
           </h2>
           <p className="text-av-muted mt-3 max-w-md text-sm leading-relaxed">
-            Five steps from raw drone footage to your hands. Content delivered
-            digitally — with an optional print service if you want something
+            Simple process, no hassle. We shoot, we edit, you get your
+            content — with an optional print service if you want something
             you can hold.
           </p>
         </div>
       </ScrollReveal>
 
       {/* Steps 1-4: core flow */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         {steps.filter((s) => !s.optional).map((s, i) => (
           <ScrollReveal key={i} delay={i * 0.12}>
             <motion.div
@@ -77,7 +69,7 @@ export default function Process() {
               className="relative group"
             >
               {/* Connector line (desktop) */}
-              {i < 3 && (
+              {i < 2 && (
                 <div className="hidden md:block absolute top-10 left-[calc(100%+4px)] w-[calc(100%-8px)] h-px bg-gradient-to-r from-av-border to-transparent" />
               )}
 

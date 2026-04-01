@@ -9,8 +9,8 @@ const projects = [
     category: "Real Estate",
     categoryColor: "#c9342a",
     description:
-      "Beachfront property aerial tour — slow orbits, reveal shots, golden hour.",
-    specs: "4K · 90s · Warm Golden LUT",
+      "Beachfront property aerial tour — wide shots, close passes, multiple angles.",
+    specs: "4K · 60s",
     gradient: "from-[#2a1508] via-[#1a0d05] to-[#12110e]",
     glow: "bg-amber-600/15",
   },
@@ -19,8 +19,8 @@ const projects = [
     category: "Events",
     categoryColor: "#d4730f",
     description:
-      "Golden hour ceremony from above — sweeping establishing shots, intimate details.",
-    specs: "4K · 120s · Warm Soft LUT",
+      "Ceremony captured from above — wide establishing shots and detail passes.",
+    specs: "4K · 60s",
     gradient: "from-[#1a1200] via-[#1a0a05] to-[#12110e]",
     glow: "bg-orange-500/12",
   },
@@ -29,8 +29,8 @@ const projects = [
     category: "Commercial",
     categoryColor: "#1a4e8c",
     description:
-      "Full property reveal — pools, gardens, architecture. Corporate-cool edit.",
-    specs: "1080p · 60s · Cool Crisp LUT",
+      "Full property reveal — pools, gardens, architecture from every angle.",
+    specs: "1080p · 60s",
     gradient: "from-[#0a0f1a] via-[#05101a] to-[#12110e]",
     glow: "bg-blue-500/12",
   },
@@ -39,8 +39,8 @@ const projects = [
     category: "Travel",
     categoryColor: "#2a6e4a",
     description:
-      "Multi-location aerials — quick cuts, high energy, scroll-stopping vertical.",
-    specs: "9:16 · 30s · Vibrant LUT",
+      "Multi-location aerials — quick cuts, vertical format for social media.",
+    specs: "9:16 · 30s",
     gradient: "from-[#0a1a0f] via-[#051a10] to-[#12110e]",
     glow: "bg-emerald-500/12",
   },
@@ -56,8 +56,8 @@ export default function Work() {
             Selected <span className="text-av-red">Work</span>
           </h2>
           <p className="text-av-muted mt-3 max-w-md text-sm leading-relaxed">
-            Every shot AI-scored for composition. Every edit color-graded with
-            cinematic LUTs. Every second precisely timed.
+            Clean edits, multiple angles, ready-to-use content from every
+            shoot.
           </p>
         </div>
       </ScrollReveal>

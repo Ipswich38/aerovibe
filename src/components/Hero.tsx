@@ -88,7 +88,7 @@ export default function Hero() {
           >
             <div className="accent-bar" />
             <span className="label-mono text-av-red">
-              Drone Videography + AI Editing
+              Drone Videography + Photo Prints
             </span>
           </motion.div>
 
@@ -113,8 +113,8 @@ export default function Hero() {
             animate="visible"
             className="text-lg md:text-xl text-av-light max-w-lg mb-8 leading-relaxed"
           >
-            We fly. AI scores every frame. You get cinematic footage —
-            color-graded, cut to length, ready to post.
+            We fly, we edit, you get clean aerial footage —
+            videos and photos, delivered straight to your device.
           </motion.p>
 
           {/* CTAs */}
@@ -151,8 +151,8 @@ export default function Hero() {
           >
             {[
               { value: "4K", label: "Resolution" },
-              { value: "AI", label: "Scored" },
               { value: "9:16", label: "Reels Ready" },
+              { value: "📲", label: "Email / AirDrop" },
               { value: "<24h", label: "Turnaround" },
             ].map((stat) => (
               <div key={stat.label}>
