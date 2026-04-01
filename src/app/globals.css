@@ -123,3 +123,31 @@ body {
     linear-gradient(90deg, rgba(201, 52, 42, 0.02) 1px, transparent 1px);
   background-size: 60px 60px;
 }
+
+/* Swiper overrides — DJI-style pagination bullets */
+.aerovibe-bullet {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 100px;
+  background: rgba(240, 235, 224, 0.3);
+  margin: 0 4px !important;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.aerovibe-bullet-active {
+  background: var(--color-av-red) !important;
+  width: 24px;
+}
+
+/* Swiper container fixes */
+.swiper {
+  height: 100%;
+  width: 100%;
+}
+.swiper-slide {
+  height: 100% !important;
+}
+.swiper-pagination {
+  bottom: 24px !important;
+}

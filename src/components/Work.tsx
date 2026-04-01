@@ -1,100 +1,139 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import ScrollReveal from "./ScrollReveal";
+import ParallaxImage from "./ParallaxImage";
 
 const projects = [
   {
     title: "Luxury Villa Showcase",
     category: "Real Estate",
     categoryColor: "#c9342a",
+    image: "/images/work/real-estate.png",
     description:
       "Beachfront property aerial tour — slow orbits, reveal shots, golden hour.",
     specs: "4K · 90s · Warm Golden LUT",
-    gradient: "from-[#1a0f0f] to-av-bg",
   },
   {
     title: "Sunset Beach Wedding",
     category: "Events",
     categoryColor: "#d4730f",
+    image: "/images/work/wedding.png",
     description:
       "Golden hour ceremony from above — sweeping establishing shots, intimate details.",
     specs: "4K · 120s · Warm Soft LUT",
-    gradient: "from-[#1a1200] to-av-bg",
   },
   {
     title: "Resort Grand Opening",
     category: "Commercial",
     categoryColor: "#1a4e8c",
+    image: "/images/work/commercial.png",
     description:
       "Full property reveal — pools, gardens, architecture. Corporate-cool edit.",
     specs: "1080p · 60s · Cool Crisp LUT",
-    gradient: "from-[#0a0f1a] to-av-bg",
   },
   {
     title: "Island Hopping Reels",
     category: "Travel",
     categoryColor: "#2a6e4a",
+    image: "/images/work/travel.png",
     description:
       "Multi-location aerials — quick cuts, high energy, scroll-stopping vertical.",
     specs: "9:16 · 30s · Vibrant LUT",
-    gradient: "from-[#0a1a0f] to-av-bg",
   },
 ];
 
 export default function Work() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add("visible");
-        });
-      },
-      { threshold: 0.1 }
-    );
-    const elements = sectionRef.current?.querySelectorAll(".fade-up") ?? [];
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section
-      id="work"
-      ref={sectionRef}
-      className="py-20 md:py-28 max-w-[1180px] mx-auto px-4 md:px-6"
-    >
-      <div className="fade-up mb-12">
-        <div className="accent-bar mb-4" />
-        <h2 className="headline text-3xl md:text-5xl font-bold">
-          Selected <span className="text-av-red">Work</span>
-        </h2>
-        <p className="text-av-muted mt-3 max-w-md text-sm leading-relaxed">
-          Every shot AI-scored for composition. Every edit color-graded with
-          cinematic LUTs. Every second precisely timed.
-        </p>
-      </div>
+    <section id="work" className="py-20 md:py-28 max-w-[1180px] mx-auto px-4 md:px-6">
+      <ScrollReveal>
+        <div className="mb-12">
+          <div className="accent-bar mb-4" />
+          <h2 className="headline text-3xl md:text-5xl font-bold">
+            Selected <span className="text-av-red">Work</span>
+          </h2>
+          <p className="text-av-muted mt-3 max-w-md text-sm leading-relaxed">
+            Every shot AI-scored for composition. Every edit color-graded with
+            cinematic LUTs. Every second precisely timed.
+          </p>
+        </div>
+      </ScrollReveal>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {projects.map((p, i) => (
-          <div
-            key={i}
-            className="fade-up group relative aspect-[16/10] overflow-hidden rounded-lg border border-av-border hover:border-av-red/30 transition-all duration-300 cursor-pointer"
+      {/* Featured — full width with parallax (DJI hero-section style) */}
+      <ScrollReveal className="mb-4">
+        <div className="group relative aspect-[21/9] overflow-hidden rounded-lg border border-av-border hover:border-av-red/30 transition-all duration-500 cursor-pointer">
+          <ParallaxImage
+            src={projects[0].image}
+            alt={projects[0].title}
+            className="absolute inset-0"
+            speed={0.2}
+          />
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-av-bg via-av-bg/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-av-bg/50 to-transparent" />
+
+          {/* Content */}
+          <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-10">
+            <span
+              className="pill w-fit mb-3"
+              style={{
+                borderColor: `${projects[0].categoryColor}40`,
+                color: projects[0].categoryColor,
+                background: `${projects[0].categoryColor}10`,
+              }}
+            >
+              {projects[0].category}
+            </span>
+            <h3
+              className="text-2xl md:text-4xl font-bold tracking-[2px] uppercase mb-2"
+              style={{ fontFamily: "var(--font-cond)" }}
+            >
+              {projects[0].title}
+            </h3>
+            <p className="text-sm text-av-light max-w-md mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              {projects[0].description}
+            </p>
+            <span className="label-mono text-av-muted">
+              {projects[0].specs}
+            </span>
+          </div>
+
+          {/* Play button — glass morphism (DJI style) */}
+          <motion.div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            whileHover={{ scale: 1.1 }}
           >
-            {/* Background gradient — swap with real thumbnails */}
-            <div className={`absolute inset-0 bg-gradient-to-br ${p.gradient}`} />
-            {/* Ambient glow */}
-            <div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] rounded-full blur-[80px] opacity-20 group-hover:opacity-30 transition-opacity"
-              style={{ background: p.categoryColor }}
-            />
+            <div className="w-20 h-20 rounded-full backdrop-blur-md bg-av-bg/30 border border-av-text/20 flex items-center justify-center">
+              <svg
+                className="w-8 h-8 text-av-text ml-1"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </motion.div>
+        </div>
+      </ScrollReveal>
 
-            {/* Content */}
-            <div className="absolute inset-0 flex flex-col justify-between p-5 md:p-6">
-              {/* Top — category pill */}
-              <div>
+      {/* Grid — 3 remaining projects */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {projects.slice(1).map((p, i) => (
+          <ScrollReveal key={i} delay={i * 0.1}>
+            <div className="group relative aspect-[4/3] overflow-hidden rounded-lg border border-av-border hover:border-av-red/30 transition-all duration-500 cursor-pointer">
+              <Image
+                src={p.image}
+                alt={p.title}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-av-bg via-av-bg/20 to-transparent" />
+
+              <div className="absolute inset-0 flex flex-col justify-between p-5">
                 <span
-                  className="pill"
+                  className="pill w-fit"
                   style={{
                     borderColor: `${p.categoryColor}40`,
                     color: p.categoryColor,
@@ -103,43 +142,31 @@ export default function Work() {
                 >
                   {p.category}
                 </span>
+                <div>
+                  <h3
+                    className="text-lg font-bold tracking-[1px] uppercase mb-1"
+                    style={{ fontFamily: "var(--font-cond)" }}
+                  >
+                    {p.title}
+                  </h3>
+                  <span className="label-mono text-av-muted">{p.specs}</span>
+                </div>
               </div>
 
-              {/* Bottom — title + details */}
-              <div>
-                <h3
-                  className="text-xl md:text-2xl font-bold tracking-[1px] uppercase mb-1"
-                  style={{ fontFamily: "var(--font-cond)" }}
-                >
-                  {p.title}
-                </h3>
-                <p className="text-sm text-av-light leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300 mb-2">
-                  {p.description}
-                </p>
-                <span className="label-mono text-av-muted">{p.specs}</span>
+              {/* Hover play */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="w-12 h-12 rounded-full backdrop-blur-md bg-av-bg/30 border border-av-text/20 flex items-center justify-center">
+                  <svg
+                    className="w-5 h-5 text-av-text ml-0.5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
               </div>
             </div>
-
-            {/* Play button */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <div
-                className="w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-sm hover-lift"
-                style={{
-                  background: `${p.categoryColor}20`,
-                  border: `1.5px solid ${p.categoryColor}60`,
-                }}
-              >
-                <svg
-                  className="w-5 h-5 ml-0.5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  style={{ color: p.categoryColor }}
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>
-            </div>
-          </div>
+          </ScrollReveal>
         ))}
       </div>
     </section>

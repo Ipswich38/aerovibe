@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+import ScrollReveal from "./ScrollReveal";
 
 const packages = [
   {
@@ -51,30 +52,10 @@ const packages = [
 ];
 
 export default function Pricing() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add("visible");
-        });
-      },
-      { threshold: 0.1 }
-    );
-    const elements = sectionRef.current?.querySelectorAll(".fade-up") ?? [];
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section
-      id="pricing"
-      ref={sectionRef}
-      className="py-20 md:py-28 bg-av-surface grid-pattern"
-    >
-      <div className="max-w-[1180px] mx-auto px-4 md:px-6">
-        <div className="fade-up mb-12">
+    <section id="pricing" className="py-20 md:py-28 max-w-[1180px] mx-auto px-4 md:px-6">
+      <ScrollReveal>
+        <div className="mb-12">
           <div className="accent-bar mb-4" />
           <h2 className="headline text-3xl md:text-5xl font-bold">
             Simple <span className="text-av-red">Pricing</span>
@@ -84,18 +65,19 @@ export default function Pricing() {
             shoot, get your content.
           </p>
         </div>
+      </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {packages.map((p, i) => (
-            <div
-              key={i}
-              className={`fade-up group p-6 rounded-lg border transition-all duration-300 relative overflow-hidden ${
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {packages.map((p, i) => (
+          <ScrollReveal key={i} delay={i * 0.1}>
+            <motion.div
+              whileHover={{ y: -6, transition: { duration: 0.2 } }}
+              className={`p-6 rounded-lg border transition-colors duration-300 relative overflow-hidden h-full ${
                 p.highlight
-                  ? "border-av-red/40 bg-av-bg/80"
-                  : "border-av-border bg-av-bg/50 hover:border-av-red/20"
+                  ? "border-av-red/40 bg-av-surface"
+                  : "border-av-border bg-av-surface/50 hover:border-av-red/20"
               }`}
             >
-              {/* Ambient glow for highlighted */}
               {p.highlight && (
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] h-[200px] bg-av-red/[0.04] rounded-full blur-[60px]" />
               )}
@@ -119,9 +101,7 @@ export default function Pricing() {
                 >
                   {p.duration}
                 </div>
-                <p className="label-mono text-av-muted mt-1 mb-6">
-                  {p.ideal}
-                </p>
+                <p className="label-mono text-av-muted mt-1 mb-6">{p.ideal}</p>
 
                 <ul className="space-y-2.5 mb-6">
                   {p.includes.map((item) => (
@@ -147,9 +127,9 @@ export default function Pricing() {
                   Get Quote
                 </a>
               </div>
-            </div>
-          ))}
-        </div>
+            </motion.div>
+          </ScrollReveal>
+        ))}
       </div>
     </section>
   );
