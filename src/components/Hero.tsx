@@ -34,7 +34,7 @@ export default function Hero() {
       <div className="relative z-10 max-w-[1200px] mx-auto px-6 pt-32 pb-28 md:pt-40 md:pb-36 min-h-screen flex flex-col justify-center">
         <div className="max-w-2xl">
           <motion.div {...fadeUp(0.1)} className="mb-6">
-            <span className="label-mono text-av-muted">Drone Videography & Photo Prints</span>
+            <span className="label-mono text-av-muted">Aerial Content &middot; 3D Mapping &middot; Inspections</span>
           </motion.div>
 
           <motion.h1
@@ -55,8 +55,8 @@ export default function Hero() {
             className="text-[clamp(1rem,2vw,1.25rem)] text-av-light leading-relaxed mb-10 max-w-lg"
             style={{ textWrap: "balance" }}
           >
-            We fly, we edit, you get clean aerial content — videos, photos,
-            and prints delivered straight to your device.
+            From cinematic aerial footage to 3D site maps — we handle the
+            flight, the data, and the delivery.
           </motion.p>
 
           <motion.div {...fadeUp(0.5)} className="flex flex-wrap gap-3">
@@ -82,8 +82,8 @@ export default function Hero() {
         >
           {[
             { value: "4K", label: "Resolution" },
-            { value: "9:16", label: "Reels Ready" },
-            { value: "Email / AirDrop", label: "Delivery" },
+            { value: "3D", label: "Mapping" },
+            { value: "Multi-Format", label: "Delivery" },
             { value: "< 24h", label: "Turnaround" },
           ].map((s) => (
             <div key={s.label} className="pt-6">

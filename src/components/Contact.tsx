@@ -17,8 +17,8 @@ export default function Contact() {
                 Let&apos;s shoot
               </h2>
               <p className="text-sm text-av-muted leading-relaxed mb-10 max-w-md">
-                Got a property to sell? Event coming up? Brand that needs aerial
-                content? Drop us a message — we&apos;ll handle the rest.
+                Need aerial content, 3D mapping, or site documentation?
+                Drop us a message — we&apos;ll handle the rest.
               </p>
 
               <div className="space-y-4 mb-10">
@@ -82,12 +82,15 @@ export default function Contact() {
                   className="w-full bg-transparent border-b border-av-border focus:border-av-red py-3 text-av-dark outline-none transition-colors text-sm"
                 >
                   <option value="">Select type...</option>
+                  <option value="social">Social Media Content</option>
+                  <option value="travel">Travel / Lifestyle</option>
                   <option value="real-estate">Real Estate</option>
                   <option value="event">Wedding / Event</option>
-                  <option value="commercial">Commercial</option>
-                  <option value="travel">Travel / Lifestyle</option>
-                  <option value="social">Social Media Content</option>
-                  <option value="inspection">Site Ocular / Inspection</option>
+                  <option value="commercial">Commercial / Business</option>
+                  <option value="construction">Construction Progress</option>
+                  <option value="inspection">Site Inspection</option>
+                  <option value="3d-mapping">3D Mapping / Photogrammetry</option>
+                  <option value="survey">Land Survey / Terrain</option>
                   <option value="other">Other</option>
                 </select>
               </div>

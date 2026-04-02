@@ -32,6 +32,13 @@ const projects = [
     specs: "4K · 30s",
     video: "https://videos.pexels.com/video-files/31588924/13461208_1280_720_60fps.mp4",
   },
+  {
+    title: "Land Survey Flight",
+    category: "3D Mapping",
+    description: "Photogrammetry capture for terrain modeling — overlapping passes at consistent altitude.",
+    specs: "4K · Mapping",
+    video: "https://videos.pexels.com/video-files/6010489/6010489-hd_1280_720_25fps.mp4",
+  },
 ];
 
 export default function Work() {
