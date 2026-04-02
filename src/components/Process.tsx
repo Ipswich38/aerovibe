@@ -7,7 +7,7 @@ const steps = [
   {
     number: "01",
     title: "We fly",
-    description: "DJI drones capture your location from multiple angles — wide shots, close-ups, different heights.",
+    description: "Our drones capture your location from multiple angles — wide shots, close-ups, different heights.",
   },
   {
     number: "02",

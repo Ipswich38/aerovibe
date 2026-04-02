@@ -28,7 +28,7 @@ export default function DroneShowcase() {
               className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.1]"
               style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
             >
-              Powered by <span className="text-av-red">DJI</span>
+              Professional Aerial Gear
             </h2>
           </div>
         </ScrollReveal>
@@ -38,28 +38,26 @@ export default function DroneShowcase() {
           className="rounded-xl inner-glow bg-av-surface border border-av-border-light overflow-hidden"
         >
           <div className="grid grid-cols-1 md:grid-cols-2">
-            {/* Specs */}
+            {/* Capabilities */}
             <div className="p-8 md:p-12 flex flex-col justify-center">
-              <span className="label-mono text-av-muted mb-3">Primary Drone</span>
+              <span className="label-mono text-av-muted mb-3">Current Fleet</span>
               <h3
                 className="text-2xl md:text-3xl mb-4"
                 style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
               >
-                DJI Neo 2
+                DJI Drones
               </h3>
               <p className="text-sm text-av-muted leading-relaxed mb-8">
-                Ultra-compact, incredibly capable. 4K stabilized video with
-                intelligent flight modes — the perfect tool for aerial content.
+                Cinema-grade aerial cameras with stabilized 4K video and
+                intelligent flight modes — built for stunning content.
               </p>
 
               <div className="grid grid-cols-2 gap-4">
                 {[
                   { value: "4K", label: "Video" },
-                  { value: "3.3×", label: "Slow Motion" },
-                  { value: "136g", label: "Ultralight" },
-                  { value: "18min", label: "Flight Time" },
-                  { value: "6", label: "QuickShots" },
-                  { value: "3-Axis", label: "Stabilization" },
+                  { value: "Stabilized", label: "Gimbal" },
+                  { value: "Smart", label: "Flight Modes" },
+                  { value: "Compact", label: "Form Factor" },
                 ].map((spec) => (
                   <div
                     key={spec.label}
