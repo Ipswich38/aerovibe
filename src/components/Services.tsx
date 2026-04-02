@@ -3,7 +3,13 @@
 import { motion } from "framer-motion";
 import ScrollReveal from "./ScrollReveal";
 
-const categories = [
+interface ServiceCategory {
+  label: string;
+  coming_soon?: boolean;
+  services: { icon: string; title: string; description: string; tags: string[] }[];
+}
+
+const categories: ServiceCategory[] = [
   {
     label: "Content & Creative",
     services: [
@@ -51,7 +57,8 @@ const categories = [
     ],
   },
   {
-    label: "Mapping & Technical",
+    label: "Mapping & Technical — Coming Soon",
+    coming_soon: true,
     services: [
       {
         icon: "🗺️",
@@ -123,9 +130,13 @@ export default function Services() {
                 {cat.services.map((s, i) => (
                   <ScrollReveal key={i} delay={ci * 0.05 + i * 0.08}>
                     <motion.div
-                      whileHover={{ y: -3 }}
+                      whileHover={cat.coming_soon ? {} : { y: -3 }}
                       transition={{ duration: 0.2 }}
-                      className="group p-6 rounded-xl border border-av-border bg-white hover:shadow-lg transition-shadow duration-300 h-full"
+                      className={`group p-6 rounded-xl border h-full ${
+                        cat.coming_soon
+                          ? "border-dashed border-av-border bg-gray-50/60 opacity-60"
+                          : "border-av-border bg-white hover:shadow-lg transition-shadow duration-300"
+                      }`}
                     >
                       <div className="text-2xl mb-4">{s.icon}</div>
                       <h3

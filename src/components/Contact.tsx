@@ -17,7 +17,7 @@ export default function Contact() {
                 Let&apos;s shoot
               </h2>
               <p className="text-sm text-av-muted leading-relaxed mb-10 max-w-md">
-                Need aerial content, 3D mapping, or site documentation?
+                Need aerial content, event coverage, or commercial shoots?
                 Drop us a message — we&apos;ll handle the rest.
               </p>
 
@@ -89,8 +89,8 @@ export default function Contact() {
                   <option value="commercial">Commercial / Business</option>
                   <option value="construction">Construction Progress</option>
                   <option value="inspection">Site Inspection</option>
-                  <option value="3d-mapping">3D Mapping / Photogrammetry</option>
-                  <option value="survey">Land Survey / Terrain</option>
+                  <option value="3d-mapping">3D Mapping / Photogrammetry (Coming Soon)</option>
+                  <option value="survey">Land Survey / Terrain (Coming Soon)</option>
                   <option value="other">Other</option>
                 </select>
               </div>
