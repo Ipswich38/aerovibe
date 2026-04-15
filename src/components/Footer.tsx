@@ -3,15 +3,14 @@ export default function Footer() {
     <footer className="dark-section border-t border-av-border-light">
       <div className="max-w-[1200px] mx-auto px-6 py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col items-center md:items-start gap-1">
             <img
               src="/images/logo.png"
               alt="waevpoint2740"
               className="h-16 w-auto"
             />
-            <span className="text-av-border-light">&middot;</span>
-            <span className="text-[11px] text-av-muted uppercase tracking-wider">
-              Breaking Boundaries from a New Vantage Point
+            <span className="text-[11px] italic text-av-muted lowercase tracking-wide">
+              breaking boundaries from a new vantage point
             </span>
           </div>
 
