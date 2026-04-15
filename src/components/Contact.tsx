@@ -31,7 +31,7 @@ export default function Contact() {
                 className="text-[clamp(2.2rem,5vw,3.5rem)] leading-[1.1] text-white mb-5"
                 style={{ fontFamily: "'League Spartan', sans-serif", fontWeight: 700 }}
               >
-                Tara, let&apos;s shoot.
+                Tara, let&apos;s capture the moment!
               </h2>
               <p className="text-base text-white/60 leading-relaxed mb-10 max-w-md">
                 Have a project in mind? Or just curious how drone content could
