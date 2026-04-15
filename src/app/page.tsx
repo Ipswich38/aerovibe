@@ -1,5 +1,6 @@
 import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
+import WhyUs from "@/components/WhyUs";
 import Work from "@/components/Work";
 import Services from "@/components/Services";
 import DroneShowcase from "@/components/DroneShowcase";
@@ -13,6 +14,7 @@ export default function Home() {
     <main>
       <Navigation />
       <Hero />
+      <WhyUs />
       <Work />
       <Services />
       <DroneShowcase />

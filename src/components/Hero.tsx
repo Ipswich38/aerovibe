@@ -26,48 +26,42 @@ export default function Hero() {
             type="video/mp4"
           />
         </video>
-        {/* Dark overlay for readability */}
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-black/65" />
       </div>
 
       {/* Content */}
       <div className="relative z-10 max-w-[1200px] mx-auto px-6 pt-32 pb-28 md:pt-40 md:pb-36 min-h-screen flex flex-col justify-center">
         <div className="max-w-2xl">
-          <motion.div {...fadeUp(0.1)} className="mb-6">
-            <span className="label-mono text-av-muted">Aerial Content &middot; Events &middot; Commercial</span>
-          </motion.div>
-
           <motion.h1
             {...fadeUp(0.2)}
-            className="text-[clamp(2.5rem,6vw,4rem)] leading-[1.1] mb-6"
+            className="text-[clamp(2.8rem,7vw,5rem)] leading-[1.05] mb-6"
             style={{
-              fontFamily: "var(--font-sans)",
-              fontWeight: 600,
+              fontFamily: "'League Spartan', sans-serif",
+              fontWeight: 800,
               textWrap: "balance",
             }}
           >
-            Drone shots that hit{" "}
-            <span className="text-av-red">different</span>
+            Come see your world{" "}
+            <span className="text-cyan-400">from the clouds.</span>
           </motion.h1>
 
           <motion.p
             {...fadeUp(0.35)}
-            className="text-[clamp(1rem,2vw,1.25rem)] text-av-light leading-relaxed mb-10 max-w-lg"
-            style={{ textWrap: "balance" }}
+            className="text-[clamp(0.95rem,1.8vw,1.1rem)] text-av-light/70 leading-relaxed mb-10 max-w-lg"
           >
-            From cinematic aerial footage to event coverage — we handle the
-            flight, the edit, and the delivery.
+            Simple, stunning perspectives for your next project.
+            We handle the flight, you enjoy the view.
           </motion.p>
 
           <motion.div {...fadeUp(0.5)} className="flex flex-wrap gap-3">
-            <a href="#contact" className="btn-red">
-              Book a Shoot
+            <a href="#pricing" className="btn-cyan">
+              See Our Rates
               <svg className="btn-arrow" viewBox="0 0 12 12" fill="none">
                 <path d="M2 6h8m0 0L7 3m3 3L7 9" stroke="currentColor" strokeWidth="1.5" />
               </svg>
             </a>
             <a href="#work" className="btn-dark">
-              See Our Work
+              Watch Sample Work
               <svg className="btn-arrow" viewBox="0 0 12 12" fill="none">
                 <path d="M2 6h8m0 0L7 3m3 3L7 9" stroke="currentColor" strokeWidth="1.5" />
               </svg>
@@ -75,16 +69,16 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Stats */}
+        {/* Value props — not vanity stats */}
         <motion.div
           {...fadeUp(0.65)}
           className="mt-auto pt-16 flex flex-wrap gap-10 md:gap-16 border-t border-av-border-light"
         >
           {[
-            { value: "4K", label: "Resolution" },
-            { value: "9:16", label: "Reels Ready" },
-            { value: "Multi-Format", label: "Delivery" },
-            { value: "< 24h", label: "Turnaround" },
+            { value: "Edited", label: "Not just raw footage" },
+            { value: "Same-day", label: "Delivery via AirDrop" },
+            { value: "No hidden fees", label: "What we quote is what you pay" },
+            { value: "Your format", label: "Reels, landscape, both" },
           ].map((s) => (
             <div key={s.label} className="pt-6">
               <div className="text-lg font-semibold text-av-text">

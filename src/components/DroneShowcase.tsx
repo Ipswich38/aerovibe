@@ -23,12 +23,11 @@ export default function DroneShowcase() {
       <div className="max-w-[1200px] mx-auto px-6">
         <ScrollReveal>
           <div className="text-center mb-14">
-            <span className="label-mono text-av-muted block mb-4">Equipment</span>
             <h2
-              className="text-[clamp(2rem,4vw,2.8rem)] leading-[1.1]"
-              style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
+              className="text-[clamp(2.2rem,5vw,3.5rem)] leading-[1.1]"
+              style={{ fontFamily: "'League Spartan', sans-serif", fontWeight: 700 }}
             >
-              Professional Aerial Gear
+              DJI Mini 5 Pro
             </h2>
           </div>
         </ScrollReveal>
@@ -38,26 +37,29 @@ export default function DroneShowcase() {
           className="rounded-xl inner-glow bg-av-surface border border-av-border-light overflow-hidden"
         >
           <div className="grid grid-cols-1 md:grid-cols-2">
-            {/* Capabilities */}
+            {/* Specs */}
             <div className="p-8 md:p-12 flex flex-col justify-center">
-              <span className="label-mono text-av-muted mb-3">Current Fleet</span>
+              <span className="label-mono text-cyan-400/60 mb-3">Our Gear</span>
               <h3
-                className="text-2xl md:text-3xl mb-4"
+                className="text-2xl md:text-3xl mb-2"
                 style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
               >
-                DJI Drones
+                DJI Mini 5 Pro
               </h3>
               <p className="text-sm text-av-muted leading-relaxed mb-8">
-                Cinema-grade aerial cameras with stabilized 4K video and
-                intelligent flight modes — built for stunning content.
+                Pro-level aerial camera in an ultra-portable body. 4K HDR video,
+                48MP photos, omnidirectional obstacle sensing — everything we
+                need to capture stunning content for you.
               </p>
 
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { value: "4K", label: "Video" },
-                  { value: "Stabilized", label: "Gimbal" },
-                  { value: "Smart", label: "Flight Modes" },
-                  { value: "Compact", label: "Form Factor" },
+                  { value: "4K HDR", label: "Video" },
+                  { value: "48MP", label: "Photos" },
+                  { value: "34 min", label: "Flight Time" },
+                  { value: "< 249g", label: "Ultralight" },
+                  { value: "ActiveTrack", label: "Subject Tracking" },
+                  { value: "O4", label: "Transmission" },
                 ].map((spec) => (
                   <div
                     key={spec.label}
@@ -74,31 +76,16 @@ export default function DroneShowcase() {
               </div>
             </div>
 
-            {/* Visual */}
-            <div className="relative min-h-[300px] md:min-h-[450px] bg-av-elevated flex items-center justify-center">
-              <motion.div
-                animate={{ y: [0, -8, 0], rotateZ: [0, 0.5, 0, -0.5, 0] }}
-                transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              >
-                <svg
-                  width="160"
-                  height="160"
-                  viewBox="0 0 200 200"
-                  fill="none"
-                  className="text-av-text/10"
-                >
-                  <rect x="80" y="85" width="40" height="30" rx="6" fill="currentColor" />
-                  <line x1="85" y1="95" x2="40" y2="60" stroke="currentColor" strokeWidth="3" />
-                  <line x1="115" y1="95" x2="160" y2="60" stroke="currentColor" strokeWidth="3" />
-                  <line x1="85" y1="105" x2="40" y2="140" stroke="currentColor" strokeWidth="3" />
-                  <line x1="115" y1="105" x2="160" y2="140" stroke="currentColor" strokeWidth="3" />
-                  <circle cx="40" cy="60" r="22" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 4" />
-                  <circle cx="160" cy="60" r="22" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 4" />
-                  <circle cx="40" cy="140" r="22" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 4" />
-                  <circle cx="160" cy="140" r="22" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 4" />
-                  <circle cx="100" cy="120" r="5" fill="currentColor" />
-                </svg>
-              </motion.div>
+            {/* YouTube embed */}
+            <div className="relative min-h-[300px] md:min-h-[450px] bg-av-elevated">
+              <iframe
+                src="https://www.youtube.com/embed/jRzpagPx6uY?autoplay=1&mute=0&rel=0&modestbranding=1&playsinline=1"
+                title="DJI Mini 5 Pro"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full"
+                style={{ border: "none" }}
+              />
             </div>
           </div>
         </motion.div>

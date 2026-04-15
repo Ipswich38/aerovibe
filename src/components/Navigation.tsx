@@ -13,9 +13,9 @@ export default function Navigation() {
   }, []);
 
   const links = [
+    { href: "#why", label: "Why Us" },
     { href: "#work", label: "Work" },
     { href: "#services", label: "Services" },
-    { href: "#process", label: "Process" },
     { href: "#pricing", label: "Pricing" },
   ];
 
@@ -27,14 +27,13 @@ export default function Navigation() {
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-[1200px] mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-1.5">
-          <span
-            className="text-[15px] font-semibold tracking-tight text-av-text"
-            style={{ fontFamily: "var(--font-sans)" }}
-          >
-            aero<span className="text-av-red">vibe</span>
-          </span>
+      <div className="max-w-[1200px] mx-auto px-6 py-3 flex items-center justify-between">
+        <a href="#" className="flex items-center gap-2">
+          <img
+            src="/images/logo.png"
+            alt="waevpoint2740"
+            className="h-20 md:h-24 w-auto"
+          />
         </a>
 
         {/* Desktop */}
@@ -49,8 +48,8 @@ export default function Navigation() {
               {l.label}
             </a>
           ))}
-          <a href="#contact" className="btn-red">
-            Book a Shoot
+          <a href="#contact" className="btn-cyan">
+            Get a Quote
             <svg className="btn-arrow" viewBox="0 0 12 12" fill="none">
               <path d="M2 6h8m0 0L7 3m3 3L7 9" stroke="currentColor" strokeWidth="1.5" />
             </svg>
@@ -82,8 +81,8 @@ export default function Navigation() {
               {l.label}
             </a>
           ))}
-          <a href="#contact" onClick={() => setMenuOpen(false)} className="btn-red w-fit">
-            Book a Shoot
+          <a href="#contact" onClick={() => setMenuOpen(false)} className="btn-cyan w-fit">
+            Get a Quote
           </a>
         </div>
       )}
