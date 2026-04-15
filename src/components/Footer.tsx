@@ -11,7 +11,7 @@ export default function Footer() {
             />
             <span className="text-av-border-light">&middot;</span>
             <span className="text-[11px] text-av-muted uppercase tracking-wider">
-              Drone content, delivered
+              Breaking Boundaries from a New Vantage Point
             </span>
           </div>
 
