@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function InboxRedirect() {
+export default function OpsIndex() {
   redirect("/ops/inbox");
 }

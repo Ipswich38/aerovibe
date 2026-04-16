@@ -92,6 +92,35 @@ View and reply in inbox: https://waevpoint.quest/inbox`;
   }
 }
 
+async function upsertContact(name: string, contact: string): Promise<string | null> {
+  const isEmail = contact.includes("@");
+  const email = isEmail ? contact.toLowerCase() : null;
+  const phone = isEmail ? null : contact;
+
+  // Try to find existing contact first.
+  const lookup = email
+    ? supabaseAdmin.from("contacts").select("id").ilike("email", email).maybeSingle()
+    : supabaseAdmin.from("contacts").select("id").eq("phone", phone).maybeSingle();
+
+  const { data: existing, error: findErr } = await lookup;
+  if (findErr) {
+    console.warn("Contact lookup failed (table may not be migrated yet):", findErr.message);
+    return null;
+  }
+  if (existing?.id) return existing.id;
+
+  const { data: inserted, error: insertErr } = await supabaseAdmin
+    .from("contacts")
+    .insert({ name, email, phone })
+    .select("id")
+    .single();
+  if (insertErr) {
+    console.warn("Contact insert failed:", insertErr.message);
+    return null;
+  }
+  return inserted?.id ?? null;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -108,7 +137,11 @@ export async function POST(req: NextRequest) {
       message: message.trim(),
     };
 
-    const { error } = await supabaseAdmin.from("waevpoint_messages").insert(payload);
+    const contactId = await upsertContact(payload.name, payload.contact);
+
+    const { error } = await supabaseAdmin
+      .from("waevpoint_messages")
+      .insert({ ...payload, contact_id: contactId });
 
     if (error) {
       console.error("Supabase insert error:", error);
