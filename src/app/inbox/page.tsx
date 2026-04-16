@@ -83,8 +83,8 @@ export default function InboxPage() {
   function openReply(msg: Message) {
     setShowReply(true);
     setReplySuccess("");
-    setReplySubject(`Re: Your inquiry — ${SERVICE_LABELS[msg.service_type || ""] || "waevpoint2740"}`);
-    setReplyBody(`Hi ${msg.name.split(" ")[0]},\n\nThank you for reaching out!\n\n\n\nBest,\nwaevpoint2740`);
+    setReplySubject(`Re: Your inquiry — ${SERVICE_LABELS[msg.service_type || ""] || "waevpoint"}`);
+    setReplyBody(`Hi ${msg.name.split(" ")[0]},\n\nThank you for reaching out!\n\n\n\nBest,\nwaevpoint`);
   }
 
   async function sendReply() {

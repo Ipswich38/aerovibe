@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: { email: "hello@waevpoint.quest", name: "waevpoint2740" },
+      from: { email: "hello@waevpoint.quest", name: "waevpoint" },
       to: [{ email: to }],
       subject,
       text: body,
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/\n/g, "<br>")
-        + '<br><br><p style="color:#888;font-size:12px;">— waevpoint2740 · <a href="https://waevpoint.quest">waevpoint.quest</a></p>',
+        + '<br><br><p style="color:#888;font-size:12px;">— waevpoint · <a href="https://waevpoint.quest">waevpoint.quest</a></p>',
     }),
   });
 
