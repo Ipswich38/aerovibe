@@ -14,6 +14,7 @@ import { OpsContext } from "./OpsContext";
 
 const MODULES = [
   { href: "/ops/inbox", label: "Inbox", icon: "✉" },
+  { href: "/ops/leads", label: "Leads", icon: "⌕" },
   { href: "/ops/clients", label: "Clients", icon: "◉" },
   { href: "/ops/invoices", label: "Invoices", icon: "₱" },
   { href: "/ops/contracts", label: "Contracts", icon: "✎" },
