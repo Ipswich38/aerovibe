@@ -40,6 +40,11 @@ export default function InboxPage() {
   const [selected, setSelected] = useState<Message | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showReply, setShowReply] = useState(false);
+  const [replyBody, setReplyBody] = useState("");
+  const [replySubject, setReplySubject] = useState("");
+  const [replySending, setReplySending] = useState(false);
+  const [replySuccess, setReplySuccess] = useState("");
 
   const fetchMessages = useCallback(async (t: string, statusFilter?: string) => {
     setLoading(true);
@@ -72,6 +77,47 @@ export default function InboxPage() {
     fetchMessages(token, filter);
     if (selected?.id === id) {
       setSelected((prev) => prev ? { ...prev, ...data } as Message : null);
+    }
+  }
+
+  function openReply(msg: Message) {
+    setShowReply(true);
+    setReplySuccess("");
+    setReplySubject(`Re: Your inquiry — ${SERVICE_LABELS[msg.service_type || ""] || "waevpoint2740"}`);
+    setReplyBody(`Hi ${msg.name.split(" ")[0]},\n\nThank you for reaching out!\n\n\n\nBest,\nwaevpoint2740`);
+  }
+
+  async function sendReply() {
+    if (!selected || !replyBody.trim()) return;
+    if (!selected.contact.includes("@")) {
+      setReplySuccess("This contact has no email — reply via phone instead.");
+      return;
+    }
+    setReplySending(true);
+    setReplySuccess("");
+    try {
+      const res = await fetch("/api/reply", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messageId: selected.id,
+          to: selected.contact,
+          subject: replySubject,
+          body: replyBody,
+        }),
+      });
+      if (!res.ok) throw new Error("Send failed");
+      setReplySuccess("Reply sent!");
+      setShowReply(false);
+      fetchMessages(token, filter);
+      setSelected((prev) => prev ? { ...prev, status: "replied", replied_at: new Date().toISOString() } as Message : null);
+    } catch {
+      setReplySuccess("Failed to send reply. Try again.");
+    } finally {
+      setReplySending(false);
     }
   }
 
@@ -199,10 +245,16 @@ export default function InboxPage() {
                     <span className={`text-xs px-3 py-1 rounded-full ${STATUS_COLORS[selected.status]}`}>
                       {selected.status}
                     </span>
+                    <button
+                      onClick={() => openReply(selected)}
+                      className="text-xs px-3 py-1 rounded-full bg-cyan-400/20 text-cyan-400 hover:bg-cyan-400/30 transition-colors"
+                    >
+                      Reply
+                    </button>
                     {selected.status !== "replied" && (
                       <button
                         onClick={() => updateMessage(selected.id, { status: "replied" })}
-                        className="text-xs px-3 py-1 rounded-full bg-green-400/20 text-green-400 hover:bg-green-400/30 transition-colors"
+                        className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/40 hover:bg-white/15 transition-colors"
                       >
                         Mark replied
                       </button>
@@ -228,6 +280,43 @@ export default function InboxPage() {
                 <div className="bg-white/[0.03] border border-white/10 rounded-xl p-6 mb-6">
                   <p className="text-white/80 leading-relaxed whitespace-pre-wrap">{selected.message}</p>
                 </div>
+
+                {replySuccess && (
+                  <p className={`text-sm mb-4 ${replySuccess.includes("sent") ? "text-green-400" : "text-amber-400"}`}>
+                    {replySuccess}
+                  </p>
+                )}
+
+                {showReply && (
+                  <div className="bg-white/[0.03] border border-cyan-400/20 rounded-xl p-6 mb-6 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-white/40">
+                        Replying to <span className="text-white/70">{selected.contact}</span> as <span className="text-cyan-400">hello@waevpoint.quest</span>
+                      </span>
+                      <button onClick={() => setShowReply(false)} className="text-xs text-white/30 hover:text-white/60">Cancel</button>
+                    </div>
+                    <input
+                      type="text"
+                      value={replySubject}
+                      onChange={(e) => setReplySubject(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white text-sm outline-none focus:border-cyan-400/50"
+                      placeholder="Subject"
+                    />
+                    <textarea
+                      rows={8}
+                      value={replyBody}
+                      onChange={(e) => setReplyBody(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white/80 text-sm outline-none resize-y focus:border-cyan-400/50 leading-relaxed"
+                    />
+                    <button
+                      onClick={sendReply}
+                      disabled={replySending || !replyBody.trim()}
+                      className="bg-cyan-500 text-black font-medium rounded-lg px-5 py-2 text-sm hover:bg-cyan-400 transition-colors disabled:opacity-50"
+                    >
+                      {replySending ? "Sending..." : "Send Reply"}
+                    </button>
+                  </div>
+                )}
 
                 <div>
                   <label className="text-[11px] text-white/40 uppercase tracking-wider block mb-2">
