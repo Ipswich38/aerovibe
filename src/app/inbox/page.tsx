@@ -25,11 +25,15 @@ const SERVICE_LABELS: Record<string, string> = {
   other: "Other",
 };
 
-const STATUS_COLORS: Record<string, string> = {
-  unread: "bg-cyan-400/20 text-cyan-400",
-  read: "bg-white/10 text-white/50",
-  replied: "bg-green-400/20 text-green-400",
-};
+const FOLDERS: { key: string; label: string; icon: string }[] = [
+  { key: "all", label: "All", icon: "✉" },
+  { key: "unread", label: "Unread", icon: "●" },
+  { key: "read", label: "Read", icon: "○" },
+  { key: "replied", label: "Replied", icon: "↩" },
+];
+
+const SYSTEM_FONT =
+  "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 
 export default function InboxPage() {
   const [password, setPassword] = useState("");
@@ -37,6 +41,7 @@ export default function InboxPage() {
   const [token, setToken] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [filter, setFilter] = useState<string>("all");
+  const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Message | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -76,7 +81,7 @@ export default function InboxPage() {
     });
     fetchMessages(token, filter);
     if (selected?.id === id) {
-      setSelected((prev) => prev ? { ...prev, ...data } as Message : null);
+      setSelected((prev) => (prev ? ({ ...prev, ...data } as Message) : null));
     }
   }
 
@@ -113,7 +118,9 @@ export default function InboxPage() {
       setReplySuccess("Reply sent!");
       setShowReply(false);
       fetchMessages(token, filter);
-      setSelected((prev) => prev ? { ...prev, status: "replied", replied_at: new Date().toISOString() } as Message : null);
+      setSelected((prev) =>
+        prev ? ({ ...prev, status: "replied", replied_at: new Date().toISOString() } as Message) : null,
+      );
     } catch {
       setReplySuccess("Failed to send reply. Try again.");
     } finally {
@@ -128,32 +135,73 @@ export default function InboxPage() {
     setPassword("");
   }
 
-  function timeAgo(dateStr: string): string {
-    const diff = Date.now() - new Date(dateStr).getTime();
-    const mins = Math.floor(diff / 60000);
-    if (mins < 1) return "just now";
-    if (mins < 60) return `${mins}m ago`;
-    const hrs = Math.floor(mins / 60);
-    if (hrs < 24) return `${hrs}h ago`;
-    const days = Math.floor(hrs / 24);
-    return `${days}d ago`;
+  function timeShort(dateStr: string): string {
+    const d = new Date(dateStr);
+    const now = new Date();
+    const sameDay = d.toDateString() === now.toDateString();
+    if (sameDay) {
+      return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+    }
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
+    const diffDays = Math.floor((now.getTime() - d.getTime()) / 86400000);
+    if (diffDays < 7) return d.toLocaleDateString("en-US", { weekday: "short" });
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   }
+
+  function avatar(name: string) {
+    const initials = name
+      .split(/\s+/)
+      .map((n) => n[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
+    const colors = ["#3b82f6", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6", "#06b6d4", "#ef4444"];
+    const hash = [...name].reduce((a, c) => a + c.charCodeAt(0), 0);
+    return { initials, color: colors[hash % colors.length] };
+  }
+
+  const counts = {
+    all: messages.length,
+    unread: messages.filter((m) => m.status === "unread").length,
+    read: messages.filter((m) => m.status === "read").length,
+    replied: messages.filter((m) => m.status === "replied").length,
+  };
+
+  const filteredMessages = search.trim()
+    ? messages.filter((m) => {
+        const q = search.toLowerCase();
+        return (
+          m.name.toLowerCase().includes(q) ||
+          m.contact.toLowerCase().includes(q) ||
+          m.message.toLowerCase().includes(q)
+        );
+      })
+    : messages;
 
   if (!authed) {
     return (
-      <div className="min-h-screen bg-neutral-950 flex items-center justify-center px-6">
-        <form onSubmit={handleLogin} className="w-full max-w-sm space-y-4">
-          <h1 className="text-white text-2xl font-semibold text-center mb-6">Inbox</h1>
+      <div
+        className="min-h-screen flex items-center justify-center px-6"
+        style={{ background: "#1c1c1e", fontFamily: SYSTEM_FONT }}
+      >
+        <form onSubmit={handleLogin} className="w-full max-w-xs space-y-3">
+          <h1 className="text-white text-base font-medium text-center mb-4">Inbox</h1>
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             autoFocus
-            className="w-full bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white text-sm outline-none focus:border-cyan-400/50"
+            className="w-full bg-white/5 border border-white/10 rounded-md px-3 py-2 text-white text-[13px] outline-none focus:border-cyan-400/50"
           />
-          <button type="submit" className="w-full bg-cyan-500 text-black font-medium rounded-lg py-3 text-sm hover:bg-cyan-400 transition-colors">
-            Enter
+          <button
+            type="submit"
+            className="w-full bg-cyan-500 text-black font-medium rounded-md py-2 text-[13px] hover:bg-cyan-400 transition-colors"
+          >
+            Sign in
           </button>
         </form>
       </div>
@@ -161,180 +209,275 @@ export default function InboxPage() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white">
-      <header className="border-b border-white/10 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <a href="/" className="text-cyan-400 text-sm hover:text-cyan-300">← Site</a>
-          <h1 className="text-lg font-semibold">waevpoint2740 Inbox</h1>
-          <span className="text-xs text-white/30">{messages.length} messages</span>
+    <div className="h-screen flex flex-col text-white" style={{ background: "#1c1c1e", fontFamily: SYSTEM_FONT }}>
+      {/* Top toolbar */}
+      <header className="h-11 flex items-center justify-between px-3 border-b border-white/[0.08] bg-[#2c2c2e]">
+        <div className="flex items-center gap-3">
+          <a href="/" className="text-white/40 hover:text-white text-[12px]">←</a>
+          <span className="text-[13px] font-semibold">waevpoint</span>
+          <span className="text-[11px] text-white/30">Inbox</span>
         </div>
-        <div className="flex items-center gap-2">
-          {["all", "unread", "read", "replied"].map((s) => (
-            <button
-              key={s}
-              onClick={() => { setFilter(s); setSelected(null); }}
-              className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
-                filter === s ? "bg-cyan-400/20 text-cyan-400" : "text-white/40 hover:text-white/70"
-              }`}
-            >
-              {s}
-            </button>
-          ))}
+        <div className="relative">
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search"
+            className="w-56 bg-white/[0.08] rounded-md pl-7 pr-3 py-1 text-[12px] text-white outline-none placeholder:text-white/30 focus:bg-white/[0.12]"
+          />
+          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30 text-[10px]">⌕</span>
         </div>
       </header>
 
-      {error && <div className="bg-red-500/10 text-red-400 text-sm px-6 py-2">{error}</div>}
+      {error && <div className="bg-red-500/10 text-red-400 text-[11px] px-3 py-1">{error}</div>}
 
-      <div className="flex h-[calc(100vh-65px)]">
-        {/* Message list */}
-        <div className="w-full md:w-[380px] border-r border-white/10 overflow-y-auto">
-          {loading ? (
-            <p className="text-white/30 text-sm text-center py-10">Loading...</p>
-          ) : messages.length === 0 ? (
-            <p className="text-white/30 text-sm text-center py-10">No messages</p>
-          ) : (
-            messages.map((msg) => (
-              <button
-                key={msg.id}
-                onClick={() => {
-                  setSelected(msg);
-                  if (msg.status === "unread") updateMessage(msg.id, { status: "read" });
-                }}
-                className={`w-full text-left px-5 py-4 border-b border-white/5 hover:bg-white/[0.03] transition-colors ${
-                  selected?.id === msg.id ? "bg-white/[0.05]" : ""
-                } ${msg.status === "unread" ? "border-l-2 border-l-cyan-400" : "border-l-2 border-l-transparent"}`}
-              >
-                <div className="flex items-center justify-between mb-1">
-                  <span className={`text-sm font-medium ${msg.status === "unread" ? "text-white" : "text-white/70"}`}>
-                    {msg.name}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <aside className="w-44 border-r border-white/[0.06] bg-[#252527] flex flex-col">
+          <nav className="py-2">
+            {FOLDERS.map((f) => {
+              const count = counts[f.key as keyof typeof counts];
+              const active = filter === f.key;
+              return (
+                <button
+                  key={f.key}
+                  onClick={() => {
+                    setFilter(f.key);
+                    setSelected(null);
+                  }}
+                  className={`w-full flex items-center justify-between px-3 py-1.5 text-[12px] transition-colors ${
+                    active ? "bg-white/[0.08] text-white" : "text-white/60 hover:bg-white/[0.04]"
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="text-white/30 w-3 text-center text-[10px]">{f.icon}</span>
+                    <span>{f.label}</span>
                   </span>
-                  <span className="text-[11px] text-white/30">{timeAgo(msg.created_at)}</span>
-                </div>
-                <div className="flex items-center gap-2 mb-1">
-                  {msg.service_type && (
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">
-                      {SERVICE_LABELS[msg.service_type] || msg.service_type}
-                    </span>
+                  {count > 0 && (
+                    <span className={`text-[10px] ${active ? "text-white/70" : "text-white/30"}`}>{count}</span>
                   )}
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full ${STATUS_COLORS[msg.status]}`}>
-                    {msg.status}
-                  </span>
-                </div>
-                <p className="text-xs text-white/40 truncate">{msg.message}</p>
-              </button>
-            ))
+                </button>
+              );
+            })}
+          </nav>
+        </aside>
+
+        {/* Message list */}
+        <div className="w-[340px] border-r border-white/[0.06] overflow-y-auto bg-[#1f1f21]">
+          {loading ? (
+            <p className="text-white/30 text-[11px] text-center py-8">Loading…</p>
+          ) : filteredMessages.length === 0 ? (
+            <p className="text-white/30 text-[11px] text-center py-8">No messages</p>
+          ) : (
+            filteredMessages.map((msg) => {
+              const av = avatar(msg.name);
+              const isSelected = selected?.id === msg.id;
+              const isUnread = msg.status === "unread";
+              return (
+                <button
+                  key={msg.id}
+                  onClick={() => {
+                    setSelected(msg);
+                    setShowReply(false);
+                    setReplySuccess("");
+                    if (msg.status === "unread") updateMessage(msg.id, { status: "read" });
+                  }}
+                  className={`w-full text-left px-3 py-2 flex gap-2.5 border-b border-white/[0.04] transition-colors ${
+                    isSelected ? "bg-cyan-500/15" : "hover:bg-white/[0.03]"
+                  }`}
+                >
+                  <div className="shrink-0 mt-0.5 relative">
+                    <div
+                      className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-semibold text-white/90"
+                      style={{ background: av.color }}
+                    >
+                      {av.initials}
+                    </div>
+                    {isUnread && (
+                      <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-cyan-400 border border-[#1f1f21]" />
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <span className={`text-[13px] truncate ${isUnread ? "font-semibold text-white" : "text-white/80"}`}>
+                        {msg.name}
+                      </span>
+                      <span className="text-[10px] text-white/40 shrink-0">{timeShort(msg.created_at)}</span>
+                    </div>
+                    <div className={`text-[12px] truncate ${isUnread ? "text-white/85 font-medium" : "text-white/55"}`}>
+                      {msg.service_type
+                        ? SERVICE_LABELS[msg.service_type] || msg.service_type
+                        : "(No category)"}
+                    </div>
+                    <div className="text-[11px] text-white/40 truncate flex items-center gap-1.5">
+                      {msg.status === "replied" && <span className="text-green-400/80">↩</span>}
+                      <span className="truncate">{msg.message}</span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })
           )}
         </div>
 
         {/* Detail panel */}
-        <div className="hidden md:flex flex-1 flex-col">
+        <div className="flex-1 flex flex-col bg-[#1c1c1e] overflow-hidden">
           {selected ? (
-            <div className="p-8 overflow-y-auto flex-1">
-              <div className="max-w-2xl">
-                <div className="flex items-start justify-between mb-6">
-                  <div>
-                    <h2 className="text-xl font-semibold mb-1">{selected.name}</h2>
-                    <p className="text-sm text-white/50">{selected.contact}</p>
-                    {selected.service_type && (
-                      <span className="inline-block mt-2 text-xs px-3 py-1 rounded-full bg-white/5 text-white/60">
-                        {SERVICE_LABELS[selected.service_type] || selected.service_type}
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className={`text-xs px-3 py-1 rounded-full ${STATUS_COLORS[selected.status]}`}>
-                      {selected.status}
-                    </span>
+            <>
+              {/* Detail toolbar */}
+              <div className="h-10 px-4 flex items-center justify-between border-b border-white/[0.06]">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => openReply(selected)}
+                    className="flex items-center gap-1.5 text-[11px] text-white/80 hover:text-white px-2.5 py-1 rounded hover:bg-white/[0.06] transition-colors"
+                    title="Reply"
+                  >
+                    <span>↩</span>
+                    <span>Reply</span>
+                  </button>
+                  {selected.status !== "replied" && (
                     <button
-                      onClick={() => openReply(selected)}
-                      className="text-xs px-3 py-1 rounded-full bg-cyan-400/20 text-cyan-400 hover:bg-cyan-400/30 transition-colors"
+                      onClick={() => updateMessage(selected.id, { status: "replied" })}
+                      className="text-[11px] text-white/50 hover:text-white px-2.5 py-1 rounded hover:bg-white/[0.06] transition-colors"
                     >
-                      Reply
+                      Mark replied
                     </button>
-                    {selected.status !== "replied" && (
-                      <button
-                        onClick={() => updateMessage(selected.id, { status: "replied" })}
-                        className="text-xs px-3 py-1 rounded-full bg-white/10 text-white/40 hover:bg-white/15 transition-colors"
-                      >
-                        Mark replied
-                      </button>
-                    )}
-                  </div>
+                  )}
+                  {selected.status !== "unread" && (
+                    <button
+                      onClick={() => updateMessage(selected.id, { status: "unread" })}
+                      className="text-[11px] text-white/50 hover:text-white px-2.5 py-1 rounded hover:bg-white/[0.06] transition-colors"
+                    >
+                      Mark unread
+                    </button>
+                  )}
                 </div>
-
-                <div className="text-xs text-white/30 mb-4">
-                  {new Date(selected.created_at).toLocaleString("en-PH", {
-                    dateStyle: "long",
-                    timeStyle: "short",
-                  })}
-                  {selected.replied_at && (
-                    <span className="ml-3 text-green-400/60">
-                      Replied {new Date(selected.replied_at).toLocaleString("en-PH", {
-                        dateStyle: "medium",
-                        timeStyle: "short",
+                <div className="text-[11px] text-white/40">
+                  {selected.status === "replied" && selected.replied_at && (
+                    <span className="text-green-400/70">
+                      Replied {new Date(selected.replied_at).toLocaleString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        hour: "numeric",
+                        minute: "2-digit",
                       })}
                     </span>
                   )}
                 </div>
+              </div>
 
-                <div className="bg-white/[0.03] border border-white/10 rounded-xl p-6 mb-6">
-                  <p className="text-white/80 leading-relaxed whitespace-pre-wrap">{selected.message}</p>
-                </div>
-
-                {replySuccess && (
-                  <p className={`text-sm mb-4 ${replySuccess.includes("sent") ? "text-green-400" : "text-amber-400"}`}>
-                    {replySuccess}
-                  </p>
-                )}
-
-                {showReply && (
-                  <div className="bg-white/[0.03] border border-cyan-400/20 rounded-xl p-6 mb-6 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-white/40">
-                        Replying to <span className="text-white/70">{selected.contact}</span> as <span className="text-cyan-400">hello@waevpoint.quest</span>
-                      </span>
-                      <button onClick={() => setShowReply(false)} className="text-xs text-white/30 hover:text-white/60">Cancel</button>
+              <div className="flex-1 overflow-y-auto px-6 py-5">
+                <div className="max-w-3xl">
+                  {/* Header block */}
+                  <div className="mb-4">
+                    <h2 className="text-[16px] font-semibold mb-2">
+                      {selected.service_type
+                        ? `${SERVICE_LABELS[selected.service_type] || selected.service_type} inquiry`
+                        : "Inquiry"}
+                    </h2>
+                    <div className="flex items-start gap-3">
+                      <div
+                        className="w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-[11px] font-semibold text-white/95"
+                        style={{ background: avatar(selected.name).color }}
+                      >
+                        {avatar(selected.name).initials}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-[13px] font-semibold">{selected.name}</span>
+                          <span className="text-[11px] text-white/50">&lt;{selected.contact}&gt;</span>
+                        </div>
+                        <div className="text-[11px] text-white/40">
+                          to <span className="text-white/60">hello@waevpoint.quest</span>
+                          <span className="mx-1.5">·</span>
+                          {new Date(selected.created_at).toLocaleString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                            hour: "numeric",
+                            minute: "2-digit",
+                          })}
+                        </div>
+                      </div>
                     </div>
-                    <input
-                      type="text"
-                      value={replySubject}
-                      onChange={(e) => setReplySubject(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white text-sm outline-none focus:border-cyan-400/50"
-                      placeholder="Subject"
-                    />
-                    <textarea
-                      rows={8}
-                      value={replyBody}
-                      onChange={(e) => setReplyBody(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white/80 text-sm outline-none resize-y focus:border-cyan-400/50 leading-relaxed"
-                    />
-                    <button
-                      onClick={sendReply}
-                      disabled={replySending || !replyBody.trim()}
-                      className="bg-cyan-500 text-black font-medium rounded-lg px-5 py-2 text-sm hover:bg-cyan-400 transition-colors disabled:opacity-50"
-                    >
-                      {replySending ? "Sending..." : "Send Reply"}
-                    </button>
                   </div>
-                )}
 
-                <div>
-                  <label className="text-[11px] text-white/40 uppercase tracking-wider block mb-2">
-                    Internal notes
-                  </label>
-                  <textarea
-                    rows={3}
-                    defaultValue={selected.notes || ""}
-                    onBlur={(e) => updateMessage(selected.id, { notes: e.target.value })}
-                    placeholder="Add notes about this lead..."
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white/70 text-sm outline-none resize-none focus:border-cyan-400/50"
-                  />
+                  {/* Message body */}
+                  <div className="text-[13px] text-white/85 leading-[1.55] whitespace-pre-wrap mb-6">
+                    {selected.message}
+                  </div>
+
+                  {replySuccess && (
+                    <p
+                      className={`text-[12px] mb-4 ${
+                        replySuccess.includes("sent") ? "text-green-400" : "text-amber-400"
+                      }`}
+                    >
+                      {replySuccess}
+                    </p>
+                  )}
+
+                  {/* Reply composer */}
+                  {showReply && (
+                    <div className="mt-4 border border-white/[0.08] rounded-lg overflow-hidden bg-[#252527]">
+                      <div className="px-3 py-2 border-b border-white/[0.06] flex items-center justify-between">
+                        <span className="text-[11px] text-white/50">
+                          From <span className="text-cyan-400">waevpoint &lt;hello@waevpoint.quest&gt;</span> · To{" "}
+                          <span className="text-white/70">{selected.contact}</span>
+                        </span>
+                        <button
+                          onClick={() => setShowReply(false)}
+                          className="text-[11px] text-white/40 hover:text-white/70"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        value={replySubject}
+                        onChange={(e) => setReplySubject(e.target.value)}
+                        className="w-full bg-transparent border-b border-white/[0.06] px-3 py-2 text-[13px] text-white outline-none focus:bg-white/[0.02]"
+                        placeholder="Subject"
+                      />
+                      <textarea
+                        rows={9}
+                        value={replyBody}
+                        onChange={(e) => setReplyBody(e.target.value)}
+                        className="w-full bg-transparent px-3 py-2.5 text-[13px] text-white/90 outline-none resize-y leading-[1.55]"
+                      />
+                      <div className="px-3 py-2 border-t border-white/[0.06] flex items-center justify-between">
+                        <span className="text-[10px] text-white/30">⌘↵ to send</span>
+                        <button
+                          onClick={sendReply}
+                          disabled={replySending || !replyBody.trim()}
+                          className="bg-cyan-500 text-black font-medium rounded-md px-4 py-1.5 text-[12px] hover:bg-cyan-400 transition-colors disabled:opacity-50"
+                        >
+                          {replySending ? "Sending…" : "Send"}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Internal notes */}
+                  <div className="mt-8 pt-5 border-t border-white/[0.05]">
+                    <label className="text-[10px] text-white/40 uppercase tracking-wider block mb-1.5">
+                      Internal notes
+                    </label>
+                    <textarea
+                      rows={2}
+                      defaultValue={selected.notes || ""}
+                      onBlur={(e) => updateMessage(selected.id, { notes: e.target.value })}
+                      placeholder="Private notes about this lead…"
+                      className="w-full bg-white/[0.03] border border-white/[0.06] rounded px-2.5 py-2 text-white/70 text-[12px] outline-none resize-none focus:border-cyan-400/40 leading-[1.5]"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            </>
           ) : (
-            <div className="flex-1 flex items-center justify-center">
-              <p className="text-white/20 text-sm">Select a message</p>
+            <div className="flex-1 flex flex-col items-center justify-center text-center">
+              <div className="text-white/20 text-3xl mb-2">✉</div>
+              <p className="text-white/30 text-[12px]">Select a message to read</p>
             </div>
           )}
         </div>
