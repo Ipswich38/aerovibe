@@ -1,3 +1,4 @@
+import { randomBytes } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 
@@ -28,6 +29,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if ("location" in body) allowed.location = body.location?.trim() || null;
   if ("description" in body) allowed.description = body.description?.trim() || null;
   if ("notes" in body) allowed.notes = body.notes?.trim() || null;
+  if (body.generate_delivery_token) {
+    allowed.delivery_token = randomBytes(16).toString("hex");
+  }
   allowed.updated_at = new Date().toISOString();
 
   const { data, error } = await supabaseAdmin

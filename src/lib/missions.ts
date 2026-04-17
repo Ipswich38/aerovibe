@@ -2,7 +2,7 @@
 // Generates waypoint sequences for the signature shot types used in real estate,
 // wedding, commercial, and travel/lifestyle work.
 
-export type GeometryKind = "orbit" | "reveal" | "dolly" | "topdown" | "linear" | "grid";
+export type GeometryKind = "orbit" | "reveal" | "dolly" | "topdown" | "linear" | "grid" | "polygon_grid";
 
 export interface Waypoint {
   index: number;
@@ -141,6 +141,14 @@ export const MISSION_PRESETS: Preset[] = [
     description: "Nadir grid mission for orthomosaic output. Set altitude/overlap in planner.",
     defaults: { altitudeM: 60, distanceM: 80, pointCount: 0, speedMs: 4, gimbalPitch: -90, duration: 0 },
   },
+  {
+    key: "MAP-2",
+    label: "MAP-2 Polygon Survey (2D)",
+    category: "photogrammetry",
+    geometry: "polygon_grid",
+    description: "Draw a polygon boundary, auto-generates serpentine survey grid. Shows GSD, photo count, area.",
+    defaults: { altitudeM: 60, speedMs: 4, gimbalPitch: -90, duration: 0 },
+  },
 ];
 
 // Convert local offset (meters) → (lat, lng) offset at a given origin latitude.
@@ -174,8 +182,18 @@ export interface MissionInput {
   centerLat: number;
   centerLng: number;
   overrides?: Partial<PresetParams>;
-  // For linear/dolly, heading defines direction of travel (degrees, 0=N).
   heading?: number;
+  polygon?: { lat: number; lng: number }[];
+}
+
+export interface PhotogrammetryStats {
+  areaM2: number;
+  gsdCmPx: number;
+  photoCount: number;
+  flightLineCount: number;
+  estimatedPhotoIntervalM: number;
+  frontOverlap: number;
+  sideOverlap: number;
 }
 
 export interface GeneratedMission {
@@ -183,10 +201,10 @@ export interface GeneratedMission {
   params: PresetParams;
   center: { lat: number; lng: number };
   waypoints: Waypoint[];
-  // bounds for map preview
   bounds: { minLat: number; minLng: number; maxLat: number; maxLng: number };
   estimatedDurationSec: number;
   totalDistanceM: number;
+  photogrammetry?: PhotogrammetryStats;
 }
 
 function haversine(lat1: number, lng1: number, lat2: number, lng2: number): number {
@@ -370,6 +388,17 @@ export function generateMission(input: MissionInput): GeneratedMission {
       ]);
     }
 
+    case "polygon_grid": {
+      const poly = input.polygon;
+      if (!poly || poly.length < 3) {
+        return finalize(preset, p, center, []);
+      }
+      const pgResult = generatePolygonGrid(poly, p, input.heading ?? 0, centerLat, centerLng);
+      const mission = finalize(preset, p, center, pgResult.waypoints);
+      mission.photogrammetry = pgResult.stats;
+      return mission;
+    }
+
     case "grid": {
       // Serpentine grid centered on (centerLat, centerLng).
       // p.distanceM = side length of square area (m). p.altitudeM = altitude AGL.
@@ -420,6 +449,193 @@ export function generateMission(input: MissionInput): GeneratedMission {
       return finalize(preset, p, center, wps);
     }
   }
+}
+
+// ---- Polygon grid photogrammetry ----
+
+// DJI Mini 5 Pro sensor: 1-inch CMOS, 4:3 mode 5472x3648
+const SENSOR_WIDTH_MM = 13.2;
+const SENSOR_HEIGHT_MM = 8.8;
+const IMAGE_WIDTH_PX = 5472;
+const IMAGE_HEIGHT_PX = 3648;
+const DEFAULT_FOCAL_MM = 24;
+
+export function calcGsd(altitudeM: number, focalMm = DEFAULT_FOCAL_MM): number {
+  return (altitudeM * SENSOR_WIDTH_MM * 100) / (focalMm * IMAGE_WIDTH_PX);
+}
+
+function latLngToLocal(
+  lat: number,
+  lng: number,
+  refLat: number,
+  refLng: number,
+): { x: number; y: number } {
+  const METERS_PER_DEG_LAT = 111_320;
+  const metersPerDegLng = METERS_PER_DEG_LAT * Math.cos((refLat * Math.PI) / 180);
+  return {
+    x: (lng - refLng) * metersPerDegLng,
+    y: (lat - refLat) * METERS_PER_DEG_LAT,
+  };
+}
+
+function localToLatLng(
+  x: number,
+  y: number,
+  refLat: number,
+  refLng: number,
+): { lat: number; lng: number } {
+  const METERS_PER_DEG_LAT = 111_320;
+  const metersPerDegLng = METERS_PER_DEG_LAT * Math.cos((refLat * Math.PI) / 180);
+  return {
+    lat: refLat + y / METERS_PER_DEG_LAT,
+    lng: refLng + x / metersPerDegLng,
+  };
+}
+
+function polygonAreaM2(pts: { x: number; y: number }[]): number {
+  let area = 0;
+  for (let i = 0; i < pts.length; i++) {
+    const j = (i + 1) % pts.length;
+    area += pts[i].x * pts[j].y;
+    area -= pts[j].x * pts[i].y;
+  }
+  return Math.abs(area) / 2;
+}
+
+function lineIntersectsSegment(
+  scanY: number,
+  ax: number,
+  ay: number,
+  bx: number,
+  by: number,
+): number | null {
+  if ((ay <= scanY && by <= scanY) || (ay > scanY && by > scanY)) return null;
+  const t = (scanY - ay) / (by - ay);
+  return ax + t * (bx - ax);
+}
+
+function scanlineClip(
+  localPoly: { x: number; y: number }[],
+  scanY: number,
+): { xMin: number; xMax: number } | null {
+  const xs: number[] = [];
+  for (let i = 0; i < localPoly.length; i++) {
+    const j = (i + 1) % localPoly.length;
+    const ix = lineIntersectsSegment(scanY, localPoly[i].x, localPoly[i].y, localPoly[j].x, localPoly[j].y);
+    if (ix !== null) xs.push(ix);
+  }
+  if (xs.length < 2) return null;
+  xs.sort((a, b) => a - b);
+  return { xMin: xs[0], xMax: xs[xs.length - 1] };
+}
+
+function rotatePoints(
+  pts: { x: number; y: number }[],
+  angleDeg: number,
+): { x: number; y: number }[] {
+  const rad = (-angleDeg * Math.PI) / 180;
+  const cos = Math.cos(rad);
+  const sin = Math.sin(rad);
+  return pts.map((p) => ({
+    x: p.x * cos - p.y * sin,
+    y: p.x * sin + p.y * cos,
+  }));
+}
+
+function unrotatePoint(x: number, y: number, angleDeg: number): { x: number; y: number } {
+  const rad = (angleDeg * Math.PI) / 180;
+  const cos = Math.cos(rad);
+  const sin = Math.sin(rad);
+  return {
+    x: x * cos - y * sin,
+    y: x * sin + y * cos,
+  };
+}
+
+function generatePolygonGrid(
+  polygon: { lat: number; lng: number }[],
+  params: PresetParams,
+  headingDeg: number,
+  refLat: number,
+  refLng: number,
+): { waypoints: Waypoint[]; stats: PhotogrammetryStats } {
+  const frontOverlap = 0.80;
+  const sideOverlap = 0.70;
+
+  const gsd = calcGsd(params.altitudeM, DEFAULT_FOCAL_MM);
+  const footprintW = (gsd * IMAGE_WIDTH_PX) / 100;
+  const footprintH = (gsd * IMAGE_HEIGHT_PX) / 100;
+
+  const lineSpacing = footprintW * (1 - sideOverlap);
+  const photoInterval = footprintH * (1 - frontOverlap);
+
+  const localPoly = polygon.map((p) => latLngToLocal(p.lat, p.lng, refLat, refLng));
+  const areaM2 = polygonAreaM2(localPoly);
+
+  const rotated = rotatePoints(localPoly, headingDeg);
+  const ys = rotated.map((p) => p.y);
+  const yMin = Math.min(...ys);
+  const yMax = Math.max(...ys);
+
+  const wps: Waypoint[] = [];
+  let lineIdx = 0;
+  let photoCount = 0;
+
+  for (let y = yMin + lineSpacing / 2; y <= yMax; y += lineSpacing) {
+    const clip = scanlineClip(rotated, y);
+    if (!clip) continue;
+
+    const startX = clip.xMin;
+    const endX = clip.xMax;
+    const swap = lineIdx % 2 === 1;
+
+    const sx = swap ? endX : startX;
+    const ex = swap ? startX : endX;
+
+    const sWorld = unrotatePoint(sx, y, headingDeg);
+    const eWorld = unrotatePoint(ex, y, headingDeg);
+
+    const sGeo = localToLatLng(sWorld.x, sWorld.y, refLat, refLng);
+    const eGeo = localToLatLng(eWorld.x, eWorld.y, refLat, refLng);
+
+    wps.push({
+      index: wps.length + 1,
+      lat: sGeo.lat,
+      lng: sGeo.lng,
+      alt: params.altitudeM,
+      heading: headingDeg,
+      gimbalPitch: -90,
+      speed: params.speedMs,
+      action: "pass",
+    });
+    wps.push({
+      index: wps.length + 1,
+      lat: eGeo.lat,
+      lng: eGeo.lng,
+      alt: params.altitudeM,
+      heading: headingDeg,
+      gimbalPitch: -90,
+      speed: params.speedMs,
+      action: "pass",
+    });
+
+    const lineLen = Math.abs(endX - startX);
+    photoCount += Math.max(1, Math.floor(lineLen / photoInterval) + 1);
+    lineIdx++;
+  }
+
+  return {
+    waypoints: wps,
+    stats: {
+      areaM2: Math.round(areaM2),
+      gsdCmPx: Math.round(gsd * 100) / 100,
+      photoCount,
+      flightLineCount: lineIdx,
+      estimatedPhotoIntervalM: Math.round(photoInterval * 10) / 10,
+      frontOverlap,
+      sideOverlap,
+    },
+  };
 }
 
 // ---- Export formats ----

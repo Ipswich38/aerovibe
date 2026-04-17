@@ -22,6 +22,7 @@ const MODULES = [
   { href: "/ops/map", label: "Map", icon: "◎" },
   { href: "/ops/missions", label: "Missions", icon: "◇" },
   { href: "/ops/ingest", label: "Ingest", icon: "↓" },
+  { href: "/ops/surveys", label: "Surveys", icon: "▣" },
   { href: "/ops/books", label: "Books", icon: "≡" },
 ];
 

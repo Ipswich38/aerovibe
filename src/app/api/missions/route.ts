@@ -40,12 +40,23 @@ export async function POST(req: NextRequest) {
   if (typeof body.gimbal_pitch === "number") overrides.gimbalPitch = body.gimbal_pitch;
 
   const heading = typeof body.heading === "number" ? body.heading : undefined;
+  const polygon = Array.isArray(body.polygon)
+    ? body.polygon.filter(
+        (p: unknown) =>
+          typeof p === "object" &&
+          p !== null &&
+          typeof (p as { lat: number }).lat === "number" &&
+          typeof (p as { lng: number }).lng === "number",
+      )
+    : undefined;
+
   const mission = generateMission({
     preset,
     centerLat: lat,
     centerLng: lng,
     overrides,
     heading,
+    polygon,
   });
 
   const format = String(body.format || "json");
