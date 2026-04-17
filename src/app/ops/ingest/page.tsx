@@ -33,9 +33,18 @@ interface TrackPoint {
   alt: number | null;
 }
 
+interface FullTrackPoint {
+  t: number;
+  lat: number;
+  lng: number;
+  alt: number | null;
+  absAlt: number | null;
+}
+
 interface PreviewResponse {
   summary: SrtSummary;
   track: TrackPoint[];
+  fullTrack: FullTrackPoint[];
 }
 
 function fmtDuration(sec: number): string {
@@ -239,6 +248,7 @@ export default function IngestPage() {
       notes: notes.trim() || null,
       latitude: s.avgLat,
       longitude: s.avgLng,
+      track: preview.fullTrack,
     };
 
     const res = await fetch("/api/flights", {

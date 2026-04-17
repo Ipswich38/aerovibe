@@ -18,9 +18,11 @@ export default function MapPage() {
   const leafletRef = useRef<typeof LeafletNS | null>(null);
   const probeMarkerRef = useRef<LeafletNS.Marker | null>(null);
   const flightLayerRef = useRef<LeafletNS.LayerGroup | null>(null);
+  const trackLayerRef = useRef<LeafletNS.LayerGroup | null>(null);
   const [probe, setProbe] = useState<FlyCheck | null>(null);
   const [flights, setFlights] = useState<FlightLog[]>([]);
   const [loadError, setLoadError] = useState("");
+  const [activeTrack, setActiveTrack] = useState<string | null>(null);
 
   const authHeader = useMemo(() => ({ Authorization: `Bearer ${token}` }), [token]);
 
@@ -103,6 +105,7 @@ export default function MapPage() {
       }
 
       flightLayerRef.current = L.layerGroup().addTo(map);
+      trackLayerRef.current = L.layerGroup().addTo(map);
 
       map.on("click", (e) => handleProbe(e.latlng.lat, e.latlng.lng));
     })().catch((err) => {
@@ -118,6 +121,7 @@ export default function MapPage() {
       }
       probeMarkerRef.current = null;
       flightLayerRef.current = null;
+      trackLayerRef.current = null;
     };
   }, [handleProbe]);
 
@@ -153,9 +157,35 @@ export default function MapPage() {
         .bindPopup(
           `<b>${f.date} · ${f.pilot_name}</b><br/>${f.location}<br/>${f.drone_name || ""} · ${f.purpose}`,
         )
+        .on("click", () => loadTrack(f.id))
         .addTo(layer);
     }
   }, [flights]);
+
+  async function loadTrack(flightId: string) {
+    const L = leafletRef.current;
+    const layer = trackLayerRef.current;
+    if (!L || !layer) return;
+
+    if (activeTrack === flightId) {
+      layer.clearLayers();
+      setActiveTrack(null);
+      return;
+    }
+
+    try {
+      const res = await fetch(`/api/flights/${flightId}`, { headers: authHeader });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!Array.isArray(data.track) || data.track.length < 2) return;
+
+      layer.clearLayers();
+      const points: [number, number][] = data.track.map((p: { latitude: number; longitude: number }) => [p.latitude, p.longitude]);
+      L.polyline(points, { color: "#22d3ee", weight: 3, opacity: 0.8 }).addTo(layer);
+      mapRef.current?.fitBounds(L.latLngBounds(points), { padding: [40, 40] });
+      setActiveTrack(flightId);
+    } catch { /* ignore */ }
+  }
 
   function locateMe() {
     if (!navigator.geolocation) {
@@ -209,6 +239,7 @@ export default function MapPage() {
           <LegendRow color="#f59e0b" label={`Caution (${CAUTION_RADIUS_KM}km)`} />
           <LegendRow color="#84cc16" dot label="Logged flight" />
           <LegendRow color="#22d3ee" dot label="Probe / you" />
+          <LegendRow color="#22d3ee" label="Flight track" />
           <p className="text-white/40 text-[10px] mt-2">Click anywhere on the map to check airspace.</p>
         </div>
 

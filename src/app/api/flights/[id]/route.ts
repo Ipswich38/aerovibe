@@ -9,6 +9,26 @@ function checkAuth(req: NextRequest): boolean {
 
 const PURPOSES = ["training", "commercial", "test", "recreational", "other"];
 
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  if (!checkAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { id } = await params;
+
+  const { data: flight, error } = await supabaseAdmin
+    .from("flight_logs")
+    .select("*")
+    .eq("id", id)
+    .single();
+  if (error || !flight) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  const { data: track } = await supabaseAdmin
+    .from("flight_track_points")
+    .select("seq, latitude, longitude, rel_alt, abs_alt, ts_ms")
+    .eq("flight_id", id)
+    .order("seq", { ascending: true });
+
+  return NextResponse.json({ ...flight, track: track || [] });
+}
+
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!checkAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id } = await params;

@@ -66,5 +66,24 @@ export async function POST(req: NextRequest) {
 
   const { data, error } = await supabaseAdmin.from("flight_logs").insert(payload).select("*").single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Store GPS track points if provided (from SRT ingest)
+  if (data && Array.isArray(body.track) && body.track.length > 0) {
+    const points = body.track
+      .filter((p: { lat?: number; lng?: number }) => p.lat != null && p.lng != null)
+      .map((p: { lat: number; lng: number; alt?: number | null; absAlt?: number | null; t?: number }, i: number) => ({
+        flight_id: data.id,
+        seq: i,
+        latitude: p.lat,
+        longitude: p.lng,
+        rel_alt: p.alt ?? null,
+        abs_alt: p.absAlt ?? null,
+        ts_ms: p.t ?? null,
+      }));
+    if (points.length > 0) {
+      await supabaseAdmin.from("flight_track_points").insert(points);
+    }
+  }
+
   return NextResponse.json(data);
 }

@@ -89,6 +89,18 @@ export default function SurveysPage() {
     fetchSurveys();
   }, [fetchSurveys]);
 
+  // Auto-poll processing surveys every 10s
+  useEffect(() => {
+    const hasProcessing = surveys.some((s) => s.status === "processing");
+    if (!hasProcessing) return;
+    const interval = setInterval(() => {
+      surveys
+        .filter((s) => s.status === "processing")
+        .forEach((s) => checkProcessingStatus(s.id));
+    }, 10_000);
+    return () => clearInterval(interval);
+  }, [surveys]); // eslint-disable-line react-hooks/exhaustive-deps
+
   async function createSurvey(e: React.FormEvent) {
     e.preventDefault();
     if (!form.title.trim()) {

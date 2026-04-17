@@ -45,6 +45,17 @@ export async function POST(req: NextRequest) {
   const startDateTime = srtWallToDateTime(summary.startWallClock);
   const endDateTime = srtWallToDateTime(summary.endWallClock);
 
+  // Full-resolution track for DB persistence (every valid GPS point)
+  const fullTrack = summary.samples
+    .filter((s) => s.lat != null && s.lng != null)
+    .map((s) => ({
+      t: s.tsMs,
+      lat: s.lat,
+      lng: s.lng,
+      alt: s.relAlt,
+      absAlt: s.absAlt,
+    }));
+
   return NextResponse.json({
     summary: {
       totalSamples: summary.totalSamples,
@@ -65,5 +76,6 @@ export async function POST(req: NextRequest) {
       landing_time: endDateTime?.time || null,
     },
     track,
+    fullTrack,
   });
 }
