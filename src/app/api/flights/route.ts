@@ -60,6 +60,8 @@ export async function POST(req: NextRequest) {
     incidents: body.incidents?.trim() || null,
     project_id: body.project_id || null,
     notes: body.notes?.trim() || null,
+    latitude: typeof body.latitude === "number" ? body.latitude : null,
+    longitude: typeof body.longitude === "number" ? body.longitude : null,
   };
 
   const { data, error } = await supabaseAdmin.from("flight_logs").insert(payload).select("*").single();

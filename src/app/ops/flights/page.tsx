@@ -27,6 +27,8 @@ interface FlightForm {
   weather: string;
   incidents: string;
   notes: string;
+  latitude: string;
+  longitude: string;
 }
 
 function blankFlight(): FlightForm {
@@ -42,6 +44,8 @@ function blankFlight(): FlightForm {
     weather: "",
     incidents: "",
     notes: "",
+    latitude: "",
+    longitude: "",
   };
 }
 
@@ -138,6 +142,8 @@ export default function FlightsPage() {
       weather: f.weather || "",
       incidents: f.incidents || "",
       notes: f.notes || "",
+      latitude: f.latitude != null ? String(f.latitude) : "",
+      longitude: f.longitude != null ? String(f.longitude) : "",
     });
     setEditingFlight(f.id);
     setShowFlight(true);
@@ -150,11 +156,19 @@ export default function FlightsPage() {
       return;
     }
     const drone = drones.find((d) => d.id === flightForm.drone_id);
+    const lat = flightForm.latitude.trim() ? Number(flightForm.latitude) : null;
+    const lng = flightForm.longitude.trim() ? Number(flightForm.longitude) : null;
+    if ((lat !== null && !Number.isFinite(lat)) || (lng !== null && !Number.isFinite(lng))) {
+      setError("Invalid coordinates");
+      return;
+    }
     const payload = {
       ...flightForm,
       drone_id: flightForm.drone_id || null,
       drone_name: drone?.name || flightForm.drone_name || null,
       duration_minutes: minutesBetween(flightForm.takeoff_time, flightForm.landing_time),
+      latitude: lat,
+      longitude: lng,
     };
     const url = editingFlight ? `/api/flights/${editingFlight}` : "/api/flights";
     const method = editingFlight ? "PATCH" : "POST";
@@ -303,6 +317,53 @@ export default function FlightsPage() {
                     <Field label="Location">
                       <input type="text" required value={flightForm.location} onChange={(e) => setFlightForm({ ...flightForm, location: e.target.value })} placeholder="Barangay, City / GPS" className={inputCls} />
                     </Field>
+                    <div className="md:col-span-2 grid grid-cols-[1fr_1fr_auto] gap-2 items-end">
+                      <Field label="Latitude">
+                        <input
+                          type="text"
+                          value={flightForm.latitude}
+                          onChange={(e) => setFlightForm({ ...flightForm, latitude: e.target.value })}
+                          placeholder="14.5995"
+                          inputMode="decimal"
+                          className={inputCls}
+                        />
+                      </Field>
+                      <Field label="Longitude">
+                        <input
+                          type="text"
+                          value={flightForm.longitude}
+                          onChange={(e) => setFlightForm({ ...flightForm, longitude: e.target.value })}
+                          placeholder="120.9842"
+                          inputMode="decimal"
+                          className={inputCls}
+                        />
+                      </Field>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!navigator.geolocation) {
+                            setError("Geolocation not available in this browser");
+                            return;
+                          }
+                          navigator.geolocation.getCurrentPosition(
+                            (pos) => {
+                              setFlightForm((f) => ({
+                                ...f,
+                                latitude: pos.coords.latitude.toFixed(6),
+                                longitude: pos.coords.longitude.toFixed(6),
+                              }));
+                              setError("");
+                            },
+                            (err) => setError(`Geolocation failed: ${err.message}`),
+                            { enableHighAccuracy: true, timeout: 10000 },
+                          );
+                        }}
+                        className="bg-white/[0.06] hover:bg-white/[0.1] text-[11px] text-white/80 rounded-md px-2.5 py-1.5 border border-white/[0.08] whitespace-nowrap"
+                        title="Use current location"
+                      >
+                        ◎ Use GPS
+                      </button>
+                    </div>
                     <Field label="Purpose">
                       <select value={flightForm.purpose} onChange={(e) => setFlightForm({ ...flightForm, purpose: e.target.value as FlightPurpose })} className={inputCls}>
                         {FLIGHT_PURPOSES.map((p) => (

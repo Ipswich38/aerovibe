@@ -28,6 +28,8 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if ("incidents" in body) allowed.incidents = body.incidents?.trim() || null;
   if ("project_id" in body) allowed.project_id = body.project_id || null;
   if ("notes" in body) allowed.notes = body.notes?.trim() || null;
+  if ("latitude" in body) allowed.latitude = typeof body.latitude === "number" ? body.latitude : null;
+  if ("longitude" in body) allowed.longitude = typeof body.longitude === "number" ? body.longitude : null;
   allowed.updated_at = new Date().toISOString();
 
   const { data, error } = await supabaseAdmin

@@ -30,6 +30,8 @@ export interface FlightLog {
   incidents: string | null;
   project_id: string | null;
   notes: string | null;
+  latitude: number | null;
+  longitude: number | null;
   created_at: string;
   updated_at: string;
 }
