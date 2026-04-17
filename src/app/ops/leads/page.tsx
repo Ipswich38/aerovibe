@@ -9,10 +9,12 @@ import {
   SearchResult,
   leadStatusMeta,
 } from "@/lib/leads";
+import { INDUSTRY_OSM_TAGS, PH_LOCATIONS as PH_LOC_OSM } from "@/lib/overpass";
 import { SYSTEM_FONT } from "@/lib/ops";
 import { useOps } from "../OpsContext";
 
 type Tab = "search" | "saved";
+type Source = "places" | "osm";
 
 const PH_LOCATIONS = [
   "Metro Manila",
@@ -38,6 +40,7 @@ export default function LeadsPage() {
   const [tab, setTab] = useState<Tab>("search");
 
   // Search form
+  const [source, setSource] = useState<Source>("osm");
   const [industryKey, setIndustryKey] = useState(INDUSTRY_SUGGESTIONS[0].key);
   const [customIndustry, setCustomIndustry] = useState("");
   const [location, setLocation] = useState("");
@@ -95,23 +98,49 @@ export default function LeadsPage() {
       setSearchError("Pick or type an industry");
       return;
     }
+    if (source === "osm" && industryKey === "custom") {
+      setSearchError("OSM search only supports preset industries. Switch to Google Places for custom.");
+      return;
+    }
+    if (source === "osm" && !INDUSTRY_OSM_TAGS[industryKey]) {
+      setSearchError("OSM mapping not available for this industry. Use Google Places.");
+      return;
+    }
 
     setSearching(true);
     setSearchError("");
     setResults([]);
     setSelected(new Set());
 
-    const res = await fetch("/api/leads/search", {
-      method: "POST",
-      headers: { ...authHeader, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        industry_label: industryLabel,
-        industry_query: industryQuery,
-        location: loc,
-        pages,
-        enrich_emails: enrichEmails,
-      }),
-    });
+    let res: Response;
+    if (source === "osm") {
+      // Map PH location label → OSM location key.
+      const osmLoc = PH_LOC_OSM.find((l) => l.label === loc);
+      res = await fetch("/api/leads/search-osm", {
+        method: "POST",
+        headers: { ...authHeader, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          industry_key: industryKey,
+          industry_label: industryLabel,
+          location_key: osmLoc?.key || "",
+          location_label: loc,
+          enrich_emails: enrichEmails,
+          limit: 120,
+        }),
+      });
+    } else {
+      res = await fetch("/api/leads/search", {
+        method: "POST",
+        headers: { ...authHeader, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          industry_label: industryLabel,
+          industry_query: industryQuery,
+          location: loc,
+          pages,
+          enrich_emails: enrichEmails,
+        }),
+      });
+    }
 
     setSearching(false);
 
@@ -265,6 +294,34 @@ export default function LeadsPage() {
           {tab === "search" && (
             <>
               <form onSubmit={runSearch} className="border border-white/[0.08] rounded-lg bg-[#252527] p-3 md:p-4 mb-4">
+                <div className="mb-3">
+                  <span className="text-[10px] text-white/40 uppercase tracking-wider block mb-1.5">Source</span>
+                  <div className="inline-flex rounded-md border border-white/[0.08] overflow-hidden text-[11px]">
+                    <button
+                      type="button"
+                      onClick={() => setSource("osm")}
+                      className={`px-3 py-1.5 transition-colors ${
+                        source === "osm" ? "bg-emerald-500/20 text-emerald-300" : "text-white/60 hover:text-white"
+                      }`}
+                    >
+                      🆓 OSM (free)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSource("places")}
+                      className={`px-3 py-1.5 border-l border-white/[0.08] transition-colors ${
+                        source === "places" ? "bg-blue-500/20 text-blue-300" : "text-white/60 hover:text-white"
+                      }`}
+                    >
+                      💳 Google Places
+                    </button>
+                  </div>
+                  <p className="text-[10px] text-white/40 mt-1.5">
+                    {source === "osm"
+                      ? "OpenStreetMap + Jina Reader email scrape. Free, no API key. Lower coverage but zero cost."
+                      : "Google Places API. Higher coverage, uses your paid quota."}
+                  </p>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <Field label="Industry">
                     <select value={industryKey} onChange={(e) => setIndustryKey(e.target.value)} className={inputCls}>
@@ -305,13 +362,15 @@ export default function LeadsPage() {
                       />
                     </Field>
                   )}
-                  <Field label="Depth (pages × 20 results)">
-                    <select value={pages} onChange={(e) => setPages(Number(e.target.value))} className={inputCls}>
-                      <option value={1} className="bg-neutral-900">1 page — up to 20</option>
-                      <option value={2} className="bg-neutral-900">2 pages — up to 40</option>
-                      <option value={3} className="bg-neutral-900">3 pages — up to 60 (max)</option>
-                    </select>
-                  </Field>
+                  {source === "places" && (
+                    <Field label="Depth (pages × 20 results)">
+                      <select value={pages} onChange={(e) => setPages(Number(e.target.value))} className={inputCls}>
+                        <option value={1} className="bg-neutral-900">1 page — up to 20</option>
+                        <option value={2} className="bg-neutral-900">2 pages — up to 40</option>
+                        <option value={3} className="bg-neutral-900">3 pages — up to 60 (max)</option>
+                      </select>
+                    </Field>
+                  )}
                   <label className="flex items-center gap-2 text-[12px] text-white/70 self-end pb-1.5">
                     <input type="checkbox" checked={enrichEmails} onChange={(e) => setEnrichEmails(e.target.checked)} />
                     Scrape emails from websites

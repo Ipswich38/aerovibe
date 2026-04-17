@@ -27,25 +27,30 @@ export async function POST(req: NextRequest) {
   if (!checkAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const body = await req.json();
   const leads: SearchResult[] = Array.isArray(body.leads) ? body.leads : [];
+  const batchSource = typeof body.source === "string" ? body.source : null;
 
   if (leads.length === 0) return NextResponse.json({ error: "leads array required" }, { status: 400 });
 
   const rows = leads
     .filter((l) => (l.phone || l.email) && l.name?.trim())
-    .map((l) => ({
-      name: l.name.trim(),
-      industry: l.industry || "unknown",
-      location: l.location || null,
-      address: l.address || null,
-      phone: l.phone || null,
-      email: l.email ? l.email.toLowerCase() : null,
-      website: l.website || null,
-      rating: l.rating,
-      rating_count: l.rating_count,
-      google_place_id: l.google_place_id || null,
-      source: "google_places",
-      status: "new",
-    }));
+    .map((l) => {
+      const placeId = l.google_place_id || null;
+      const inferredSource = placeId?.startsWith("osm:") ? "osm" : "google_places";
+      return {
+        name: l.name.trim(),
+        industry: l.industry || "unknown",
+        location: l.location || null,
+        address: l.address || null,
+        phone: l.phone || null,
+        email: l.email ? l.email.toLowerCase() : null,
+        website: l.website || null,
+        rating: l.rating,
+        rating_count: l.rating_count,
+        google_place_id: placeId,
+        source: batchSource || inferredSource,
+        status: "new",
+      };
+    });
 
   if (rows.length === 0) return NextResponse.json({ saved: 0, skipped: leads.length });
 
