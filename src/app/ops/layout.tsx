@@ -20,6 +20,8 @@ const MODULES = [
   { href: "/ops/contracts", label: "Contracts", icon: "✎" },
   { href: "/ops/flights", label: "Flights", icon: "✈" },
   { href: "/ops/map", label: "Map", icon: "◎" },
+  { href: "/ops/missions", label: "Missions", icon: "◇" },
+  { href: "/ops/ingest", label: "Ingest", icon: "↓" },
   { href: "/ops/books", label: "Books", icon: "≡" },
 ];
 
