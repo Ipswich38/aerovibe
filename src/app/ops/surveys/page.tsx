@@ -143,6 +143,24 @@ export default function SurveysPage() {
     fetchSurveys();
   }
 
+  async function checkProcessingStatus(surveyId: string) {
+    const res = await fetch(`/api/surveys/${surveyId}/status`, { headers: authHeader });
+    if (!res.ok) {
+      const d = await res.json().catch(() => ({}));
+      setError(d.error || "Status check failed");
+      return;
+    }
+    const data = await res.json();
+    if (data.status === "complete") {
+      setToast("Processing complete — outputs ready!");
+    } else if (data.status === "failed") {
+      setError(`Processing failed: ${data.error || "unknown"}`);
+    } else {
+      setToast(`Processing: ${Math.round(data.progress || 0)}% complete`);
+    }
+    fetchSurveys();
+  }
+
   return (
     <div
       className="h-full overflow-auto text-white"
@@ -316,6 +334,14 @@ export default function SurveysPage() {
                       className="bg-purple-500/20 text-purple-300 hover:bg-purple-500/30 rounded-md px-3 py-1 text-[11px]"
                     >
                       Process
+                    </button>
+                  )}
+                  {s.status === "processing" && (
+                    <button
+                      onClick={() => checkProcessingStatus(s.id)}
+                      className="bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 rounded-md px-3 py-1 text-[11px]"
+                    >
+                      Check status
                     </button>
                   )}
                   {s.orthomosaic_url && (
