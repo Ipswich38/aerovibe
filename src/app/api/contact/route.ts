@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
+import { classifyAndDraft, sendAutoReply, sendIMessage } from "@/lib/auto-reply";
+
+const CEO_PHONE = "+639524807848";
 
 const SERVICE_LABELS: Record<string, string> = {
   social: "Social Media",
@@ -148,8 +151,42 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Failed to save message" }, { status: 500 });
     }
 
-    // Fire-and-forget Gmail notification — don't block on email
-    sendNotification(payload).catch((e) => console.error("Notify error:", e));
+    // Fire-and-forget: notify CEO + classify + auto-reply + iMessage
+    (async () => {
+      await sendNotification(payload);
+
+      const result = await classifyAndDraft(payload);
+      if (!result) return;
+
+      // Store classification as internal note
+      const noteText = `[AUTO] Category: ${result.category} | Personal: ${result.personal_attention} | Auto-replied: ${result.can_auto_reply || result.personal_attention}`;
+      await supabaseAdmin
+        .from("waevpoint_messages")
+        .update({ notes: noteText, service_type: result.category !== "unrelated" ? result.category : payload.service_type })
+        .eq("contact", payload.contact)
+        .eq("message", payload.message)
+        .order("created_at", { ascending: false })
+        .limit(1);
+
+      // Send auto-reply email to client
+      if (result.reply_draft && payload.contact.includes("@")) {
+        const sent = await sendAutoReply(payload.contact, payload.name, result.reply_draft);
+        if (sent) {
+          await supabaseAdmin
+            .from("waevpoint_messages")
+            .update({ status: result.personal_attention ? "read" : "replied" })
+            .eq("contact", payload.contact)
+            .eq("message", payload.message);
+        }
+      }
+
+      // iMessage CEO if personal attention needed
+      if (result.personal_attention) {
+        const serviceLabel = SERVICE_LABELS[result.category] || result.category;
+        const imsg = `waevpoint inquiry needs your attention\n\nFrom: ${payload.name}\nContact: ${payload.contact}\nType: ${serviceLabel}\n\n"${payload.message.slice(0, 200)}"\n\nThis is about pricing/scheduling — auto-reply sent, they're expecting a personal follow-up.`;
+        await sendIMessage(CEO_PHONE, imsg);
+      }
+    })().catch((e) => console.error("Auto-reply pipeline error:", e));
 
     return NextResponse.json({ ok: true });
   } catch {
