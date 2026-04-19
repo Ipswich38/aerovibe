@@ -16,23 +16,85 @@ import { useOps } from "../OpsContext";
 type Tab = "search" | "saved";
 type Source = "places" | "osm";
 
-const PH_LOCATIONS = [
-  "Metro Manila",
-  "Baguio",
-  "Tagaytay",
-  "Batangas",
-  "Cavite",
-  "Cebu",
-  "Davao",
-  "Palawan",
-  "Boracay",
-  "Siargao",
-  "Bohol",
-  "Iloilo",
-  "La Union",
-  "Pampanga",
-  "Laguna",
-  "Rizal",
+interface LocationGroup {
+  label: string;
+  locations: string[];
+}
+
+const PH_LOCATION_GROUPS: LocationGroup[] = [
+  {
+    label: "★ Priority — Bulacan (Region 3)",
+    locations: [
+      "San Jose del Monte, Bulacan",
+      "Meycauayan, Bulacan",
+      "Marilao, Bulacan",
+      "Bocaue, Bulacan",
+      "Sta. Maria, Bulacan",
+      "Norzagaray, Bulacan",
+      "Malolos, Bulacan",
+      "Baliwag, Bulacan",
+      "Bulacan (Province-wide)",
+    ],
+  },
+  {
+    label: "Region 3 — Central Luzon",
+    locations: [
+      "Pampanga",
+      "Angeles City, Pampanga",
+      "Clark Freeport Zone",
+      "Tarlac",
+      "Nueva Ecija",
+      "Zambales",
+      "Bataan",
+      "Aurora",
+    ],
+  },
+  {
+    label: "NCR — Metro Manila",
+    locations: [
+      "Metro Manila",
+      "Quezon City",
+      "Makati",
+      "BGC / Taguig",
+      "Manila City",
+      "Pasig",
+      "Mandaluyong",
+      "Caloocan",
+      "Valenzuela",
+    ],
+  },
+  {
+    label: "Region 1 — Ilocos",
+    locations: ["La Union", "Pangasinan", "Ilocos Norte", "Ilocos Sur / Vigan"],
+  },
+  {
+    label: "Region 2 — Cagayan Valley",
+    locations: ["Cagayan", "Isabela", "Nueva Vizcaya"],
+  },
+  {
+    label: "CAR — Cordillera",
+    locations: ["Baguio City", "Benguet"],
+  },
+  {
+    label: "Region 4A — CALABARZON",
+    locations: ["Cavite", "Laguna", "Batangas", "Rizal", "Quezon Province", "Tagaytay"],
+  },
+  {
+    label: "Region 4B — MIMAROPA",
+    locations: ["Palawan", "Puerto Princesa", "Mindoro"],
+  },
+  {
+    label: "Region 5 — Bicol",
+    locations: ["Albay / Legazpi", "Camarines Sur / Naga", "Sorsogon"],
+  },
+  {
+    label: "Visayas",
+    locations: ["Cebu City", "Cebu (Province-wide)", "Bohol", "Iloilo City", "Boracay", "Bacolod City", "Dumaguete", "Tacloban"],
+  },
+  {
+    label: "Mindanao",
+    locations: ["Davao City", "Cagayan de Oro", "General Santos", "Zamboanga City", "Siargao", "Camiguin"],
+  },
 ];
 
 export default function LeadsPage() {
@@ -345,8 +407,12 @@ export default function LeadsPage() {
                   <Field label="Location">
                     <select value={location} onChange={(e) => setLocation(e.target.value)} className={inputCls}>
                       <option value="" className="bg-neutral-900">Nationwide (Philippines)</option>
-                      {PH_LOCATIONS.map((l) => (
-                        <option key={l} value={l} className="bg-neutral-900">{l}</option>
+                      {PH_LOCATION_GROUPS.map((group) => (
+                        <optgroup key={group.label} label={group.label}>
+                          {group.locations.map((l) => (
+                            <option key={l} value={l} className="bg-neutral-900">{l}</option>
+                          ))}
+                        </optgroup>
                       ))}
                       <option value="custom" className="bg-neutral-900">Custom…</option>
                     </select>
