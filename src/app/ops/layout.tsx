@@ -41,12 +41,14 @@ const DEPARTMENTS: Department[] = [
     ],
   },
   {
-    key: "production",
-    label: "Production",
+    key: "studio",
+    label: "Studio",
     icon: "◈",
     items: [
-      { href: "/ops/studio", label: "Studio", icon: "◈" },
+      { href: "/ops/studio", label: "Grade", icon: "◈" },
       { href: "/ops/ingest", label: "Ingest", icon: "↓" },
+      { href: "/ops/lightroom", label: "Lightroom", icon: "◎" },
+      { href: "/ops/render", label: "Render", icon: "▶" },
     ],
   },
   {
