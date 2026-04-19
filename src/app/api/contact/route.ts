@@ -20,6 +20,8 @@ const NOTIFY_EMAIL = "rootbyte.tech@gmail.com";
 async function sendNotification(payload: {
   name: string;
   contact: string;
+  phone: string | null;
+  phone_attn: string | null;
   service_type: string | null;
   message: string;
 }) {
@@ -35,10 +37,14 @@ async function sendNotification(payload: {
 
   const subject = `New ${serviceLabel} inquiry from ${payload.name}`;
 
+  const phoneLine = payload.phone
+    ? `Phone: ${payload.phone}${payload.phone_attn ? ` (Attn: ${payload.phone_attn})` : ""}`
+    : "";
+
   const text = `New message from waevpoint.quest
 
 From: ${payload.name}
-Contact: ${payload.contact}
+Email: ${payload.contact}${phoneLine ? `\n${phoneLine}` : ""}
 Service: ${serviceLabel}
 
 Message:
@@ -58,7 +64,8 @@ View and reply in inbox: https://waevpoint.quest/inbox`;
   </div>
   <table style="width:100%;font-size:13px;line-height:1.6;color:#374151;border-collapse:collapse;">
     <tr><td style="color:#6b7280;width:80px;padding:6px 0;">From</td><td style="padding:6px 0;font-weight:600;">${escape(payload.name)}</td></tr>
-    <tr><td style="color:#6b7280;padding:6px 0;">Contact</td><td style="padding:6px 0;">${escape(payload.contact)}</td></tr>
+    <tr><td style="color:#6b7280;padding:6px 0;">Email</td><td style="padding:6px 0;">${escape(payload.contact)}</td></tr>${payload.phone ? `
+    <tr><td style="color:#6b7280;padding:6px 0;">Phone</td><td style="padding:6px 0;">${escape(payload.phone)}${payload.phone_attn ? ` <span style="color:#9ca3af;">(Attn: ${escape(payload.phone_attn)})</span>` : ""}</td></tr>` : ""}
     <tr><td style="color:#6b7280;padding:6px 0;vertical-align:top;">Message</td><td style="padding:6px 0;white-space:pre-wrap;">${escape(payload.message)}</td></tr>
   </table>
   <div style="margin-top:24px;">
@@ -127,24 +134,47 @@ async function upsertContact(name: string, contact: string): Promise<string | nu
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, contact, service_type, message } = body;
+    const { name, contact, phone, phone_attn, service_type, message } = body;
 
     if (!name?.trim() || !contact?.trim() || !message?.trim()) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    const cleanPhone = phone?.trim() || null;
+    const cleanAttn = phone_attn?.trim() || null;
+
     const payload = {
       name: name.trim(),
       contact: contact.trim(),
+      phone: cleanPhone,
+      phone_attn: cleanAttn,
       service_type: service_type || null,
       message: message.trim(),
     };
 
     const contactId = await upsertContact(payload.name, payload.contact);
 
+    // Update contact with phone if provided
+    if (contactId && cleanPhone) {
+      await supabaseAdmin
+        .from("contacts")
+        .update({ phone: cleanPhone, notes: cleanAttn ? `Attn: ${cleanAttn}` : undefined })
+        .eq("id", contactId);
+    }
+
+    const msgPayload: Record<string, unknown> = {
+      name: payload.name,
+      contact: payload.contact,
+      service_type: payload.service_type,
+      message: cleanPhone
+        ? `${payload.message}${cleanAttn ? `\n\n[Phone: ${cleanPhone}, Attn: ${cleanAttn}]` : `\n\n[Phone: ${cleanPhone}]`}`
+        : payload.message,
+      contact_id: contactId,
+    };
+
     const { error } = await supabaseAdmin
       .from("waevpoint_messages")
-      .insert({ ...payload, contact_id: contactId });
+      .insert(msgPayload);
 
     if (error) {
       console.error("Supabase insert error:", error);
@@ -183,7 +213,8 @@ export async function POST(req: NextRequest) {
       // iMessage CEO if personal attention needed
       if (result.personal_attention) {
         const serviceLabel = SERVICE_LABELS[result.category] || result.category;
-        const imsg = `waevpoint inquiry needs your attention\n\nFrom: ${payload.name}\nContact: ${payload.contact}\nType: ${serviceLabel}\n\n"${payload.message.slice(0, 200)}"\n\nThis is about pricing/scheduling — auto-reply sent, they're expecting a personal follow-up.`;
+        const phoneInfo = payload.phone ? `\nPhone: ${payload.phone}${payload.phone_attn ? ` (Attn: ${payload.phone_attn})` : ""}` : "";
+        const imsg = `waevpoint inquiry needs your attention\n\nFrom: ${payload.name}\nEmail: ${payload.contact}${phoneInfo}\nType: ${serviceLabel}\n\n"${payload.message.slice(0, 200)}"\n\nThis is about pricing/scheduling — auto-reply sent, they're expecting a personal follow-up.`;
         await sendIMessage(CEO_PHONE, imsg);
       }
     })().catch((e) => console.error("Auto-reply pipeline error:", e));

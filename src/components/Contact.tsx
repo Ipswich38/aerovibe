@@ -16,13 +16,18 @@ export default function Contact() {
     const form = e.currentTarget;
     const fd = new FormData(form);
 
+    const phone = (fd.get("phone") as string)?.trim() || "";
+    const phoneAttn = (fd.get("phone_attn") as string)?.trim() || "";
+
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: fd.get("name"),
-          contact: fd.get("contact"),
+          contact: fd.get("email"),
+          phone: phone || undefined,
+          phone_attn: phoneAttn || undefined,
           service_type: fd.get("service_type"),
           message: fd.get("message"),
         }),
@@ -129,15 +134,40 @@ export default function Contact() {
                   </div>
                   <div>
                     <label className="text-[11px] text-white/40 uppercase tracking-wider block mb-2">
-                      Email or Phone
+                      Email <span className="text-cyan-400/60">*</span>
                     </label>
                     <input
-                      name="contact"
-                      type="text"
+                      name="email"
+                      type="email"
                       required
                       className="w-full bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white text-sm outline-none transition-all placeholder:text-white/20 focus:border-cyan-400/50 focus:bg-white/[0.08] focus:shadow-[0_0_20px_rgba(6,182,212,0.1)]"
-                      placeholder="your@email.com or 09XX-XXX-XXXX"
+                      placeholder="your@email.com"
                     />
+                  </div>
+                  <div>
+                    <label className="text-[11px] text-white/40 uppercase tracking-wider block mb-2">
+                      Phone <span className="text-white/20 normal-case tracking-normal">(optional)</span>
+                    </label>
+                    <input
+                      name="phone"
+                      type="tel"
+                      className="w-full bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white text-sm outline-none transition-all placeholder:text-white/20 focus:border-cyan-400/50 focus:bg-white/[0.08] focus:shadow-[0_0_20px_rgba(6,182,212,0.1)]"
+                      placeholder="09XX-XXX-XXXX or (02) 8XXX-XXXX"
+                      onChange={(e) => {
+                        const val = e.target.value.trim();
+                        const isLandline = val.startsWith("(") || val.startsWith("02") || val.startsWith("+632") || /^\d{1,4}[- ]\d{3,4}[- ]\d{4}$/.test(val);
+                        const attnField = e.target.form?.querySelector<HTMLDivElement>("[data-phone-attn]");
+                        if (attnField) attnField.style.display = isLandline && val.length > 3 ? "block" : "none";
+                      }}
+                    />
+                    <div data-phone-attn style={{ display: "none" }} className="mt-2">
+                      <input
+                        name="phone_attn"
+                        type="text"
+                        className="w-full bg-white/5 border border-white/15 rounded-lg px-4 py-3 text-white text-sm outline-none transition-all placeholder:text-white/20 focus:border-cyan-400/50 focus:bg-white/[0.08] focus:shadow-[0_0_20px_rgba(6,182,212,0.1)]"
+                        placeholder="Attention: person name or ext. number"
+                      />
+                    </div>
                   </div>
                   <div>
                     <label className="text-[11px] text-white/40 uppercase tracking-wider block mb-2">
