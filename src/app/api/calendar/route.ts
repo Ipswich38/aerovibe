@@ -1,11 +1,6 @@
+import { checkAuth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
-
-function checkAuth(req: NextRequest): boolean {
-  const auth = req.headers.get("authorization");
-  if (!auth?.startsWith("Bearer ")) return false;
-  return auth.slice(7) === process.env.INBOX_PASSWORD;
-}
 
 export interface CalendarEvent {
   id: string;
@@ -171,9 +166,43 @@ export async function GET(req: NextRequest) {
       })
   );
 
+  // Standalone calendar events (activities, appointments, reminders, meetings)
+  queries.push(
+    supabaseAdmin
+      .from("calendar_events")
+      .select("id, title, type, date, time, end_time, notes, location, color")
+      .gte("date", startDate)
+      .lt("date", nextMonth)
+      .then(({ data }) => {
+        (data || []).forEach((ev) =>
+          events.push({
+            id: `evt-${ev.id}`,
+            type: ev.type as CalendarEvent["type"],
+            title: ev.title,
+            date: ev.date,
+            time: ev.time ?? undefined,
+            end_time: ev.end_time ?? undefined,
+            notes: ev.notes ?? undefined,
+            location: ev.location ?? undefined,
+            status: null,
+            color: ev.color,
+            href: "/ops/calendar",
+            editable: true,
+            sourceId: ev.id,
+          } as CalendarEvent & { editable: true; sourceId: string })
+        );
+      })
+  );
+
   await Promise.allSettled(queries);
 
-  events.sort((a, b) => a.date.localeCompare(b.date));
+  events.sort((a, b) => {
+    const dateCmp = a.date.localeCompare(b.date);
+    if (dateCmp !== 0) return dateCmp;
+    const aTime = (a as CalendarEvent & { time?: string }).time ?? "00:00";
+    const bTime = (b as CalendarEvent & { time?: string }).time ?? "00:00";
+    return aTime.localeCompare(bTime);
+  });
 
   return NextResponse.json(events);
 }
