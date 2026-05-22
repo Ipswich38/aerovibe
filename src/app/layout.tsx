@@ -3,14 +3,14 @@ import Script from "next/script";
 import "./globals.css";
 
 const SITE_URL = "https://waevpoint.quest";
-const SITE_NAME = "waevpoint2740";
+const SITE_NAME = "Waevpoint";
 const DESCRIPTION =
-  "Professional drone videography and photography in the Philippines. Startup pricing, ready-to-post aerial content — no raw footage, no hidden fees.";
+  "Cinematic aerial visuals for properties, events, and content projects across the Philippines. Ready-to-post drone photography and videography — no raw footage, no hidden fees.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — Professional Drone Content, Startup Pricing`,
+    default: `${SITE_NAME} — Aerial Visual Content, Philippines`,
     template: `%s · ${SITE_NAME}`,
   },
   description: DESCRIPTION,
@@ -18,13 +18,12 @@ export const metadata: Metadata = {
   keywords: [
     "drone videography Philippines",
     "aerial photography Philippines",
-    "drone services Bulacan",
     "real estate drone",
     "wedding drone",
     "event drone coverage",
-    "San Jose del Monte drone",
-    "DJI Neo Philippines",
     "aerial content creator",
+    "cinematic drone footage",
+    "aerial visual content Philippines",
   ],
   authors: [{ name: SITE_NAME }],
   creator: SITE_NAME,
@@ -33,7 +32,7 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: `${SITE_NAME} — Professional Drone Content, Startup Pricing`,
+    title: `${SITE_NAME} — Aerial Visual Content, Philippines`,
     description: DESCRIPTION,
     url: SITE_URL,
     siteName: SITE_NAME,
@@ -50,7 +49,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} — Professional Drone Content`,
+    title: `${SITE_NAME} — Aerial Visual Content`,
     description: DESCRIPTION,
     images: ["/og-image.jpg"],
   },
@@ -92,21 +91,21 @@ const organizationJsonLd = {
   url: SITE_URL,
   logo: `${SITE_URL}/images/logo.png`,
   description: DESCRIPTION,
-  email: "hello@waevpoint.quest",
+  email: "waevpoint@gmail.com",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Altaraza Spine Rd",
-    addressLocality: "City of San Jose del Monte",
+    addressLocality: "San Jose del Monte",
     addressRegion: "Bulacan",
-    postalCode: "3073",
     addressCountry: "PH",
   },
   areaServed: {
     "@type": "Country",
     name: "Philippines",
   },
-  foundingDate: "2028-06",
-  sameAs: [],
+  foundingDate: "2026",
+  sameAs: [
+    "https://www.facebook.com/profile.php?id=61589289392539",
+  ],
 };
 
 const websiteJsonLd = {

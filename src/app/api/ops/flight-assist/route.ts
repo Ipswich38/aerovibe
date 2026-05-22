@@ -1,13 +1,8 @@
+import { checkAuth } from "@/lib/auth";
 import { NextRequest } from "next/server";
 import { fetchFlightWeather, formatWeatherForAI } from "@/lib/weather";
 import { checkLocation } from "@/lib/geofence";
 import { SECURITY_DIRECTIVE, sanitizeMessages } from "@/lib/agent-security";
-
-function checkAuth(req: NextRequest): boolean {
-  const auth = req.headers.get("authorization");
-  if (!auth?.startsWith("Bearer ")) return false;
-  return auth.slice(7) === process.env.INBOX_PASSWORD;
-}
 
 const BASE_PROMPT = `You are Captain Panchi — elite flight copilot for DJI Mini 5 Pro operations. Voice-first: concise, natural, conversational. Max 2-3 sentences unless asked for detail. Match pilot's language (English/Tagalog/Taglish). Keep technical terms in English.
 
@@ -41,7 +36,9 @@ CAAP PH RULES: Sub-250g no registration (recreational). Max 120m AGL. VLOS alway
 
 SAFETY: Land at 25% battery (non-negotiable). RTH at critical 10%. Cold weather: 20-30% less flight time. NOT waterproof — land immediately if rain. Signal lost → auto-RTH. Flyaway → Sport mode to fight wind + lower altitude + RTH. Wind above 38km/h = DO NOT FLY. Gusts more dangerous than sustained. 248g = very wind-susceptible.
 
-RESPONSE FORMAT: No markdown/bullets/asterisks — speak naturally. Numbers clearly: "ISO one hundred, shutter one over sixty." Short sentences. Pauses between info (periods). Number items verbally.`;
+RESPONSE FORMAT: Speak naturally, short sentences. Numbers clearly: "ISO one hundred, shutter one over sixty."
+CHECKLISTS ONLY: Output each item on its own line as "✓ Item — status or detail". Group items under a short plain-text intro sentence. The ✓ and — are stripped before TTS so they won't be spoken.
+All other responses: plain sentences — no asterisks, no markdown.`;
 
 const MODE_KNOWLEDGE: Record<string, string> = {
   survey: `UAV PHOTOGRAMMETRY — CAPTAIN PANCHI'S SPECIALTY

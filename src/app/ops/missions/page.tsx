@@ -383,6 +383,35 @@ export default function MissionsPage() {
         </div>
       </div>
 
+      {/* Field tools strip */}
+      <div className="h-8 flex items-center gap-1 px-3 border-b border-white/[0.05] bg-[#1c1c1e] overflow-x-auto shrink-0" style={{ scrollbarWidth: "none" }}>
+        <span className="text-[9px] text-white/20 uppercase tracking-widest shrink-0 pr-1.5">Tools</span>
+        {(
+          [
+            { key: "litchi",      label: "Litchi Bridge",  href: "https://flylitchi.com/hub" },
+            { key: "waypointmap", label: "WaypointMap",    href: center ? `https://waypointmap.com/?lat=${center.lat}&lng=${center.lng}` : "https://waypointmap.com" },
+            { key: "geonadir",    label: "Geonadir",       href: "https://geonadir.com" },
+            { key: "earth",       label: "Google Earth",   href: center ? `https://earth.google.com/web/@${center.lat},${center.lng},400a,500d,35y,0h,0t,0r` : "https://earth.google.com/web/" },
+            { key: "weather",     label: "Weather",        href: center ? `https://www.windy.com/${center.lat.toFixed(3)}/${center.lng.toFixed(3)}/14?wind,clouds` : "https://www.windy.com" },
+            { key: "nfz",         label: "No-Fly Zone",   href: center ? `https://www.dji.com/flysafe/geo-system?lng=${center.lng}&lat=${center.lat}` : "https://www.dji.com/flysafe/geo-system" },
+            { key: "wpmission",   label: "WP Mission",     href: center ? `https://flylitchi.com/hub#map=15/${center.lat}/${center.lng}` : "https://flylitchi.com/hub" },
+          ] as { key: string; label: string; href: string }[]
+        ).map((tool) => (
+          <a key={tool.key} href={tool.href} target="_blank" rel="noopener noreferrer"
+            className="flex items-center px-2 py-0.5 rounded text-[10px] text-white/40 hover:text-white border border-white/[0.07] hover:border-white/20 hover:bg-white/[0.05] transition-colors whitespace-nowrap shrink-0">
+            {tool.label}
+            {["waypointmap", "earth", "weather", "nfz", "wpmission"].includes(tool.key) && center && (
+              <span className="ml-1 text-[8px] text-cyan-400/60">●</span>
+            )}
+          </a>
+        ))}
+        {center && (
+          <span className="ml-auto text-[9px] text-white/20 font-mono shrink-0 pl-3">
+            {center.lat.toFixed(5)}, {center.lng.toFixed(5)}
+          </span>
+        )}
+      </div>
+
       {error && <div className="bg-red-500/10 text-red-400 text-[11px] px-3 py-1">{error}</div>}
 
       <div className="flex-1 flex overflow-hidden">

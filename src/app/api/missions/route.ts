@@ -1,3 +1,4 @@
+import { checkAuth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import {
   MISSION_PRESETS,
@@ -7,12 +8,6 @@ import {
   missionToKml,
   missionToLitchiCsv,
 } from "@/lib/missions";
-
-function checkAuth(req: NextRequest): boolean {
-  const auth = req.headers.get("authorization");
-  if (!auth?.startsWith("Bearer ")) return false;
-  return auth.slice(7) === process.env.INBOX_PASSWORD;
-}
 
 // POST { preset_key, center_lat, center_lng, heading?, overrides?, format? }
 // format: "json" (default) | "kml" | "csv" | "litchi"

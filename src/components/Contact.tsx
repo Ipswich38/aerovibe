@@ -63,7 +63,7 @@ export default function Contact() {
                 className="text-[clamp(2.2rem,5vw,3.5rem)] leading-[1.1] text-white mb-5"
                 style={{ fontFamily: "'League Spartan', sans-serif", fontWeight: 700 }}
               >
-                Tara, let&apos;s capture the moment!
+                Have a project in mind?
               </h2>
               <p className="text-base text-white/60 leading-relaxed mb-10 max-w-md">
                 Have a project in mind? Or just curious how drone content could
@@ -78,14 +78,14 @@ export default function Contact() {
                     <path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                   </svg>
                   <address className="not-italic text-sm text-white/80">
-                    Altaraza Spine Rd, City of San Jose del Monte, Bulacan 3073, Philippines
+                    San Jose del Monte, Bulacan, Philippines
                   </address>
                 </div>
                 <div className="flex items-center gap-4">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-cyan-400 shrink-0">
                     <path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
                   </svg>
-                  <a href="mailto:hello@waevpoint.quest" className="text-sm text-white/80 hover:text-cyan-400 transition-colors">hello@waevpoint.quest</a>
+                  <a href="mailto:waevpoint@gmail.com" className="text-sm text-white/80 hover:text-cyan-400 transition-colors">waevpoint@gmail.com</a>
                 </div>
                 <div className="flex items-center gap-4">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-cyan-400 shrink-0">
@@ -182,9 +182,7 @@ export default function Contact() {
                       <option value="social" className="bg-neutral-900">Social Media Content</option>
                       <option value="real-estate" className="bg-neutral-900">Real Estate / Property</option>
                       <option value="event" className="bg-neutral-900">Wedding / Event</option>
-                      <option value="construction" className="bg-neutral-900">Construction Progress</option>
                       <option value="travel" className="bg-neutral-900">Travel / Tourism</option>
-                      <option value="commercial" className="bg-neutral-900">Commercial / Business</option>
                       <option value="just-asking" className="bg-neutral-900">Just curious about pricing</option>
                       <option value="other" className="bg-neutral-900">Something else</option>
                     </select>

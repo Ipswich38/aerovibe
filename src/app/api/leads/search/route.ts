@@ -1,13 +1,8 @@
+import { checkAuth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { SearchResult } from "@/lib/leads";
 
 export const maxDuration = 60;
-
-function checkAuth(req: NextRequest): boolean {
-  const auth = req.headers.get("authorization");
-  if (!auth?.startsWith("Bearer ")) return false;
-  return auth.slice(7) === process.env.INBOX_PASSWORD;
-}
 
 interface PlacesResponse {
   places?: {

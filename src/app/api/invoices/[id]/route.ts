@@ -1,12 +1,7 @@
+import { checkAuth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 import { computeTotals, InvoiceItem } from "@/lib/invoices";
-
-function checkAuth(req: NextRequest): boolean {
-  const auth = req.headers.get("authorization");
-  if (!auth?.startsWith("Bearer ")) return false;
-  return auth.slice(7) === process.env.INBOX_PASSWORD;
-}
 
 const STATUSES = ["draft", "sent", "accepted", "paid", "cancelled", "overdue"];
 

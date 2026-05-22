@@ -46,7 +46,7 @@ export function statusMeta(key: string): { label: string; color: string } {
 }
 
 export const DEFAULT_TERMS = `Payment due within 7 days of invoice date.
-Accepted: GCash, bank transfer. Contact hello@waevpoint.quest for payment details.
+Accepted: GCash, bank transfer. Contact waevpoint@gmail.com for payment details.
 
 Thank you for choosing waevpoint.`;
 

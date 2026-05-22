@@ -46,7 +46,7 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
               <p className="font-bold text-lg">waevpoint</p>
               <p className="text-gray-600 text-[11px]">Drone videography & photography</p>
               <p className="text-gray-600 text-[11px]">Philippines</p>
-              <p className="text-gray-600 text-[11px] mt-1">hello@waevpoint.quest</p>
+              <p className="text-gray-600 text-[11px] mt-1">waevpoint@gmail.com</p>
               <p className="text-gray-600 text-[11px]">waevpoint.quest</p>
             </div>
           </div>
@@ -103,7 +103,7 @@ export default async function PublicInvoicePage({ params }: { params: Promise<{ 
           )}
 
           <div className="mt-8 pt-4 border-t border-gray-200 flex items-center justify-between print:hidden">
-            <p className="text-[10px] text-gray-500">Questions? Reply to this email or message us at hello@waevpoint.quest</p>
+            <p className="text-[10px] text-gray-500">Questions? Reply to this email or message us at waevpoint@gmail.com</p>
             <PrintButton />
           </div>
         </div>

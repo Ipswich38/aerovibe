@@ -425,7 +425,7 @@ export default function InvoicesPage() {
                 <div className="text-right">
                   <p className="font-semibold">waevpoint</p>
                   <p className="text-gray-600 text-[11px]">Drone videography & photography</p>
-                  <p className="text-gray-600 text-[11px]">hello@waevpoint.quest</p>
+                  <p className="text-gray-600 text-[11px]">waevpoint@gmail.com</p>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-6 mb-6 text-[12px]">

@@ -39,7 +39,7 @@ export default function DroneShowcase() {
           <div className="grid grid-cols-1 md:grid-cols-2">
             {/* Specs */}
             <div className="p-8 md:p-12 flex flex-col justify-center">
-              <span className="label-mono text-cyan-400/60 mb-3">Our Gear</span>
+              <span className="label-mono text-cyan-400/60 mb-3">Aerial Camera</span>
               <h3
                 className="text-2xl md:text-3xl mb-2"
                 style={{ fontFamily: "var(--font-sans)", fontWeight: 600 }}
@@ -47,9 +47,9 @@ export default function DroneShowcase() {
                 DJI Mini 5 Pro
               </h3>
               <p className="text-sm text-av-muted leading-relaxed mb-8">
-                Pro-level aerial camera in an ultra-portable body. 4K HDR video,
-                48MP photos, omnidirectional obstacle sensing — everything we
-                need to capture stunning content for you.
+                Pro-grade aerial imaging in a sub-250g body. 4K HDR video,
+                48MP stills, omnidirectional sensing — the tool behind the
+                aerial side of our creative work.
               </p>
 
               <div className="grid grid-cols-2 gap-4">

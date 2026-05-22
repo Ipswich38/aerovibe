@@ -56,7 +56,7 @@ export default async function SignContractPage({ params }: { params: Promise<{ t
 
           <div className="mt-8 pt-4 border-t border-gray-200 text-[10px] text-gray-500">
             This agreement is governed by the laws of the Republic of the Philippines.
-            Questions? Contact hello@waevpoint.quest
+            Questions? Contact waevpoint@gmail.com
           </div>
         </div>
       </div>

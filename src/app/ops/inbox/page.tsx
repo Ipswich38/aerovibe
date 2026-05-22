@@ -50,6 +50,7 @@ export default function InboxPage() {
   const [selected, setSelected] = useState<Message | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [syncingGmail, setSyncingGmail] = useState(false);
 
   const [showReply, setShowReply] = useState(false);
   const [replyBody, setReplyBody] = useState("");
@@ -110,6 +111,26 @@ export default function InboxPage() {
     fetchMessages(token, filter);
     if (selected?.id === id) {
       setSelected((prev) => (prev ? ({ ...prev, ...data } as Message) : null));
+    }
+  }
+
+  async function syncGmail() {
+    setSyncingGmail(true);
+    setError("");
+    try {
+      const res = await fetch("/api/messages/gmail-sync", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.error || "Failed to sync Gmail");
+        return;
+      }
+      setReplySuccess(`Gmail sync complete: ${data.imported || 0} imported, ${data.skipped || 0} skipped.`);
+      await fetchMessages(token, filter);
+    } finally {
+      setSyncingGmail(false);
     }
   }
 
@@ -373,15 +394,25 @@ export default function InboxPage() {
         <button onClick={toggleSidebar} className="text-white/50 hover:text-white text-[13px] px-1" title="Toggle folders">
           ☰
         </button>
-        <div className="relative">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search messages"
-            className="w-56 bg-white/[0.08] rounded-md pl-7 pr-3 py-1 text-[12px] text-white outline-none placeholder:text-white/30 focus:bg-white/[0.12]"
-          />
-          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30 text-[10px]">⌕</span>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={syncGmail}
+            disabled={syncingGmail}
+            className="h-7 px-3 rounded-md bg-white/[0.06] hover:bg-white/[0.1] disabled:opacity-50 text-[11px] text-white/65"
+            title="Import recent waevpoint@gmail.com messages"
+          >
+            {syncingGmail ? "Syncing" : "Sync Gmail"}
+          </button>
+          <div className="relative">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search messages"
+              className="w-56 bg-white/[0.08] rounded-md pl-7 pr-3 py-1 text-[12px] text-white outline-none placeholder:text-white/30 focus:bg-white/[0.12]"
+            />
+            <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-white/30 text-[10px]">⌕</span>
+          </div>
         </div>
       </div>
 
@@ -644,7 +675,7 @@ function DetailPane({
                   <span className="text-[11px] text-white/50 break-all">&lt;{selected.contact}&gt;</span>
                 </div>
                 <div className="text-[11px] text-white/40">
-                  to <span className="text-white/60">hello@waevpoint.quest</span>
+                  to <span className="text-white/60">waevpoint@gmail.com</span>
                   <span className="mx-1.5">·</span>
                   {new Date(selected.created_at).toLocaleString("en-US", {
                     month: "short",

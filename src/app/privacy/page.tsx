@@ -55,7 +55,7 @@ export default function PrivacyPage() {
           <p>
             You have the right to access, correct, object to processing, or request deletion of
             your personal data. Contact us at{" "}
-            <a href="mailto:hello@waevpoint.quest" className="text-cyan-400">hello@waevpoint.quest</a>.
+            <a href="mailto:waevpoint@gmail.com" className="text-cyan-400">waevpoint@gmail.com</a>.
           </p>
 
           <h2 className="text-xl text-white mt-10">6. Data Retention & Security</h2>
@@ -81,7 +81,7 @@ export default function PrivacyPage() {
           <p>
             waevpoint2740<br />
             Altaraza Spine Rd, City of San Jose del Monte, Bulacan 3073, Philippines<br />
-            <a href="mailto:hello@waevpoint.quest" className="text-cyan-400">hello@waevpoint.quest</a>
+            <a href="mailto:waevpoint@gmail.com" className="text-cyan-400">waevpoint@gmail.com</a>
           </p>
         </section>
       </article>

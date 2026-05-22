@@ -1,12 +1,7 @@
+import { checkAuth } from "@/lib/auth";
 import { randomBytes } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
-
-function checkAuth(req: NextRequest): boolean {
-  const auth = req.headers.get("authorization");
-  if (!auth?.startsWith("Bearer ")) return false;
-  return auth.slice(7) === process.env.INBOX_PASSWORD;
-}
 
 const VALID_STATUSES = ["lead", "booked", "shooting", "editing", "delivered", "cancelled"];
 

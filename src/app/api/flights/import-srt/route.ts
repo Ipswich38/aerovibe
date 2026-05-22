@@ -1,13 +1,8 @@
+import { checkAuth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { parseSrt, srtWallToDateTime } from "@/lib/srt";
 
 export const maxDuration = 30;
-
-function checkAuth(req: NextRequest): boolean {
-  const auth = req.headers.get("authorization");
-  if (!auth?.startsWith("Bearer ")) return false;
-  return auth.slice(7) === process.env.INBOX_PASSWORD;
-}
 
 // POST body: { srt: "<contents of .SRT file>", downsample?: number }
 // Returns parsed summary + downsampled track for map preview.

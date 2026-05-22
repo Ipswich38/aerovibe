@@ -1,15 +1,12 @@
+import { checkAuth } from "@/lib/auth";
 import { NextRequest } from "next/server";
 import { SECURITY_DIRECTIVE, sanitizeMessage } from "@/lib/agent-security";
 
-function checkAuth(req: NextRequest): boolean {
-  const auth = req.headers.get("authorization");
-  if (!auth?.startsWith("Bearer ")) return false;
-  return auth.slice(7) === process.env.INBOX_PASSWORD;
-}
-
-const HF_BASE = "https://router.huggingface.co/v1";
-const PRIMARY_MODEL = "google/gemma-4-31B-it:together";
-const FALLBACK_MODEL = "Qwen/Qwen2-VL-7B-Instruct";
+const GROQ_API    = "https://api.groq.com/openai/v1/chat/completions";
+const OR_API      = "https://openrouter.ai/api/v1/chat/completions";
+const OR_HEADERS  = { "HTTP-Referer": "https://waevpoint.quest", "X-Title": "Waevpoint Ops" };
+const GROQ_MODELS = ["meta-llama/llama-4-scout-17b-16e-instruct"];
+const OR_MODELS   = ["meta-llama/llama-3.2-90b-vision-instruct:free", "qwen/qwen2.5-vl-7b-instruct:free"];
 
 const SYSTEM_PROMPT = `You are Captain Panchi's vision system — analyzing whatever the drone pilot shows you. This could be a live camera view of the environment, a drone photo, a drone video frame, a DJI Fly screenshot, a roof close-up, an aerial survey image, a landscape, a construction site, a person, a vehicle, a building, or literally anything. Analyze what you actually see — don't assume context.
 
@@ -36,8 +33,9 @@ export async function POST(req: NextRequest) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const token = process.env.HF_TOKEN;
-  if (!token) {
+  const groqKey = process.env.GROQ_API_KEY;
+  const orKey   = process.env.OPENROUTER_API_KEY;
+  if (!groqKey && !orKey) {
     return new Response("Vision not configured", { status: 503 });
   }
 
@@ -68,43 +66,40 @@ export async function POST(req: NextRequest) {
     },
   ];
 
-  async function tryModel(model: string): Promise<Response> {
-    return fetch(`${HF_BASE}/chat/completions`, {
+  function tryFetch(apiUrl: string, apiKey: string, model: string, extra: Record<string, string> = {}): Promise<Response> {
+    return fetch(apiUrl, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model,
-        messages,
-        stream: true,
-        max_tokens: 1500,
-        temperature: 0.4,
-      }),
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", ...extra },
+      body: JSON.stringify({ model, messages, stream: true, max_tokens: 1500, temperature: 0.4 }),
     });
   }
 
-  let upstream: Response;
-  try {
-    upstream = await tryModel(PRIMARY_MODEL);
-    if (!upstream.ok || !upstream.body) {
-      console.warn(`Vision primary failed (${upstream.status}), trying fallback`);
-      upstream = await tryModel(FALLBACK_MODEL);
-    }
-  } catch {
-    try {
-      upstream = await tryModel(FALLBACK_MODEL);
-    } catch (err) {
-      console.error("Vision fallback failed:", err);
-      return new Response("Vision service unavailable", { status: 502 });
+  let upstream: Response | null = null;
+
+  // Try Groq models first
+  if (groqKey) {
+    for (const model of GROQ_MODELS) {
+      try {
+        const res = await tryFetch(GROQ_API, groqKey, model);
+        if (res.ok && res.body) { upstream = res; break; }
+        console.warn(`Groq vision ${res.status} on ${model}`);
+      } catch (e) { console.error(`Groq vision error (${model}):`, e); }
     }
   }
 
-  if (!upstream.ok || !upstream.body) {
-    const errText = await upstream.text().catch(() => "");
-    console.error(`Vision model error ${upstream.status}: ${errText.slice(0, 200)}`);
-    return new Response(`Vision error (${upstream.status})`, { status: 502 });
+  // Fallback to OpenRouter
+  if (!upstream && orKey) {
+    for (const model of OR_MODELS) {
+      try {
+        const res = await tryFetch(OR_API, orKey, model, OR_HEADERS);
+        if (res.ok && res.body) { upstream = res; break; }
+        console.warn(`OR vision ${res.status} on ${model}`);
+      } catch (e) { console.error(`OR vision error (${model}):`, e); }
+    }
+  }
+
+  if (!upstream || !upstream.body) {
+    return new Response("Vision service unavailable", { status: 502 });
   }
 
   const encoder = new TextEncoder();

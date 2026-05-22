@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
 import { classifyAndDraft, sendAutoReply, sendIMessage } from "@/lib/auto-reply";
-
-const CEO_PHONE = "+639524807848";
+import { NOTIFY_EMAIL, OUTBOUND_FROM_EMAIL } from "@/lib/email-config";
 
 const SERVICE_LABELS: Record<string, string> = {
   social: "Social Media",
@@ -14,8 +13,6 @@ const SERVICE_LABELS: Record<string, string> = {
   "just-asking": "Pricing Inquiry",
   other: "Other",
 };
-
-const NOTIFY_EMAIL = "rootbyte.tech@gmail.com";
 
 async function sendNotification(payload: {
   name: string;
@@ -84,7 +81,7 @@ View and reply in inbox: https://waevpoint.quest/inbox`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: { email: "hello@waevpoint.quest", name: "waevpoint inbox" },
+        from: { email: OUTBOUND_FROM_EMAIL, name: "waevpoint inbox" },
         to: [{ email: NOTIFY_EMAIL }],
         reply_to: payload.contact.includes("@")
           ? { email: payload.contact, name: payload.name }
@@ -140,15 +137,35 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
+    if (message.trim().length > 2000) {
+      return NextResponse.json({ error: "Message too long (max 2000 characters)" }, { status: 400 });
+    }
+
+    const cleanServiceType = service_type && Object.prototype.hasOwnProperty.call(SERVICE_LABELS, service_type)
+      ? service_type
+      : null;
+
     const cleanPhone = phone?.trim() || null;
     const cleanAttn = phone_attn?.trim() || null;
+
+    // Rate limit: reject if same contact submitted in the last 5 minutes
+    const recentCutoff = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    const { data: recentMsg } = await supabaseAdmin
+      .from("waevpoint_messages")
+      .select("id")
+      .eq("contact", contact.trim())
+      .gte("created_at", recentCutoff)
+      .maybeSingle();
+    if (recentMsg) {
+      return NextResponse.json({ error: "Please wait before submitting again" }, { status: 429 });
+    }
 
     const payload = {
       name: name.trim(),
       contact: contact.trim(),
       phone: cleanPhone,
       phone_attn: cleanAttn,
-      service_type: service_type || null,
+      service_type: cleanServiceType,
       message: message.trim(),
     };
 
@@ -215,7 +232,7 @@ export async function POST(req: NextRequest) {
         const serviceLabel = SERVICE_LABELS[result.category] || result.category;
         const phoneInfo = payload.phone ? `\nPhone: ${payload.phone}${payload.phone_attn ? ` (Attn: ${payload.phone_attn})` : ""}` : "";
         const imsg = `waevpoint inquiry needs your attention\n\nFrom: ${payload.name}\nEmail: ${payload.contact}${phoneInfo}\nType: ${serviceLabel}\n\n"${payload.message.slice(0, 200)}"\n\nThis is about pricing/scheduling — auto-reply sent, they're expecting a personal follow-up.`;
-        await sendIMessage(CEO_PHONE, imsg);
+        await sendIMessage(process.env.CEO_PHONE ?? "", imsg);
       }
     })().catch((e) => console.error("Auto-reply pipeline error:", e));
 

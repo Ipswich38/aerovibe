@@ -1,3 +1,5 @@
+import { OUTBOUND_FROM_EMAIL } from "@/lib/email-config";
+
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 const CLASSIFY_PROMPT = `You are waevpoint's inbox classifier. Analyze the incoming inquiry and respond with EXACTLY one JSON object — no markdown, no explanation, no extra text.
@@ -115,7 +117,7 @@ export async function sendAutoReply(to: string, name: string, body: string): Pro
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: { email: "hello@waevpoint.quest", name: "waevpoint" },
+        from: { email: OUTBOUND_FROM_EMAIL, name: "waevpoint" },
         to: [{ email: to, name }],
         subject: `Thanks for reaching out, ${name}`,
         text: body + "\n\n— waevpoint · waevpoint.quest",

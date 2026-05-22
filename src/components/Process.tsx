@@ -6,26 +6,26 @@ import ScrollReveal from "./ScrollReveal";
 const steps = [
   {
     number: "01",
-    title: "Message us",
-    description: "Tell us what you need. We'll give you a clear quote — no surprises.",
+    title: "Tell us what you're building",
+    description: "Share your idea — a shoot, a site, an app, or something in between. No jargon needed.",
     icon: "M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z",
   },
   {
     number: "02",
-    title: "We fly & shoot",
-    description: "We show up, fly the drone, capture every angle you need.",
-    icon: "M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5",
+    title: "We scope & plan",
+    description: "We map out the work — what gets made, how long it takes, and what you'll actually receive.",
+    icon: "M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75",
   },
   {
     number: "03",
-    title: "We edit",
-    description: "Color grading, music, cuts — finished content, not raw footage.",
-    icon: "M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75",
+    title: "We create",
+    description: "Capture, design, or build — we make the thing. Finished output, not half-baked drafts.",
+    icon: "M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5",
   },
   {
     number: "04",
     title: "You get it",
-    description: "Same-day delivery. AirDrop, email, or Drive — ready to post.",
+    description: "Delivered however works for you — just tell us your preference. Drive, email, repo, or wherever.",
     icon: "M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
   },
 ];

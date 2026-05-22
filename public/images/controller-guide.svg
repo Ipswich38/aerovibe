@@ -1,0 +1,44 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="720" rx="32" fill="#111112"/>
+  <rect x="32" y="32" width="1136" height="656" rx="28" fill="#161617" stroke="#3f3f46" stroke-width="2"/>
+  <text x="600" y="86" text-anchor="middle" fill="#F4F4F5" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700">Controller Direction Guide</text>
+  <text x="600" y="120" text-anchor="middle" fill="#A1A1AA" font-family="Arial, Helvetica, sans-serif" font-size="18">Use this before the field sequence</text>
+
+  <g transform="translate(110,170)">
+    <rect x="0" y="0" width="430" height="430" rx="34" fill="#1d1d20" stroke="#52525b" stroke-width="2"/>
+    <circle cx="215" cy="215" r="118" fill="none" stroke="#8b8b93" stroke-width="18"/>
+    <circle cx="215" cy="215" r="16" fill="#fafafa" stroke="#27272a" stroke-width="8"/>
+    <line x1="215" y1="110" x2="215" y2="52" stroke="#93c5fd" stroke-width="8" stroke-linecap="round"/>
+    <polygon points="215,36 201,58 229,58" fill="#93c5fd"/>
+    <line x1="215" y1="320" x2="215" y2="378" stroke="#93c5fd" stroke-width="8" stroke-linecap="round"/>
+    <polygon points="215,394 201,372 229,372" fill="#93c5fd"/>
+    <line x1="110" y1="215" x2="52" y2="215" stroke="#93c5fd" stroke-width="8" stroke-linecap="round"/>
+    <polygon points="36,215 58,201 58,229" fill="#93c5fd"/>
+    <line x1="320" y1="215" x2="378" y2="215" stroke="#93c5fd" stroke-width="8" stroke-linecap="round"/>
+    <polygon points="394,215 372,201 372,229" fill="#93c5fd"/>
+    <text x="215" y="24" text-anchor="middle" fill="#F4F4F5" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Throttle Up</text>
+    <text x="215" y="420" text-anchor="middle" fill="#F4F4F5" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Throttle Down</text>
+    <text x="18" y="226" text-anchor="start" fill="#F4F4F5" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Yaw Left</text>
+    <text x="412" y="226" text-anchor="end" fill="#F4F4F5" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Yaw Right</text>
+  </g>
+
+  <g transform="translate(670,170)">
+    <rect x="0" y="0" width="430" height="430" rx="34" fill="#1d1d20" stroke="#52525b" stroke-width="2"/>
+    <circle cx="215" cy="215" r="118" fill="none" stroke="#8b8b93" stroke-width="18"/>
+    <circle cx="215" cy="215" r="16" fill="#fafafa" stroke="#27272a" stroke-width="8"/>
+    <line x1="215" y1="110" x2="215" y2="52" stroke="#93c5fd" stroke-width="8" stroke-linecap="round"/>
+    <polygon points="215,36 201,58 229,58" fill="#93c5fd"/>
+    <line x1="215" y1="320" x2="215" y2="378" stroke="#93c5fd" stroke-width="8" stroke-linecap="round"/>
+    <polygon points="215,394 201,372 229,372" fill="#93c5fd"/>
+    <line x1="110" y1="215" x2="52" y2="215" stroke="#93c5fd" stroke-width="8" stroke-linecap="round"/>
+    <polygon points="36,215 58,201 58,229" fill="#93c5fd"/>
+    <line x1="320" y1="215" x2="378" y2="215" stroke="#93c5fd" stroke-width="8" stroke-linecap="round"/>
+    <polygon points="394,215 372,201 372,229" fill="#93c5fd"/>
+    <text x="215" y="24" text-anchor="middle" fill="#F4F4F5" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Pitch Down</text>
+    <text x="215" y="420" text-anchor="middle" fill="#F4F4F5" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Pitch Up</text>
+    <text x="18" y="226" text-anchor="start" fill="#F4F4F5" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Roll Left</text>
+    <text x="412" y="226" text-anchor="end" fill="#F4F4F5" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">Roll Right</text>
+  </g>
+
+  <text x="600" y="652" text-anchor="middle" fill="#A1A1AA" font-family="Arial, Helvetica, sans-serif" font-size="16">Up = climb, down = descend, left/right = yaw, front/back = pitch, side to side = roll</text>
+</svg>

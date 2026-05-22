@@ -10,6 +10,47 @@ interface Message {
   content: string;
 }
 
+function renderContent(text: string): React.ReactNode {
+  if (!text) return null;
+  const lines = text.split("\n");
+  const nodes: React.ReactNode[] = [];
+  let listBuf: string[] = [];
+
+  function flushList() {
+    if (!listBuf.length) return;
+    const items = listBuf.slice();
+    listBuf = [];
+    nodes.push(
+      <ul key={`list-${nodes.length}`} className="space-y-1.5 my-1">
+        {items.map((item, i) => (
+          <li key={i} className="flex items-start gap-2">
+            <span className="mt-[3px] shrink-0 w-3.5 h-3.5 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+              <svg width="7" height="6" viewBox="0 0 8 6" fill="none">
+                <path d="M1 3l2 2 4-4" stroke="#34d399" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+            <span className="leading-snug">{item}</span>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  for (const line of lines) {
+    const t = line.trim();
+    if (t.startsWith("✓ ")) {
+      listBuf.push(t.slice(2));
+    } else {
+      flushList();
+      if (t) nodes.push(<p key={`p-${nodes.length}`} className="leading-relaxed">{t}</p>);
+      else if (nodes.length) nodes.push(<div key={`sp-${nodes.length}`} className="h-1.5" />);
+    }
+  }
+  flushList();
+
+  return <div className="space-y-1 text-[12.5px]">{nodes}</div>;
+}
+
 function getTab(pathname: string): string {
   const seg = pathname.replace("/ops/", "").split("/")[0];
   return seg || "inbox";
@@ -103,6 +144,9 @@ export default function PanchiAssistant() {
             if (parsed.content) {
               fullContent += parsed.content;
               setMessages([...updated, { role: "assistant", content: fullContent }]);
+            }
+            if (parsed.action === "calendar_changed") {
+              window.dispatchEvent(new CustomEvent("panchi:calendar_changed"));
             }
           } catch {
             // skip
@@ -221,19 +265,21 @@ export default function PanchiAssistant() {
               >
                 <div
                   className={`
-                    max-w-[85%] rounded-xl px-3.5 py-2 text-[12.5px] leading-relaxed
+                    max-w-[85%] rounded-xl px-3.5 py-2
                     ${msg.role === "user"
-                      ? "bg-cyan-500/20 text-white"
+                      ? "bg-cyan-500/20 text-white text-[12.5px] leading-relaxed"
                       : "bg-white/[0.04] text-white/80"
                     }
                   `}
                 >
-                  {msg.content || (
-                    <span className="inline-flex items-center gap-1 text-white/30">
-                      <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" />
-                      Thinking...
-                    </span>
-                  )}
+                  {msg.content
+                    ? (msg.role === "assistant" ? renderContent(msg.content) : msg.content)
+                    : (
+                      <span className="inline-flex items-center gap-1 text-white/30 text-[12.5px]">
+                        <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" />
+                        Thinking...
+                      </span>
+                    )}
                 </div>
               </div>
             ))}

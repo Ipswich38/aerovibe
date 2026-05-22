@@ -90,7 +90,7 @@ export default function TermsPage() {
 
           <h2 className="text-xl text-white mt-10">10. Contact</h2>
           <p>
-            <a href="mailto:hello@waevpoint.quest" className="text-cyan-400">hello@waevpoint.quest</a>
+            <a href="mailto:waevpoint@gmail.com" className="text-cyan-400">waevpoint@gmail.com</a>
           </p>
         </section>
       </article>

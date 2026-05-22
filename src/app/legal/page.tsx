@@ -22,7 +22,7 @@ export default function LegalPage() {
             waevpoint2740 is a pre-launch aerial content brand preparing for formal operations
             in June 2028.<br />
             <strong>Address:</strong> Altaraza Spine Rd, City of San Jose del Monte, Bulacan 3073, Philippines<br />
-            <strong>Email:</strong> <a href="mailto:hello@waevpoint.quest" className="text-cyan-400">hello@waevpoint.quest</a>
+            <strong>Email:</strong> <a href="mailto:waevpoint@gmail.com" className="text-cyan-400">waevpoint@gmail.com</a>
           </p>
 
           <h2 className="text-xl text-white mt-10">Regulatory Status</h2>
@@ -44,7 +44,7 @@ export default function LegalPage() {
           <h2 className="text-xl text-white mt-10">Copyright &amp; Takedown</h2>
           <p>
             If you believe content on this site infringes your intellectual property, please
-            contact <a href="mailto:hello@waevpoint.quest" className="text-cyan-400">hello@waevpoint.quest</a>{" "}
+            contact <a href="mailto:waevpoint@gmail.com" className="text-cyan-400">waevpoint@gmail.com</a>{" "}
             with a detailed description, links to the original work, and proof of ownership.
           </p>
 

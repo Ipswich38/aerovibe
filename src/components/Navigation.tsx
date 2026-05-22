@@ -15,8 +15,8 @@ export default function Navigation() {
   const links = [
     { href: "#why", label: "Why Us" },
     { href: "#work", label: "Work" },
-    { href: "#services", label: "Services" },
-    { href: "#pricing", label: "Pricing" },
+    { href: "#sites", label: "Sites" },
+    { href: "#services", label: "What We Create" },
   ];
 
   return (
@@ -49,7 +49,7 @@ export default function Navigation() {
             </a>
           ))}
           <a href="#contact" className="btn-cyan">
-            Get a Quote
+            Contact
             <svg className="btn-arrow" viewBox="0 0 12 12" fill="none">
               <path d="M2 6h8m0 0L7 3m3 3L7 9" stroke="currentColor" strokeWidth="1.5" />
             </svg>
@@ -82,7 +82,7 @@ export default function Navigation() {
             </a>
           ))}
           <a href="#contact" onClick={() => setMenuOpen(false)} className="btn-cyan w-fit">
-            Get a Quote
+            Contact
           </a>
         </div>
       )}

@@ -1,34 +1,46 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const HF_VISION_MODEL = "Qwen/Qwen2.5-VL-72B-Instruct";
-const HF_TEXT_MODEL = "meta-llama/Llama-3.3-70B-Instruct";
-const HF_API_URL = "https://router.huggingface.co/v1/chat/completions";
+const GROQ_API = "https://api.groq.com/openai/v1/chat/completions";
+const OR_API   = "https://openrouter.ai/api/v1/chat/completions";
+const OR_EXTRA = { "HTTP-Referer": "https://waevpoint.quest", "X-Title": "Waevpoint Ops" };
 
-async function hfChat(
-  key: string,
-  model: string,
+const GROQ_VISION = "llama-3.2-90b-vision-preview";
+const GROQ_TEXT   = "llama-3.3-70b-versatile";
+const OR_VISION   = "meta-llama/llama-3.2-90b-vision-instruct:free";
+const OR_TEXT     = "qwen/qwen-2.5-72b-instruct:free";
+
+async function aiChat(
+  groqKey: string | undefined,
+  orKey: string | undefined,
+  groqModel: string,
+  orModel: string,
   messages: Array<{ role: string; content: string | Array<Record<string, unknown>> }>,
-  maxTokens: number = 1024
+  maxTokens = 1024,
 ): Promise<string | null> {
-  const res = await fetch(HF_API_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ model, messages, max_tokens: maxTokens }),
-  });
-  if (!res.ok) return null;
-  const data = (await res.json()) as {
-    choices: Array<{ message: { content: string } }>;
-  };
-  return data.choices[0]?.message?.content ?? null;
+  const attempts = [
+    ...(groqKey ? [{ url: GROQ_API, key: groqKey, model: groqModel, extra: {} }] : []),
+    ...(orKey   ? [{ url: OR_API,   key: orKey,   model: orModel,   extra: OR_EXTRA }] : []),
+  ];
+  for (const { url, key, model, extra } of attempts) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json", ...extra },
+        body: JSON.stringify({ model, messages, max_tokens: maxTokens }),
+      });
+      if (!res.ok) { console.warn(`Studio analyze ${res.status} on ${model}`); continue; }
+      const data = (await res.json()) as { choices: Array<{ message: { content: string } }> };
+      return data.choices[0]?.message?.content ?? null;
+    } catch (e) { console.error(`Studio analyze error (${model}):`, e); }
+  }
+  return null;
 }
 
 export async function POST(req: NextRequest) {
-  const hfKey = process.env.HF_TOKEN;
-  if (!hfKey) {
-    return NextResponse.json({ error: "HF_TOKEN not configured" }, { status: 500 });
+  const groqKey = process.env.GROQ_API_KEY;
+  const orKey   = process.env.OPENROUTER_API_KEY;
+  if (!groqKey && !orKey) {
+    return NextResponse.json({ error: "AI not configured" }, { status: 500 });
   }
 
   const authHeader = req.headers.get("x-ops-token");
@@ -46,7 +58,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Step 1: Vision — describe the frame
-  const visionDesc = await hfChat(hfKey, HF_VISION_MODEL, [
+  const visionDesc = await aiChat(groqKey, orKey, GROQ_VISION, OR_VISION, [
     {
       role: "user",
       content: [
@@ -112,7 +124,7 @@ RESPOND ONLY with valid JSON, no markdown fences:
   }
 }`;
 
-  const result = await hfChat(hfKey, HF_TEXT_MODEL, [
+  const result = await aiChat(groqKey, orKey, GROQ_TEXT, OR_TEXT, [
     { role: "user", content: prompt },
   ], 1500);
 

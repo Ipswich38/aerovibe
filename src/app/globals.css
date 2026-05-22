@@ -37,6 +37,15 @@ body {
   overflow-x: hidden;
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 ::selection {
   background: var(--color-av-red);
   color: var(--color-av-white);

@@ -6,28 +6,39 @@ import ScrollReveal from "./ScrollReveal";
 
 const solutions = [
   {
-    headline: "We fly, edit, and deliver.",
-    description: "Not just raw footage — you get fully edited, color-graded, music-synced content ready to post or present.",
+    headline: <>Come see your world <span className="text-cyan-400">from the clouds.</span></>,
+    description: "Cinematic aerial visuals for properties, events, and content projects across the Philippines.",
+    accent: true,
   },
   {
-    headline: "Startup pricing, no markup.",
-    description: "No office rent, no big team overhead. You pay for the content — that's it. Transparent rates from day one.",
+    headline: <>Sky to screen —<br className="hidden md:block" /> one creative team.</>,
+    description: "Aerial visuals, web design, mobile apps, and custom software. Different crafts, one consistent vision.",
+    accent: false,
   },
   {
-    headline: "Quality you can preview first.",
-    description: "We show samples before you book. And if you're not happy with the output, we re-edit it — free.",
+    headline: <>We create.<br className="hidden md:block" /> You stand out.</>,
+    description: "Not templates, not stock. Everything is made from scratch around what you're trying to say and who you're saying it to.",
+    accent: false,
   },
   {
-    headline: "Same-day delivery.",
-    description: "Standard shoots delivered the same day via AirDrop, email, or Google Drive. No waiting around.",
+    headline: <>Quality you can see<br className="hidden md:block" /> before you commit.</>,
+    description: "We show samples and prototypes before you sign off. Not happy with the output? We iterate — no extra charge.",
+    accent: false,
   },
   {
-    headline: "Every format you need.",
-    description: "Horizontal for YouTube, vertical for Reels and TikTok, stills for listings — all from one shoot.",
+    headline: <>Every format.<br className="hidden md:block" /> Every platform.</>,
+    description: "Reels, YouTube, listings, app stores, websites — built for where your audience actually lives.",
+    accent: false,
   },
   {
-    headline: "Built for Filipino businesses.",
-    description: "Real estate, events, tourism, construction — we understand the local market and what your audience wants to see.",
+    headline: <>Simple process.<br className="hidden md:block" /> Clear results.</>,
+    description: "No jargon, no scope creep. We scope it, build it, deliver it. You always know what's happening and when.",
+    accent: false,
+  },
+  {
+    headline: <>Personal,<br className="hidden md:block" /> not transactional.</>,
+    description: "You talk directly to the person doing the work. Fast replies, honest feedback, real collaboration.",
+    accent: false,
   },
 ];
 
@@ -75,8 +86,15 @@ export default function WhyUs() {
                 className="text-center"
               >
                 <h2
-                  className="text-[clamp(2.2rem,5.5vw,4rem)] leading-[1.1] text-white mb-6"
-                  style={{ fontFamily: "'League Spartan', sans-serif", fontWeight: 700 }}
+                  className={`leading-[1.05] text-white mb-6 ${
+                    active.accent
+                      ? "text-[clamp(2.8rem,7vw,5rem)]"
+                      : "text-[clamp(2.2rem,5.5vw,4rem)]"
+                  }`}
+                  style={{
+                    fontFamily: "'League Spartan', sans-serif",
+                    fontWeight: active.accent ? 800 : 700,
+                  }}
                 >
                   {active.headline}
                 </h2>

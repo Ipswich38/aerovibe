@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -9,108 +9,378 @@ import {
   saveSession,
   touchSession,
   clearSession,
-  loadSidebarCollapsed,
-  saveSidebarCollapsed,
 } from "@/lib/ops";
 import { OpsContext } from "./OpsContext";
 import PanchiAssistant from "./PanchiAssistant";
 
-interface NavItem {
+interface AppItem {
   href: string;
   label: string;
   icon: string;
+  desc: string;
 }
 
-interface Department {
+interface Section {
   key: string;
   label: string;
   icon: string;
-  items: NavItem[];
+  color: string;
+  apps: AppItem[];
 }
 
-const DEPARTMENTS: Department[] = [
+const SECTIONS: Section[] = [
   {
     key: "field",
     label: "Field Ops",
     icon: "✈",
-    items: [
-      { href: "/ops/missions", label: "Missions", icon: "◇" },
-      { href: "/ops/flights", label: "Flights", icon: "✈" },
-      { href: "/ops/map", label: "Map", icon: "◎" },
-      { href: "/ops/surveys", label: "Surveys", icon: "▣" },
+    color: "#06b6d4",
+    apps: [
+      { href: "/ops/missions", label: "Missions", icon: "◇", desc: "Plan & track missions" },
+      { href: "/ops/flights", label: "Flights", icon: "✈", desc: "Flight logs & records" },
+      { href: "/ops/map", label: "Map", icon: "◎", desc: "Live map & zones" },
+      { href: "/ops/surveys", label: "Surveys", icon: "▣", desc: "Area surveys" },
+      { href: "/ops/ingest", label: "Ingest", icon: "↓", desc: "Import & parse footage" },
     ],
   },
   {
     key: "studio",
     label: "Studio",
     icon: "◈",
-    items: [
-      { href: "/ops/studio", label: "Grade", icon: "◈" },
-      { href: "/ops/ingest", label: "Ingest", icon: "↓" },
-      { href: "/ops/lightroom", label: "Lightroom", icon: "◎" },
-      { href: "/ops/render", label: "Render", icon: "▶" },
+    color: "#a78bfa",
+    apps: [
+      { href: "/ops/luts", label: "LUTs", icon: "◈", desc: "DJI Mini 5 Pro color LUTs" },
     ],
   },
   {
     key: "manage",
     label: "Manage",
     icon: "▦",
-    items: [
-      { href: "/ops/calendar", label: "Calendar", icon: "▥" },
-      { href: "/ops/projects", label: "Projects", icon: "▦" },
-      { href: "/ops/activity", label: "Activity", icon: "◷" },
+    color: "#34d399",
+    apps: [
+      { href: "/ops/bookings", label: "Bookings", icon: "✈", desc: "Client booking requests" },
+      { href: "/ops/calendar", label: "Calendar", icon: "▥", desc: "Schedule" },
+      { href: "/ops/projects", label: "Projects", icon: "▦", desc: "Active jobs" },
+      { href: "/ops/activity", label: "Activity", icon: "◷", desc: "Timeline" },
     ],
   },
   {
     key: "marketing",
     label: "Marketing",
     icon: "◐",
-    items: [
-      { href: "/ops/blitz", label: "Blitz", icon: "◐" },
+    color: "#fbbf24",
+    apps: [
+      { href: "/ops/blitz", label: "Blitz", icon: "◐", desc: "Campaign launcher" },
     ],
   },
   {
     key: "crm",
     label: "CRM",
     icon: "◉",
-    items: [
-      { href: "/ops/leads", label: "Leads", icon: "⌕" },
-      { href: "/ops/clients", label: "Clients", icon: "◉" },
-      { href: "/ops/contracts", label: "Contracts", icon: "✎" },
+    color: "#f472b6",
+    apps: [
+      { href: "/ops/leads", label: "Leads", icon: "⌕", desc: "Prospect pipeline" },
+      { href: "/ops/clients", label: "Clients", icon: "◉", desc: "Client records" },
+      { href: "/ops/contracts", label: "Contracts", icon: "✎", desc: "Agreements" },
     ],
   },
   {
     key: "finance",
     label: "Finance",
     icon: "₱",
-    items: [
-      { href: "/ops/wavi", label: "Wavi", icon: "₩" },
-      { href: "/ops/invoices", label: "Invoices", icon: "₱" },
-      { href: "/ops/books", label: "Books", icon: "≡" },
+    color: "#4ade80",
+    apps: [
+      { href: "/ops/wavi", label: "Wavi", icon: "₩", desc: "Wallet overview" },
+      { href: "/ops/invoices", label: "Invoices", icon: "₱", desc: "Billing" },
+      { href: "/ops/books", label: "Books", icon: "≡", desc: "Accounting" },
     ],
   },
   {
     key: "inbox",
     label: "Inbox",
     icon: "✉",
-    items: [{ href: "/ops/inbox", label: "Messages", icon: "✉" }],
+    color: "#60a5fa",
+    apps: [
+      { href: "/ops/inbox", label: "Messages", icon: "✉", desc: "Client messages" },
+    ],
+  },
+  {
+    key: "wavepilots",
+    label: "WaevPilots",
+    icon: "⬡",
+    color: "#8b5cf6",
+    apps: [
+      { href: "/ops/pilots", label: "WaevPilots", icon: "⬡", desc: "Pilot applications & jobs" },
+    ],
   },
 ];
 
-function Logo({ size = 22 }: { size?: number }) {
+function getActiveSectionKey(pathname: string): string | null {
+  if (pathname === "/ops" || pathname.startsWith("/ops/flight-assist") || pathname.startsWith("/ops/checklist")) return null;
+  for (const s of SECTIONS) {
+    if (s.apps.some((a) => pathname.startsWith(a.href))) return s.key;
+  }
+  return null;
+}
+
+// ── Section icon with hover flyout ────────────────────────────────────────────
+
+function SectionRailItem({
+  section,
+  isActive,
+  pathname,
+}: {
+  section: Section;
+  isActive: boolean;
+  pathname: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  function show() {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    setOpen(true);
+  }
+  function hide() {
+    timerRef.current = setTimeout(() => setOpen(false), 120);
+  }
+
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src="/images/logo.png" alt="waevpoint" style={{ height: size, width: "auto" }} />
+    <div
+      className="relative"
+      onMouseEnter={show}
+      onMouseLeave={hide}
+    >
+      <button
+        className="w-9 h-9 rounded-xl flex items-center justify-center text-[16px] transition-all"
+        style={{
+          background: isActive ? `${section.color}22` : open ? "rgba(255,255,255,0.07)" : "transparent",
+          color: isActive ? section.color : "rgba(255,255,255,0.45)",
+          boxShadow: isActive ? `0 0 0 1px ${section.color}40` : "none",
+        }}
+        title={section.label}
+      >
+        {section.icon}
+      </button>
+
+      {open && (
+        <div
+          className="absolute left-full top-0 z-50 ml-3"
+          onMouseEnter={show}
+          onMouseLeave={hide}
+        >
+          <div
+            className="rounded-2xl p-3 shadow-2xl"
+            style={{
+              background: "#1a1a1a",
+              border: "1px solid rgba(255,255,255,0.09)",
+              minWidth: 200,
+            }}
+          >
+            {/* Section header */}
+            <div className="flex items-center gap-2 px-1 mb-2.5">
+              <div className="w-1.5 h-1.5 rounded-full" style={{ background: section.color }} />
+              <span
+                className="text-[10px] font-semibold uppercase tracking-[0.1em]"
+                style={{ color: `${section.color}bb` }}
+              >
+                {section.label}
+              </span>
+            </div>
+
+            {/* App mini-cards */}
+            <div className="grid grid-cols-2 gap-1.5">
+              {section.apps.map((app) => {
+                const active = pathname.startsWith(app.href);
+                return (
+                  <Link
+                    key={app.href}
+                    href={app.href}
+                    className="flex flex-col gap-1.5 p-2.5 rounded-xl transition-all"
+                    style={{
+                      background: active ? `${section.color}18` : "rgba(255,255,255,0.04)",
+                      border: active ? `1px solid ${section.color}35` : "1px solid transparent",
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!active) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.07)";
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!active) (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
+                    }}
+                  >
+                    <span
+                      className="text-[15px] leading-none"
+                      style={{ color: active ? section.color : "rgba(255,255,255,0.6)" }}
+                    >
+                      {app.icon}
+                    </span>
+                    <span
+                      className="text-[11px] font-medium leading-none"
+                      style={{ color: active ? section.color : "rgba(255,255,255,0.75)" }}
+                    >
+                      {app.label}
+                    </span>
+                    <span className="text-[10px] leading-tight" style={{ color: "rgba(255,255,255,0.28)" }}>
+                      {app.desc}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
-function activeDepartment(pathname: string): string {
-  if (pathname.startsWith("/ops/flight-assist")) return "flight-assist";
-  for (const dept of DEPARTMENTS) {
-    if (dept.items.some((i) => pathname.startsWith(i.href))) return dept.key;
-  }
-  return "field";
+// ── Icon rail ──────────────────────────────────────────────────────────────────
+
+function IconRail({
+  pathname,
+  onLogout,
+}: {
+  pathname: string;
+  onLogout: () => void;
+}) {
+  const activeSectionKey = getActiveSectionKey(pathname);
+  const isHome = pathname === "/ops";
+  const isPanchi = pathname.startsWith("/ops/flight-assist");
+  const isRegs = pathname.startsWith("/ops/regs");
+  const isExam = pathname.startsWith("/ops/exam");
+  const isChecklist = pathname.startsWith("/ops/checklist");
+
+  return (
+    <div
+      className="flex flex-col items-center h-full py-3 gap-1"
+      style={{
+        width: 56,
+        background: "#0d0d0d",
+        borderRight: "1px solid rgba(255,255,255,0.055)",
+        flexShrink: 0,
+      }}
+    >
+      {/* Logo → Home */}
+      <Link href="/ops" className="mb-1" title="Home">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/logo.png" alt="waevpoint" style={{ height: 20, width: "auto", opacity: 0.85 }} />
+      </Link>
+
+      <div style={{ width: 24, borderTop: "1px solid rgba(255,255,255,0.06)", margin: "4px 0" }} />
+
+      {/* Panchi ⚡ */}
+      <Link
+        href="/ops/flight-assist"
+        title="Captain Panchi"
+        className="w-9 h-9 rounded-xl flex items-center justify-center text-[16px] transition-all"
+        style={{
+          background: isPanchi ? "#06b6d4" : "rgba(6,182,212,0.12)",
+          color: isPanchi ? "#000" : "#06b6d4",
+        }}
+      >
+        ⚡
+      </Link>
+
+      {/* PCAR/RPAS Regulations ⚖ */}
+      <Link
+        href="/ops/regs"
+        title="PCAR / RPAS Regulations"
+        className="w-9 h-9 rounded-xl flex items-center justify-center text-[16px] transition-all"
+        style={{
+          background: isRegs ? "rgba(168,139,250,0.25)" : "rgba(168,139,250,0.10)",
+          color: isRegs ? "#c4b5fd" : "#a78bfa",
+          boxShadow: isRegs ? "0 0 0 1px rgba(167,139,250,0.35)" : "none",
+        }}
+      >
+        ⚖
+      </Link>
+
+      {/* Pilot Exam ✎ */}
+      <Link
+        href="/ops/exam"
+        title="Pilot Exam"
+        className="w-9 h-9 rounded-xl flex items-center justify-center text-[16px] transition-all"
+        style={{
+          background: isExam ? "rgba(251,191,36,0.25)" : "rgba(251,191,36,0.10)",
+          color: isExam ? "#fde68a" : "#fbbf24",
+          boxShadow: isExam ? "0 0 0 1px rgba(251,191,36,0.35)" : "none",
+        }}
+      >
+        ✎
+      </Link>
+
+      {/* Pilot Checklist ✓ */}
+      <Link
+        href="/ops/checklist"
+        title="Pilot Checklist"
+        className="w-9 h-9 rounded-xl flex items-center justify-center text-[16px] transition-all"
+        style={{
+          background: isChecklist ? "rgba(52,211,153,0.25)" : "rgba(52,211,153,0.10)",
+          color: isChecklist ? "#86efac" : "#34d399",
+          boxShadow: isChecklist ? "0 0 0 1px rgba(52,211,153,0.35)" : "none",
+        }}
+      >
+        ✓
+      </Link>
+
+      {/* Home icon */}
+      <Link
+        href="/ops"
+        title="All Apps"
+        className="w-9 h-9 rounded-xl flex items-center justify-center transition-all"
+        style={{
+          background: isHome ? "rgba(255,255,255,0.12)" : "transparent",
+          color: isHome ? "#fff" : "rgba(255,255,255,0.4)",
+        }}
+      >
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M1.5 6L7 1.5 12.5 6V13H9V9.5H5V13H1.5V6z" />
+        </svg>
+      </Link>
+
+      <div style={{ width: 24, borderTop: "1px solid rgba(255,255,255,0.06)", margin: "2px 0" }} />
+
+      {/* Section icons with flyouts */}
+      {SECTIONS.map((section) => (
+        <SectionRailItem
+          key={section.key}
+          section={section}
+          isActive={activeSectionKey === section.key}
+          pathname={pathname}
+        />
+      ))}
+
+      {/* Spacer */}
+      <div className="flex-1" />
+
+      {/* Site link */}
+      <Link
+        href="/"
+        target="_blank"
+        title="View site"
+        className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors"
+        style={{ color: "rgba(255,255,255,0.25)" }}
+      >
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M6.5 1.5H2a1 1 0 0 0-1 1v7.5a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V6.5M8.5 1.5h3v3M5.5 8l6-6" />
+        </svg>
+      </Link>
+
+      {/* Logout */}
+      <button
+        onClick={onLogout}
+        title="Sign out"
+        className="w-9 h-9 rounded-xl flex items-center justify-center transition-colors"
+        style={{ color: "rgba(255,255,255,0.25)" }}
+      >
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 11H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h2M9 9l3-3-3-3M12 6.5H5" />
+        </svg>
+      </button>
+    </div>
+  );
 }
+
+// ── Root layout ────────────────────────────────────────────────────────────────
 
 export default function OpsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -119,28 +389,32 @@ export default function OpsLayout({ children }: { children: React.ReactNode }) {
   const [token, setToken] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
-
-  const activeDept = activeDepartment(pathname);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     setHydrated(true);
     const session = loadSession();
     if (session) {
-      setToken(session.token);
-      setAuthed(true);
+      fetch("/api/ops/session", {
+        headers: { Authorization: `Bearer ${session.token}` },
+      }).then((res) => {
+        if (res.ok) {
+          setToken(session.token);
+          setAuthed(true);
+        } else {
+          clearSession();
+        }
+      }).catch(() => clearSession());
     }
-    setCollapsed(loadSidebarCollapsed());
   }, []);
 
   useEffect(() => {
     if (!authed) return;
-    const events = ["click", "keydown", "scroll", "mousemove"];
+    const events = ["click", "keydown", "scroll", "mousemove"] as const;
     let throttle = 0;
     const handler = () => {
       const now = Date.now();
-      if (now - throttle < 30000) return;
+      if (now - throttle < 30_000) return;
       throttle = now;
       touchSession();
     };
@@ -149,7 +423,6 @@ export default function OpsLayout({ children }: { children: React.ReactNode }) {
       if (!loadSession()) {
         setAuthed(false);
         setToken("");
-        setError("Session expired. Please sign in again.");
       }
     }, 60_000);
     return () => {
@@ -159,11 +432,21 @@ export default function OpsLayout({ children }: { children: React.ReactNode }) {
   }, [authed]);
 
   useEffect(() => {
-    setSidebarOpen(false);
+    setMobileOpen(false);
   }, [pathname]);
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
+    setError("");
+    const res = await fetch("/api/ops/session", {
+      headers: { Authorization: `Bearer ${password}` },
+    });
+    if (!res.ok) {
+      setError("Invalid password");
+      setPassword("");
+      clearSession();
+      return;
+    }
     setToken(password);
     setAuthed(true);
     saveSession(password);
@@ -177,27 +460,22 @@ export default function OpsLayout({ children }: { children: React.ReactNode }) {
     setToken("");
   }
 
-  function toggleSidebar() {
-    const next = !collapsed;
-    setCollapsed(next);
-    saveSidebarCollapsed(next);
-  }
-
   if (!hydrated) {
-    return <div className="min-h-screen" style={{ background: "#1c1c1e" }} />;
+    return <div className="min-h-screen" style={{ background: "#0d0d0d" }} />;
   }
 
   if (!authed) {
     return (
       <div
         className="min-h-screen flex items-center justify-center px-6"
-        style={{ background: "#1c1c1e", fontFamily: SYSTEM_FONT }}
+        style={{ background: "#0d0d0d", fontFamily: SYSTEM_FONT }}
       >
-        <form onSubmit={handleLogin} className="w-full max-w-xs">
+        <form onSubmit={handleLogin} className="w-full max-w-[320px]">
           <div className="flex flex-col items-center mb-8">
-            <Logo size={56} />
-            <h1 className="text-white text-[15px] font-semibold mt-4">Ops</h1>
-            <p className="text-white/40 text-[12px] mt-1">Sign in to continue</p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/logo.png" alt="waevpoint" style={{ height: 52 }} />
+            <h1 className="text-white text-[16px] font-semibold mt-5">Ops Center</h1>
+            <p className="text-white/35 text-[12px] mt-1">Sign in to continue</p>
           </div>
           {error && <p className="text-amber-400 text-[12px] mb-3 text-center">{error}</p>}
           <input
@@ -206,16 +484,16 @@ export default function OpsLayout({ children }: { children: React.ReactNode }) {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             autoFocus
-            className="w-full bg-white/5 border border-white/10 rounded-md px-3 py-2.5 text-white text-[13px] outline-none focus:border-cyan-400/50 mb-3"
+            className="w-full bg-white/[0.05] border border-white/[0.09] rounded-xl px-4 py-3 text-white text-[13px] outline-none focus:border-cyan-400/40 mb-3 placeholder:text-white/20"
           />
           <button
             type="submit"
-            className="w-full bg-cyan-500 text-black font-medium rounded-md py-2.5 text-[13px] hover:bg-cyan-400 transition-colors"
+            className="w-full bg-cyan-500 text-black font-semibold rounded-xl py-3 text-[13px] hover:bg-cyan-400 transition-colors"
           >
             Sign in
           </button>
-          <p className="text-white/30 text-[11px] mt-4 text-center">
-            Sessions expire after 24 hours of inactivity.
+          <p className="text-white/20 text-[11px] mt-5 text-center">
+            Sessions expire after 24 h of inactivity.
           </p>
         </form>
       </div>
@@ -224,232 +502,113 @@ export default function OpsLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <OpsContext.Provider value={{ token, logout }}>
-      <div className="h-screen flex text-white" style={{ background: "#1c1c1e", fontFamily: SYSTEM_FONT }}>
+      <div
+        className="h-screen flex text-white overflow-hidden"
+        style={{ background: "#0f0f0f", fontFamily: SYSTEM_FONT }}
+      >
         {/* Mobile overlay */}
-        {sidebarOpen && (
+        {mobileOpen && (
           <div
-            className="fixed inset-0 bg-black/60 z-40 lg:hidden"
-            onClick={() => setSidebarOpen(false)}
+            className="fixed inset-0 bg-black/70 z-40 lg:hidden"
+            onClick={() => setMobileOpen(false)}
           />
         )}
 
-        {/* Sidebar */}
-        <aside
-          className={`
-            fixed inset-y-0 left-0 z-50 bg-[#2c2c2e] border-r border-white/[0.08]
-            flex flex-col transition-all duration-200 ease-out
-            lg:static lg:translate-x-0 lg:z-auto
-            ${collapsed ? "w-14" : "w-56"}
-            ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
-          `}
+        {/* Mobile slide-over (full section list) */}
+        <div
+          className={`fixed inset-y-0 left-0 z-50 flex h-[100dvh] flex-col lg:hidden transition-transform duration-200 ease-out ${
+            mobileOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+          style={{ width: 260, background: "#111", borderRight: "1px solid rgba(255,255,255,0.07)" }}
         >
-          {/* Logo header */}
-          <div className="h-12 flex items-center justify-between px-3 border-b border-white/[0.06] shrink-0">
-            <Link href="/ops/inbox" className="flex items-center gap-2 hover:opacity-80 transition-opacity overflow-hidden">
-              <Logo size={20} />
-              {!collapsed && <span className="text-[13px] font-semibold tracking-tight whitespace-nowrap">waevpoint</span>}
-            </Link>
-            <button
-              onClick={toggleSidebar}
-              className="hidden lg:flex w-6 h-6 items-center justify-center rounded text-white/40 hover:text-white hover:bg-white/[0.08] transition-colors shrink-0 focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:outline-none"
-              title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-              aria-expanded={!collapsed}
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                {collapsed ? (
-                  <path d="M5 3l4 4-4 4" />
-                ) : (
-                  <path d="M9 3L5 7l4 4" />
-                )}
-              </svg>
-            </button>
+          <div className="flex h-[52px] shrink-0 items-center gap-3 border-b border-white/[0.06] px-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/logo.png" alt="waevpoint" style={{ height: 20 }} />
+            <span className="text-white text-[13px] font-semibold">Ops Center</span>
           </div>
-
-          {/* Nav */}
-          <nav className="flex-1 overflow-y-auto py-2 px-1.5">
-            {/* Flight Assist — primary CTA */}
-            {collapsed ? (
-              <Link
-                href="/ops/flight-assist"
-                title="Captain Panchi"
-                className={`
-                  flex items-center justify-center w-full py-2 rounded-lg text-[13px] mb-2 transition-colors
-                  ${pathname.startsWith("/ops/flight-assist")
-                    ? "bg-cyan-500 text-black"
-                    : "bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30"
-                  }
-                `}
-              >
-                <span className="text-[13px]">⚡</span>
-              </Link>
-            ) : (
-              <Link
-                href="/ops/flight-assist"
-                className={`
-                  flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-[13px] font-semibold mb-2 transition-colors
-                  ${pathname.startsWith("/ops/flight-assist")
-                    ? "bg-cyan-500 text-black"
-                    : "bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30"
-                  }
-                `}
-              >
-                <span className="w-5 text-center text-[12px]">⚡</span>
-                <span>Captain Panchi</span>
-              </Link>
-            )}
-
-            {DEPARTMENTS.map((dept) => {
-              const isActive = activeDept === dept.key;
-              const singleItem = dept.items.length === 1;
-
-              if (collapsed) {
-                return (
-                  <div key={dept.key} className="mb-0.5">
-                    {dept.items.map((item) => {
-                      const itemActive = pathname.startsWith(item.href);
-                      return (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          title={item.label}
-                          className={`
-                            flex items-center justify-center w-full py-2 rounded-lg text-[13px] transition-colors mb-0.5
-                            ${itemActive
-                              ? "bg-cyan-500/15 text-cyan-300"
-                              : "text-white/55 hover:text-white hover:bg-white/[0.05]"
-                            }
-                          `}
-                        >
-                          <span className="text-[13px]">{item.icon}</span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                );
-              }
-
-              if (singleItem) {
-                const item = dept.items[0];
-                const itemActive = pathname.startsWith(item.href);
-                return (
-                  <Link
-                    key={dept.key}
-                    href={item.href}
-                    className={`
-                      flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] transition-colors mb-0.5
-                      ${itemActive
-                        ? "bg-cyan-500/15 text-cyan-300"
-                        : "text-white/60 hover:text-white hover:bg-white/[0.05]"
-                      }
-                    `}
-                  >
-                    <span className="w-5 text-center text-[12px] opacity-80">{dept.icon}</span>
-                    <span className="font-medium">{dept.label}</span>
-                  </Link>
-                );
-              }
-
-              return (
-                <div key={dept.key} className="mb-1">
-                  <div
-                    className={`
-                      flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] mb-0.5
-                      ${isActive ? "text-white" : "text-white/45"}
-                    `}
-                  >
-                    <span className="w-5 text-center text-[12px] opacity-80">{dept.icon}</span>
-                    <span className="font-semibold uppercase text-[10px] tracking-widest">{dept.label}</span>
-                  </div>
-                  <div className="ml-3 border-l border-white/[0.06] pl-2">
-                    {dept.items.map((item) => {
-                      const itemActive = pathname.startsWith(item.href);
-                      return (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className={`
-                            flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[12px] transition-colors
-                            ${itemActive
-                              ? "bg-cyan-500/15 text-cyan-300"
-                              : "text-white/55 hover:text-white hover:bg-white/[0.04]"
-                            }
-                          `}
-                        >
-                          <span className="w-4 text-center text-[11px] opacity-70">{item.icon}</span>
-                          <span>{item.label}</span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </nav>
-
-          {/* Footer */}
-          <div className="px-2 py-3 border-t border-white/[0.06] shrink-0 space-y-1">
+          <div className="no-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 pb-24 pt-3">
             <Link
-              href="/"
-              target="_blank"
-              title={collapsed ? "View site" : undefined}
-              className={`
-                w-full text-[11px] text-white/40 hover:text-white py-1.5 rounded hover:bg-white/[0.06] transition-colors block
-                ${collapsed ? "flex items-center justify-center" : "text-left px-2"}
-              `}
+              href="/ops/flight-assist"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-2 bg-cyan-500/10 text-cyan-400"
             >
-              {collapsed ? (
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M7 2H3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V8M8 2h4v4M6 8l6-6" />
-                </svg>
-              ) : (
-                "View site ↗"
-              )}
+              <span>⚡</span>
+              <span className="text-[13px] font-semibold">Captain Panchi</span>
             </Link>
-            <button
-              onClick={logout}
-              title={collapsed ? "Sign out" : undefined}
-              className={`
-                w-full text-[11px] text-white/40 hover:text-white py-1.5 rounded hover:bg-white/[0.06] transition-colors
-                ${collapsed ? "flex items-center justify-center" : "text-left px-2"}
-              `}
+            <Link
+              href="/ops/regs"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-3 bg-purple-500/10 text-purple-400"
             >
-              {collapsed ? (
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h2M9 10l3-3-3-3M12 7H5" />
-                </svg>
-              ) : (
-                "Sign out"
-              )}
-            </button>
+              <span>⚖</span>
+              <span className="text-[13px] font-semibold">PCAR / RPAS Regulations</span>
+            </Link>
+            <Link
+              href="/ops/exam"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-3 bg-amber-500/10 text-amber-300"
+            >
+              <span>✎</span>
+              <span className="text-[13px] font-semibold">Pilot Exam</span>
+            </Link>
+            <Link
+              href="/ops/checklist"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-3 bg-emerald-500/10 text-emerald-400"
+            >
+              <span>✓</span>
+              <span className="text-[13px] font-semibold">Pilot Checklist</span>
+            </Link>
+            <Link href="/ops" className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] text-white/60 mb-2">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M1.5 6L7 1.5 12.5 6V13H9V9.5H5V13H1.5V6z" />
+              </svg>
+              All Apps
+            </Link>
+            {SECTIONS.map((section) => (
+              <div key={section.key} className="mb-3">
+                <p className="px-3 text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: `${section.color}80` }}>
+                  {section.label}
+                </p>
+                {section.apps.map((app) => (
+                  <Link
+                    key={app.href}
+                    href={app.href}
+                    className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-white/60 hover:text-white hover:bg-white/[0.05]"
+                  >
+                    <span>{app.icon}</span>
+                    <span>{app.label}</span>
+                  </Link>
+                ))}
+              </div>
+            ))}
           </div>
-        </aside>
+        </div>
+
+        {/* Icon rail — desktop only */}
+        <div className="hidden lg:flex">
+          <IconRail pathname={pathname} onLogout={logout} />
+        </div>
 
         {/* Main area */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 h-full">
           {/* Mobile top bar */}
-          <header className="h-12 flex items-center justify-between px-3 border-b border-white/[0.08] bg-[#252527] shrink-0 lg:hidden">
+          <header
+            className="h-[52px] flex items-center justify-between px-4 border-b border-white/[0.06] shrink-0 lg:hidden"
+            style={{ background: "#0d0d0d" }}
+          >
             <button
-              onClick={() => setSidebarOpen(true)}
-              className="w-9 h-9 flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-white/[0.06]"
-              aria-label="Open menu"
+              onClick={() => setMobileOpen(true)}
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-white/50"
             >
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
-                <path d="M3 5h12M3 9h12M3 13h12" />
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                <path d="M2 4.5h12M2 8h12M2 11.5h12" />
               </svg>
             </button>
-            <div className="flex items-center gap-2">
-              <Logo size={18} />
-              <span className="text-[12px] font-semibold">{DEPARTMENTS.find((d) => d.key === activeDept)?.label}</span>
-            </div>
-            <div className="w-9" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/images/logo.png" alt="waevpoint" style={{ height: 18 }} />
+            <div className="w-8" />
           </header>
 
-          {/* Content */}
           <div className="flex-1 overflow-hidden">{children}</div>
         </div>
 
-        {/* Panchi AI Assistant */}
         <PanchiAssistant />
       </div>
     </OpsContext.Provider>

@@ -1,11 +1,7 @@
+import { checkAuth } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase";
-
-function checkAuth(req: NextRequest): boolean {
-  const auth = req.headers.get("authorization");
-  if (!auth?.startsWith("Bearer ")) return false;
-  return auth.slice(7) === process.env.INBOX_PASSWORD;
-}
+import { OUTBOUND_FROM_EMAIL } from "@/lib/email-config";
 
 export async function POST(req: NextRequest) {
   if (!checkAuth(req)) {
@@ -25,7 +21,7 @@ export async function POST(req: NextRequest) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: { email: "hello@waevpoint.quest", name: "waevpoint" },
+      from: { email: OUTBOUND_FROM_EMAIL, name: "waevpoint" },
       to: [{ email: to }],
       subject,
       text: body + "\n\n—\nWaevPoint Team\nAerial Creative Services\nwaevpoint.quest",

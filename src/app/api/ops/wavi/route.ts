@@ -1,11 +1,6 @@
+import { checkAuth } from "@/lib/auth";
 import { NextRequest } from "next/server";
 import { SECURITY_DIRECTIVE, sanitizeMessages } from "@/lib/agent-security";
-
-function checkAuth(req: NextRequest): boolean {
-  const auth = req.headers.get("authorization");
-  if (!auth?.startsWith("Bearer ")) return false;
-  return auth.slice(7) === process.env.INBOX_PASSWORD;
-}
 
 const SYSTEM_PROMPT = `You are Wavi — the AI Finance Controller, CFO, and Accountant for waevpoint, a professional drone services company in the Philippines. You handle all financial strategy, pricing, budgeting, proposals, and money decisions.
 

@@ -6,7 +6,7 @@ export default function Footer() {
           <div className="flex flex-col items-center md:items-start gap-1">
             <img
               src="/images/logo.png"
-              alt="waevpoint2740"
+              alt="Waevpoint"
               className="h-16 w-auto"
             />
             <span className="text-[11px] italic text-av-muted lowercase tracking-wide">
@@ -16,13 +16,19 @@ export default function Footer() {
 
           <div className="flex items-center gap-6">
             <nav className="flex items-center gap-5">
-              {["Why Us", "Services", "Work", "Pricing", "Contact"].map((item) => (
+              {[
+                { label: "Why Us", anchor: "why" },
+                { label: "Work", anchor: "work" },
+                { label: "Sites", anchor: "sites" },
+                { label: "What We Create", anchor: "services" },
+                { label: "Contact", anchor: "contact" },
+              ].map((item) => (
                 <a
-                  key={item}
-                  href={`#${item.toLowerCase().replace(" ", "")}`}
+                  key={item.label}
+                  href={`#${item.anchor}`}
                   className="text-[11px] text-av-muted uppercase tracking-wider hover:text-av-text transition-colors"
                 >
-                  {item}
+                  {item.label}
                 </a>
               ))}
             </nav>
@@ -30,7 +36,7 @@ export default function Footer() {
         </div>
 
         <address className="not-italic mt-6 text-[11px] text-av-muted/80 text-center md:text-left">
-          Altaraza Spine Rd, City of San Jose del Monte, Bulacan 3073, Philippines · <a href="mailto:hello@waevpoint.quest" className="hover:text-cyan-400 transition-colors">hello@waevpoint.quest</a>
+          San Jose del Monte, Bulacan, Philippines · <a href="mailto:waevpoint@gmail.com" className="hover:text-cyan-400 transition-colors">waevpoint@gmail.com</a>
         </address>
 
         <nav className="mt-4 flex flex-wrap items-center justify-center md:justify-start gap-x-5 gap-y-2 text-[11px] uppercase tracking-wider">
@@ -41,7 +47,7 @@ export default function Footer() {
 
         <div className="mt-4 pt-6 border-t border-av-border-light flex flex-col md:flex-row items-center justify-between gap-3">
           <span className="text-[11px] text-av-muted/60 uppercase tracking-wider">
-            &copy; {new Date().getFullYear()} waevpoint2740
+            &copy; {new Date().getFullYear()} Waevpoint
           </span>
           <span className="text-[11px] text-av-muted/60 uppercase tracking-wider">
             A{" "}
