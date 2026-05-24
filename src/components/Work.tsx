@@ -4,11 +4,11 @@ import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScrollReveal from "./ScrollReveal";
 
-// ARCHIVED — hidden for now
+// ARCHIVED - hidden for now
 // {
 //   title: "Beach Aerial Tour",
 //   category: "Travel",
-//   description: "Sweeping coastline shots — waves, sand, and crystal-clear water from above.",
+//   description: "Sweeping coastline shots, waves, sand, and crystal-clear water from above.",
 //   specs: "4K · 60s",
 //   video: "https://videos.pexels.com/video-files/32950329/14043404_1280_720_60fps.mp4",
 // },
@@ -17,14 +17,14 @@ const projects = [
   {
     title: "Park Aerial View",
     category: "Residential",
-    description: "Park and open spaces inside the subdivision — ideal for community and real estate marketing.",
+    description: "Park and open spaces inside the subdivision, ideal for community and real estate marketing.",
     specs: "4K",
     video: "/videos/sample1.mp4",
   },
   {
     title: "Real Estate Aerial",
     category: "Real Estate",
-    description: "Aerial perspective showcasing the property and surrounding area — ready for listings.",
+    description: "Aerial perspective showcasing the property and surrounding area, ready for listings.",
     specs: "4K",
     video: "/videos/sample2.mp4",
   },

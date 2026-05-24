@@ -7,7 +7,7 @@ export default function Footer() {
             <img
               src="/images/logo.png"
               alt="Waevpoint"
-              className="h-16 w-auto"
+              className="h-8 w-auto"
             />
             <span className="text-[11px] italic text-av-muted lowercase tracking-wide">
               breaking boundaries from a new vantage point

@@ -184,7 +184,7 @@ const PACKAGES = [
     includes: [
       "5 edited aerial photos",
       "Google Drive delivery within 48 hrs",
-      "Ready to post — no raw files",
+      "Ready to post, no raw files",
       "CAAP licensed operator",
     ],
     featured: false,
@@ -302,7 +302,7 @@ export default function OpenToFlyPage() {
           Open to <span style={{ color: "#06b6d4" }}>Fly.</span>
         </h1>
         <p className="text-[clamp(1rem,2.5vw,1.2rem)] leading-relaxed mb-4 max-w-xl mx-auto" style={{ color: "#999" }}>
-          Professional aerial drone photography at founding client rates — before our full launch pricing kicks in.
+          Professional aerial drone photography at founding client rates, before our full launch pricing kicks in.
         </p>
         <p className="text-sm max-w-md mx-auto" style={{ color: "#666" }}>
           SJDM Bulacan &amp; nearby Quezon City only.{" "}
@@ -380,7 +380,7 @@ export default function OpenToFlyPage() {
           })}
         </div>
         <p className="text-center mt-6 text-xs" style={{ color: "#555" }}>
-          No time limits. Deliverable-based — you get exactly what&apos;s listed.
+          No time limits. Deliverable-based, you get exactly what&apos;s listed.
         </p>
       </section>
 
@@ -420,7 +420,7 @@ export default function OpenToFlyPage() {
                   </svg>
                 </a>
                 <p className="text-xs mt-4" style={{ color: "#555" }}>
-                  Or wait — we&apos;ll message you first once we confirm your slot.
+                  Or wait, we&apos;ll message you first once we confirm your slot.
                 </p>
               </div>
             ) : (
@@ -460,7 +460,7 @@ export default function OpenToFlyPage() {
                     </div>
                   </div>
 
-                  {/* Date — availability calendar */}
+                  {/* Date: availability calendar */}
                   <div>
                     <div className="flex items-center justify-between mb-2">
                       <label className="text-xs" style={{ color: "#666" }}>

@@ -6,22 +6,22 @@ import ScrollReveal from "./ScrollReveal";
 const SERVICES = [
   {
     title: "Video & Photo",
-    description: "Cinematic footage, stills, and social-ready edits — color-graded and ready for any screen.",
+    description: "Cinematic footage, stills, and social-ready edits, color-graded and ready for any screen.",
     icon: "M15.91 11.672a.375.375 0 010 .656l-5.603 3.113a.375.375 0 01-.557-.328V8.887a.375.375 0 01.557-.328l5.603 3.113z M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
   },
   {
     title: "Events & Places",
-    description: "Weddings, properties, travel, local landmarks — visual storytelling for the moments that matter.",
+    description: "Weddings, properties, travel, local landmarks. Visual storytelling for the moments that matter.",
     icon: "M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z",
   },
   {
     title: "Website Design",
-    description: "Clean, fast, mobile-first websites — from landing pages to full web apps.",
+    description: "Clean, fast, mobile-first websites, from landing pages to full web apps.",
     icon: "M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3",
   },
   {
     title: "Mobile Apps",
-    description: "Custom iOS and Android apps — from concept to App Store-ready build.",
+    description: "Custom iOS and Android apps, from concept to App Store-ready build.",
     icon: "M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3",
   },
   {
@@ -85,7 +85,7 @@ export default function Services() {
               What We Create
             </h2>
             <p className="text-white/40 text-sm mt-4 max-w-md mx-auto leading-relaxed">
-              Visual content, digital products, and custom software — built around your idea.
+              Visual content, digital products, and custom software, built around your idea.
             </p>
           </div>
         </ScrollReveal>

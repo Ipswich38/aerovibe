@@ -11,7 +11,7 @@ const solutions = [
     accent: true,
   },
   {
-    headline: <>Sky to screen —<br className="hidden md:block" /> one creative team.</>,
+    headline: <>Sky to screen:<br className="hidden md:block" /> one creative team.</>,
     description: "Aerial visuals, web design, mobile apps, and custom software. Different crafts, one consistent vision.",
     accent: false,
   },
@@ -22,12 +22,12 @@ const solutions = [
   },
   {
     headline: <>Quality you can see<br className="hidden md:block" /> before you commit.</>,
-    description: "We show samples and prototypes before you sign off. Not happy with the output? We iterate — no extra charge.",
+    description: "We show samples and prototypes before you sign off. Not happy with the output? We iterate. No extra charge.",
     accent: false,
   },
   {
     headline: <>Every format.<br className="hidden md:block" /> Every platform.</>,
-    description: "Reels, YouTube, listings, app stores, websites — built for where your audience actually lives.",
+    description: "Reels, YouTube, listings, app stores, websites. Built for where your audience actually lives.",
     accent: false,
   },
   {

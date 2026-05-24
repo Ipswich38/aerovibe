@@ -5,12 +5,12 @@ import "./globals.css";
 const SITE_URL = "https://waevpoint.quest";
 const SITE_NAME = "Waevpoint";
 const DESCRIPTION =
-  "Cinematic aerial visuals for properties, events, and content projects across the Philippines. Ready-to-post drone photography and videography — no raw footage, no hidden fees.";
+  "Cinematic aerial visuals for properties, events, and content projects across the Philippines. Ready-to-post drone photography and videography, no raw footage, no hidden fees.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — Aerial Visual Content, Philippines`,
+    default: `${SITE_NAME}: Aerial Visual Content, Philippines`,
     template: `%s · ${SITE_NAME}`,
   },
   description: DESCRIPTION,
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: `${SITE_NAME} — Aerial Visual Content, Philippines`,
+    title: `${SITE_NAME}: Aerial Visual Content, Philippines`,
     description: DESCRIPTION,
     url: SITE_URL,
     siteName: SITE_NAME,
@@ -43,13 +43,13 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: `${SITE_NAME} — Aerial drone content, Philippines`,
+        alt: `${SITE_NAME}: Aerial drone content, Philippines`,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} — Aerial Visual Content`,
+    title: `${SITE_NAME}: Aerial Visual Content`,
     description: DESCRIPTION,
     images: ["/og-image.jpg"],
   },

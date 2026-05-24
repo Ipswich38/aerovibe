@@ -48,7 +48,7 @@ export default function DroneShowcase() {
               </h3>
               <p className="text-sm text-av-muted leading-relaxed mb-8">
                 Pro-grade aerial imaging in a sub-250g body. 4K HDR video,
-                48MP stills, omnidirectional sensing — the tool behind the
+                48MP stills, omnidirectional sensing. The tool behind the
                 aerial side of our creative work.
               </p>
 

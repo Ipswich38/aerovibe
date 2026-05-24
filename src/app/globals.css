@@ -2,7 +2,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* smallest.ai-inspired palette — dark with warm undertones */
+  /* smallest.ai-inspired palette, dark with warm undertones */
   --color-av-bg: #ffffff;
   --color-av-dark: #191919;
   --color-av-darker: #0c0c0c;
@@ -15,12 +15,12 @@
   --color-av-text: #ededed;
   --color-av-white: #ffffff;
 
-  /* Accent — warm red from RootByte DNA */
+  /* Accent, warm red from RootByte DNA */
   --color-av-red: #c9342a;
   --color-av-red-dim: rgba(201, 52, 42, 0.15);
   --color-av-amber: #d4730f;
 
-  /* Fonts — geometric sans throughout */
+  /* Fonts, geometric sans throughout */
   --font-sans: "Geist", system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", monospace;
 }
@@ -51,13 +51,13 @@ body {
   color: var(--color-av-white);
 }
 
-/* Section with dark insert — smallest.ai signature */
+/* Section with dark insert, smallest.ai signature */
 .dark-section {
   background: var(--color-av-dark);
   color: var(--color-av-text);
 }
 
-/* Gradient button — dark variant */
+/* Gradient button, dark variant */
 .btn-dark {
   background: linear-gradient(180deg, rgb(138, 138, 138) -260%, #191919 100%);
   border: 1px solid rgba(111, 111, 111, 0.2);
@@ -78,7 +78,7 @@ body {
   transform: translateY(-1px);
 }
 
-/* Gradient button — light/white variant */
+/* Gradient button, light/white variant */
 .btn-light {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, #fff 100%);
   border: 1px solid rgba(111, 111, 111, 0.2);
@@ -99,7 +99,7 @@ body {
   transform: translateY(-1px);
 }
 
-/* Gradient button — red accent */
+/* Gradient button, red accent */
 .btn-red {
   background: linear-gradient(180deg, #d94a3f -20%, #c9342a 100%);
   border: 1px solid rgba(201, 52, 42, 0.3);
@@ -120,7 +120,7 @@ body {
   transform: translateY(-1px);
 }
 
-/* Gradient button — cyan accent (waevpoint brand) */
+/* Gradient button, cyan accent (waevpoint brand) */
 .btn-cyan {
   background: linear-gradient(180deg, #22d3ee -20%, #06b6d4 100%);
   border: 1px solid rgba(6, 182, 212, 0.3);
@@ -159,7 +159,7 @@ body {
   border: 1px solid rgba(111, 111, 111, 0.2);
 }
 
-/* Inner glow — smallest.ai card effect */
+/* Inner glow, smallest.ai card effect */
 .inner-glow {
   box-shadow: inset 0 0 9.6px rgba(255, 255, 255, 0.1);
 }

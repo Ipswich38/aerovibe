@@ -52,7 +52,7 @@ export default function Pricing() {
             </p>
 
             <p className="text-base text-white/50 leading-relaxed mb-10 max-w-sm mx-auto">
-              Location, duration, deliverables, turnaround — these shape the number.
+              Location, duration, deliverables, turnaround. These shape the number.
               Tell us what you need and we&apos;ll send a clear, honest quote within 24 hours.
             </p>
 

@@ -67,7 +67,7 @@ export default function Contact() {
               </h2>
               <p className="text-base text-white/60 leading-relaxed mb-10 max-w-md">
                 Have a project in mind? Or just curious how drone content could
-                work for you? Message us — no pressure, no hard sell.
+                work for you? Message us, no pressure, no hard sell.
                 We&apos;re happy to give you a free quote.
               </p>
 

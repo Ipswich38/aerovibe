@@ -13,7 +13,6 @@ export default function Navigation() {
   }, []);
 
   const links = [
-    { href: "#why", label: "Why Us" },
     { href: "#work", label: "Work" },
     { href: "#sites", label: "Sites" },
     { href: "#services", label: "What We Create" },
@@ -21,18 +20,16 @@ export default function Navigation() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-av-dark/95 backdrop-blur-md"
-          : "bg-transparent"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b border-white/[0.06] backdrop-blur-2xl backdrop-saturate-[180%] ${
+        scrolled ? "bg-black/[0.60]" : "bg-black/[0.12]"
       }`}
     >
       <div className="max-w-[1200px] mx-auto px-6 py-3 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2">
           <img
             src="/images/logo.png"
-            alt="waevpoint2740"
-            className="h-20 md:h-24 w-auto"
+            alt="Waevpoint"
+            className="h-[58px] md:h-[62px] w-auto"
           />
         </a>
 
@@ -70,7 +67,7 @@ export default function Navigation() {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden bg-av-dark/98 backdrop-blur-md border-t border-av-border-light px-6 py-5 flex flex-col gap-4">
+        <div className="md:hidden bg-black/[0.80] backdrop-blur-2xl border-t border-white/[0.06] px-6 py-5 flex flex-col gap-4">
           {links.map((l) => (
             <a
               key={l.href}
