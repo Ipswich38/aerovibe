@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { WeatherWidget } from "./WeatherWidget";
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
@@ -34,7 +35,7 @@ export default function Navigation() {
         </a>
 
         {/* Desktop */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-4">
           {links.map((l) => (
             <a
               key={l.href}
@@ -45,6 +46,7 @@ export default function Navigation() {
               {l.label}
             </a>
           ))}
+          <WeatherWidget />
           <a href="#contact" className="btn-cyan">
             Contact
             <svg className="btn-arrow" viewBox="0 0 12 12" fill="none">

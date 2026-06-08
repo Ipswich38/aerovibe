@@ -248,6 +248,7 @@ function IconRail({
   const isRegs = pathname.startsWith("/ops/regs");
   const isExam = pathname.startsWith("/ops/exam");
   const isChecklist = pathname.startsWith("/ops/checklist");
+  const isReqs = pathname.startsWith("/ops/requirements");
 
   return (
     <div
@@ -320,6 +321,20 @@ function IconRail({
         }}
       >
         ✓
+      </Link>
+
+      {/* Requirements ⊟ */}
+      <Link
+        href="/ops/requirements"
+        title="Requirements"
+        className="w-9 h-9 rounded-xl flex items-center justify-center text-[16px] transition-all"
+        style={{
+          background: isReqs ? "rgba(251,146,60,0.25)" : "rgba(251,146,60,0.10)",
+          color: isReqs ? "#fdba74" : "#fb923c",
+          boxShadow: isReqs ? "0 0 0 1px rgba(251,146,60,0.35)" : "none",
+        }}
+      >
+        ⊟
       </Link>
 
       {/* Home icon */}
@@ -554,6 +569,13 @@ export default function OpsLayout({ children }: { children: React.ReactNode }) {
             >
               <span>✓</span>
               <span className="text-[13px] font-semibold">Pilot Checklist</span>
+            </Link>
+            <Link
+              href="/ops/requirements"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-xl mb-3 bg-orange-500/10 text-orange-400"
+            >
+              <span>⊟</span>
+              <span className="text-[13px] font-semibold">Requirements</span>
             </Link>
             <Link href="/ops" className="flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] text-white/60 mb-2">
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

@@ -79,8 +79,8 @@ export default function PrivacyPage() {
 
           <h2 className="text-xl text-white mt-10">9. Contact</h2>
           <p>
-            waevpoint2740<br />
-            Altaraza Spine Rd, City of San Jose del Monte, Bulacan 3073, Philippines<br />
+            Waevpoint Aerial Photography<br />
+            San Jose del Monte, Bulacan, Philippines<br />
             <a href="mailto:waevpoint@gmail.com" className="text-cyan-400">waevpoint@gmail.com</a>
           </p>
         </section>

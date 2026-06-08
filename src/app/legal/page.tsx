@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Legal & Disclosures",
   description:
-    "Legal notices, company information, and regulatory disclosures for waevpoint2740.",
+    "Legal notices, company information, and regulatory disclosures for Waevpoint Aerial Photography.",
   alternates: { canonical: "https://waevpoint.quest/legal" },
 };
 
@@ -19,26 +19,30 @@ export default function LegalPage() {
         <section className="space-y-6 text-white/80 leading-relaxed text-[15px]">
           <h2 className="text-xl text-white">Company Information</h2>
           <p>
-            waevpoint2740 is a pre-launch aerial content brand preparing for formal operations
-            in June 2028.<br />
-            <strong>Address:</strong> Altaraza Spine Rd, City of San Jose del Monte, Bulacan 3073, Philippines<br />
+            Waevpoint is the aerial photography and videography brand of <strong>Waevpoint Aerial
+            Photography</strong>, a sole proprietorship registered with the Department of Trade and
+            Industry (DTI).<br />
+            <strong>Registered name:</strong> Waevpoint Aerial Photography<br />
+            <strong>DTI Business Name No.:</strong> 8154743 (registered May 2, 2026, national scope)<br />
+            <strong>Proprietor:</strong> Cherwin Quintal Fernandez<br />
+            <strong>Address:</strong> San Jose del Monte, Bulacan, Philippines<br />
             <strong>Email:</strong> <a href="mailto:waevpoint@gmail.com" className="text-cyan-400">waevpoint@gmail.com</a>
           </p>
 
           <h2 className="text-xl text-white mt-10">Regulatory Status</h2>
           <p>
-            We are in the process of obtaining applicable certifications, including registration
-            and permits under the Civil Aviation Authority of the Philippines (CAAP) for Remotely
-            Piloted Aircraft Systems, and business registration with the Department of Trade and
-            Industry (DTI) / Securities and Exchange Commission (SEC) as applicable. No service
-            requiring a license will be performed prior to securing it.
+            Waevpoint Aerial Photography is registered with the Department of Trade and Industry
+            (DTI) under Business Name No. 8154743. We are completing the remaining applicable
+            certifications, including registration and permits under the Civil Aviation Authority
+            of the Philippines (CAAP) for Remotely Piloted Aircraft Systems. No service requiring a
+            license will be performed prior to securing it.
           </p>
 
           <h2 className="text-xl text-white mt-10">Intellectual Property</h2>
           <p>
             All trademarks, logos, and content on waevpoint.quest are the property of
-            waevpoint2740 or used with permission. No content may be reproduced without written
-            consent.
+            Waevpoint Aerial Photography or used with permission. No content may be reproduced
+            without written consent.
           </p>
 
           <h2 className="text-xl text-white mt-10">Copyright &amp; Takedown</h2>

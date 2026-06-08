@@ -37,6 +37,8 @@ export default function Footer() {
 
         <address className="not-italic mt-6 text-[11px] text-av-muted/80 text-center md:text-left">
           San Jose del Monte, Bulacan, Philippines · <a href="mailto:waevpoint@gmail.com" className="hover:text-cyan-400 transition-colors">waevpoint@gmail.com</a>
+          <br />
+          Waevpoint Aerial Photography · DTI BNRS No. 8154743 · A registered sole proprietorship
         </address>
 
         <nav className="mt-4 flex flex-wrap items-center justify-center md:justify-start gap-x-5 gap-y-2 text-[11px] uppercase tracking-wider">

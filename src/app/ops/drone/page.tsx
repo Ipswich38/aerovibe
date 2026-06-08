@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { SYSTEM_FONT } from "@/lib/ops";
 
-type Tab = "aircraft" | "rcn3" | "specs";
+type Tab = "aircraft" | "rcn3" | "specs" | "lookup";
 
 interface Part {
   num: number;
@@ -175,14 +175,27 @@ const TABS: { key: Tab; label: string; count: number }[] = [
   { key: "aircraft", label: "Mini 5 Pro Aircraft",     count: 17 },
   { key: "rcn3",     label: "RC-N3 Controller",        count: 15 },
   { key: "specs",    label: "Specs & References",      count: 0  },
+  { key: "lookup",   label: "S/N Lookup",              count: 0  },
 ];
 
 export default function DronePage() {
   const [tab, setTab]           = useState<Tab>("aircraft");
   const [expanded, setExpanded] = useState<number | null>(null);
   const [filter, setFilter]     = useState("all");
+  const [sn, setSn]             = useState("");
+  const [snCopied, setSnCopied] = useState(false);
 
   const parts = tab === "aircraft" ? AIRCRAFT_PARTS : RCN3_PARTS;
+
+  function handleSnLookup() {
+    if (sn.trim()) {
+      navigator.clipboard.writeText(sn.trim()).then(() => {
+        setSnCopied(true);
+        setTimeout(() => setSnCopied(false), 2000);
+      }).catch(() => {});
+    }
+    window.open("https://repair.dji.com/device/", "_blank", "noopener,noreferrer");
+  }
 
   const categories = Array.from(new Set(parts.map((p) => p.category)));
   const filtered   = filter === "all" ? parts : parts.filter((p) => p.category === filter);
@@ -400,6 +413,122 @@ export default function DronePage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </>
+        )}
+
+        {/* S/N Lookup tab */}
+        {tab === "lookup" && (
+          <>
+            <div className="mb-5">
+              <h1 className="text-white text-[17px] font-semibold">DJI S/N Lookup</h1>
+              <p className="text-white/40 text-[12px] mt-0.5">
+                Check warranty status, repair eligibility, or device info on DJI's official portal.
+              </p>
+            </div>
+
+            {/* Search card */}
+            <div
+              className="rounded-2xl p-5 mb-4"
+              style={{ background: "#212123", border: "1px solid rgba(255,255,255,0.08)" }}
+            >
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-white/30 mb-3">
+                Serial Number
+              </p>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={sn}
+                  onChange={(e) => setSn(e.target.value.toUpperCase())}
+                  onKeyDown={(e) => e.key === "Enter" && handleSnLookup()}
+                  placeholder="e.g. 1ZNBP9D0081234"
+                  spellCheck={false}
+                  className="flex-1 rounded-xl px-3.5 py-2.5 text-[13px] font-mono text-white placeholder-white/20 outline-none transition-all"
+                  style={{
+                    background: "rgba(255,255,255,0.06)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    caretColor: "#06b6d4",
+                  }}
+                  onFocus={(e) => { e.currentTarget.style.border = "1px solid rgba(6,182,212,0.50)"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+                  onBlur={(e) => { e.currentTarget.style.border = "1px solid rgba(255,255,255,0.10)"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
+                />
+                <button
+                  onClick={handleSnLookup}
+                  className="px-4 py-2.5 rounded-xl text-[12px] font-semibold transition-all active:scale-95"
+                  style={{ background: "rgba(6,182,212,0.20)", border: "1px solid rgba(6,182,212,0.35)", color: "#06b6d4" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "rgba(6,182,212,0.30)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "rgba(6,182,212,0.20)"; }}
+                >
+                  {snCopied ? "Copied ✓" : "Open DJI →"}
+                </button>
+              </div>
+              {sn.trim() && (
+                <p className="text-[11px] mt-2.5" style={{ color: "rgba(6,182,212,0.60)" }}>
+                  S/N will be copied to clipboard — paste it into the DJI portal that opens.
+                </p>
+              )}
+            </div>
+
+            {/* What you can check */}
+            <div
+              className="rounded-2xl overflow-hidden mb-4"
+              style={{ background: "#212123", border: "1px solid rgba(255,255,255,0.06)" }}
+            >
+              <div className="px-4 py-2.5 border-b border-white/[0.05]" style={{ background: "#252527" }}>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.1em] text-white/30">
+                  What You Can Check on DJI
+                </p>
+              </div>
+              {[
+                { icon: "🔍", label: "Device identification",    desc: "Confirm model name, SKU, and hardware version from S/N" },
+                { icon: "🛡️", label: "Warranty status",          desc: "Check if your drone is still under DJI's standard or DJI Care warranty" },
+                { icon: "🔧", label: "Repair eligibility",       desc: "See if your device qualifies for repair at an authorized DJI service center" },
+                { icon: "📦", label: "Activation & purchase date",desc: "View when the device was first activated and registered with DJI" },
+              ].map((row, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 px-4 py-3"
+                  style={{ borderBottom: i < 3 ? "1px solid rgba(255,255,255,0.04)" : "none" }}
+                >
+                  <span className="text-[17px] mt-0.5 shrink-0">{row.icon}</span>
+                  <div>
+                    <p className="text-[12.5px] font-semibold text-white/80">{row.label}</p>
+                    <p className="text-[11.5px] text-white/35 mt-0.5 leading-snug">{row.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Where to find S/N */}
+            <div
+              className="rounded-2xl p-4 mb-4"
+              style={{ background: "rgba(251,191,36,0.06)", border: "1px solid rgba(251,191,36,0.18)" }}
+            >
+              <p className="text-[11px] font-semibold uppercase tracking-wider mb-2" style={{ color: "#fbbf24" }}>
+                Where to Find Your S/N
+              </p>
+              <ul className="space-y-1.5">
+                {[
+                  "Battery compartment label (inside the drone body)",
+                  "Original packaging box — barcode sticker",
+                  "DJI Fly app → Me → My Devices → select your drone",
+                  "Aircraft body — engraved or printed under the arms",
+                ].map((t, i) => (
+                  <li key={i} className="flex items-start gap-2 text-[12px] text-white/55">
+                    <span className="shrink-0 mt-0.5" style={{ color: "#fbbf2466" }}>·</span>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Note */}
+            <div className="rounded-xl px-4 py-3" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}>
+              <p className="text-[11px] text-white/25 leading-relaxed">
+                This opens DJI's official repair portal at{" "}
+                <span className="text-white/40">repair.dji.com/device</span>.
+                Works for all DJI drones. DJI Mini 5 Pro S/N format: starts with 1ZN.
+              </p>
             </div>
           </>
         )}
