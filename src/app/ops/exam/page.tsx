@@ -18,7 +18,7 @@ interface Question {
 
 const TABS: { key: ExamTab; label: string; icon: string; desc: string }[] = [
   { key: "situational", label: "Situational", icon: "◇", desc: "Scenario judgment, emergencies, weather, and field decisions" },
-  { key: "theoretical", label: "Theoretical", icon: "⚖", desc: "CAAP PCAR Parts 1, 2, 4, and 11" },
+  { key: "theoretical", label: "Theoretical", icon: "⚖", desc: "CAAP PCAR Parts 1, 2, 4, 11 + the ICAO framework" },
   { key: "practical", label: "Practical", icon: "✈", desc: "CAAP skill test guide: pre-flight, maneuvers, RTH, post-flight" },
   { key: "actual", label: "Actual Skill Test", icon: "↯", desc: "CAAP field sequence, controller movement, and maneuvers" },
 ];
@@ -906,6 +906,87 @@ const THEORETICAL_POOL: Question[] = [
     ],
     correct: 1,
     explanation: "DUAFAs are pre-approved areas where compliant RPAS operations may proceed under established conditions, streamlining the authorization process for routine operations.",
+  },
+
+  // ── ICAO Framework (why CAAP rules exist) ──────────────────────────────────
+  {
+    id: "th-41",
+    type: "mc",
+    category: "ICAO · Framework",
+    question: "ICAO, the global civil-aviation body the Philippines belongs to, was established by which treaty?",
+    options: [
+      "The Warsaw Convention of 1929",
+      "The Convention on International Civil Aviation (Chicago Convention) of 1944",
+      "The Tokyo Convention of 1963",
+      "The Montreal Convention of 1999",
+    ],
+    correct: 1,
+    explanation: "ICAO was created by the 1944 Chicago Convention. The Philippines was one of the original signatory states, making it a founding ICAO member.",
+  },
+  {
+    id: "th-42",
+    type: "mc",
+    category: "ICAO · Framework",
+    question: "Which Chicago Convention principle is the legal reason CAAP — not ICAO — directly regulates drone flights within the Philippines?",
+    options: [
+      "Freedom of the air for all aircraft",
+      "Article 1: every State has complete and exclusive sovereignty over the airspace above its territory",
+      "The right of innocent passage",
+      "Open-skies reciprocity between member States",
+    ],
+    correct: 1,
+    explanation: "Under Article 1, each State has complete and exclusive sovereignty over its own airspace. That is why national rules (CAAP/PCAR) govern all flying within the Philippines.",
+  },
+  {
+    id: "th-43",
+    type: "mc",
+    category: "ICAO · Framework",
+    question: "ICAO publishes its international rules as Standards and Recommended Practices (SARPs). These are contained in:",
+    options: [
+      "A single master regulation",
+      "The 19 Annexes to the Chicago Convention",
+      "Each member State's national law only",
+      "The IATA operations manual",
+    ],
+    correct: 1,
+    explanation: "SARPs are organised into the 19 Annexes to the Convention (e.g., Annex 1 Personnel Licensing, Annex 2 Rules of the Air, Annex 7 Registration Marks).",
+  },
+  {
+    id: "th-44",
+    type: "mc",
+    category: "ICAO · Framework",
+    question: "What is the relationship between the Philippine Civil Aviation Regulations (PCAR) and ICAO standards?",
+    options: [
+      "PCAR replaces ICAO standards inside the Philippines",
+      "PCAR transposes ICAO SARPs into enforceable Philippine national law, with any differences filed with ICAO",
+      "PCAR and ICAO are unrelated bodies of law",
+      "ICAO standards override PCAR for all domestic drone flights",
+    ],
+    correct: 1,
+    explanation: "CAAP implements ICAO SARPs through the PCAR. Where the Philippines departs from a SARP, it files a 'difference' with ICAO under Article 38 of the Convention.",
+  },
+  {
+    id: "th-45",
+    type: "mc",
+    category: "ICAO · Framework",
+    question: "Which ICAO publication is the core guidance document on Remotely Piloted Aircraft Systems?",
+    options: [
+      "Annex 17 (Security)",
+      "Doc 10019 — Manual on Remotely Piloted Aircraft Systems (RPAS)",
+      "Doc 4444 (PANS-ATM)",
+      "Cir 100 (Aircraft Noise)",
+    ],
+    correct: 1,
+    explanation: "ICAO Doc 10019 is the Manual on RPAS. ICAO's first formal UAS circular was Cir 328 (2011), and the RPAS Panel is developing binding SARPs for international IFR RPAS operations.",
+  },
+  {
+    id: "th-46",
+    type: "tf",
+    category: "ICAO · Framework",
+    question: "True or False: A recreational sub-250g drone pilot flying locally in the Philippines complies with ICAO directly rather than with CAAP.",
+    options: ["True", "False"],
+    correct: 1,
+    explanation: "False. For everyday domestic flying you comply with CAAP/PCAR. ICAO's binding RPAS standards target international, IFR operations; you do not deal with ICAO directly for local flights.",
   },
 ];
 

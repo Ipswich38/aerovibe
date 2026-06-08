@@ -4,10 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { SYSTEM_FONT } from "@/lib/ops";
 
-type Tab = "overview" | "registration" | "pilots" | "commercial" | "operations" | "noflyzone" | "penalties";
+type Tab = "overview" | "icao" | "registration" | "pilots" | "commercial" | "operations" | "noflyzone" | "penalties";
 
 const TABS: { key: Tab; label: string; icon: string }[] = [
   { key: "overview",      label: "Overview",         icon: "⊕" },
+  { key: "icao",          label: "ICAO Framework",    icon: "⊕" },
   { key: "registration",  label: "Registration",      icon: "⊞" },
   { key: "pilots",        label: "Pilot Cert",        icon: "⊛" },
   { key: "commercial",    label: "Commercial Ops",    icon: "⊘" },
@@ -93,6 +94,12 @@ function OverviewTab() {
         </Card>
       </div>
 
+      <Callout title="Global Framework — ICAO" color="#a78bfa">
+        The Philippines is an <strong className="text-white">ICAO Contracting State</strong>, so PCAR is built on the international
+        standards (SARPs) ICAO sets under the 1944 Chicago Convention. See the <strong className="text-white">ICAO Framework</strong> tab
+        for how the global rules connect to the CAAP rules you fly under here.
+      </Callout>
+
       <Card title="Legal Classification">
         <div className="space-y-2.5">
           <p className="text-[13px] text-white/70 leading-relaxed">
@@ -163,6 +170,98 @@ function OverviewTab() {
           ))}
         </div>
       </Card>
+    </div>
+  );
+}
+
+function IcaoTab() {
+  return (
+    <div className="space-y-4">
+      <Callout title="Why ICAO Matters to a Philippine Drone Pilot" color="#06b6d4">
+        The Philippines is a <strong className="text-white">Contracting State of ICAO</strong> — it signed the
+        1944 Chicago Convention as one of the original member states. ICAO sets the global rulebook;
+        CAAP turns that rulebook into Philippine law (the PCAR). When you fly here,
+        you follow <strong className="text-white">CAAP / PCAR</strong> — but those rules exist because of, and align with, ICAO.
+      </Callout>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <Card><Stat label="Chicago Convention" value="1944" sub="Signed 7 Dec; in force 1947" /></Card>
+        <Card><Stat label="ICAO Member States" value="193" color="#a78bfa" sub="PH is a founding signatory" /></Card>
+        <Card><Stat label="Annexes (SARPs)" value="19" color="#34d399" sub="Standards & Recommended Practices" /></Card>
+        <Card><Stat label="PH Regulator" value="CAAP" color="#fbbf24" sub="Implements ICAO SARPs via PCAR" /></Card>
+      </div>
+
+      <Card title="Airspace Sovereignty — Chicago Convention, Article 1">
+        <p className="text-[13px] text-white/70 leading-relaxed">
+          “Every State has <strong className="text-white">complete and exclusive sovereignty</strong> over the
+          airspace above its territory.” This is the legal reason CAAP — not ICAO — directly governs every
+          drone flight inside the Philippines, including territorial waters and archipelagic airspace.
+          A drone may not enter another State&apos;s airspace without that State&apos;s permission.
+        </p>
+        <div className="mt-3">
+          <Callout title="Plain-language takeaway" color="#34d399">
+            ICAO is the international framework. <strong className="text-white">CAAP is the law you actually fly under in the Philippines.</strong>
+            They are not in conflict — PCAR is CAAP&apos;s national version of ICAO&apos;s global standards.
+          </Callout>
+        </div>
+      </Card>
+
+      <Card title="ICAO Annexes That Shape Philippine Drone Rules">
+        <div className="space-y-2">
+          {[
+            { n: "Annex 1", t: "Personnel Licensing", d: "Basis for remote-pilot competency and licensing (PCAR Part 2)." },
+            { n: "Annex 2", t: "Rules of the Air", d: "RPAS need authorization to operate; right-of-way and airspace rules." },
+            { n: "Annex 7", t: "Nationality & Registration Marks", d: "Basis for the RP-U marking scheme (PCAR Part 4)." },
+            { n: "Annex 8", t: "Airworthiness of Aircraft", d: "Airworthiness basis for larger UAS (≥150 kg)." },
+            { n: "Annex 11", t: "Air Traffic Services", d: "Integration with controlled airspace and ATS coordination." },
+            { n: "Annex 13", t: "Accident & Incident Investigation", d: "How drone accidents/serious incidents are investigated." },
+            { n: "Annex 19", t: "Safety Management", d: "State safety oversight and risk-based regulation." },
+          ].map((a) => (
+            <div key={a.n} className="flex items-start gap-3 py-2 border-b border-white/[0.05] last:border-0">
+              <Badge label={a.n} color="#a78bfa" />
+              <div className="flex-1 min-w-0">
+                <p className="text-[12.5px] font-medium text-white">{a.t}</p>
+                <p className="text-[11.5px] text-white/45 mt-0.5">{a.d}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      <Card title="ICAO Guidance Material Specific to Drones (RPAS / UAS)">
+        <div className="space-y-2">
+          {[
+            { n: "Cir 328", t: "Unmanned Aircraft Systems (UAS), 2011", d: "ICAO's first formal circular framing UAS within the Convention." },
+            { n: "Doc 10019", t: "Manual on Remotely Piloted Aircraft Systems (RPAS)", d: "Core guidance for integrating RPAS into airspace and licensing." },
+            { n: "Model UAS Regs", t: "Parts 101, 102 & 149", d: "Template regulations States may adopt — PCAR mirrors many concepts." },
+            { n: "UAS Toolkit", t: "ICAO UAS / U-AID resources", d: "Practical material on safe domestic UAS operations and UTM." },
+            { n: "RPAS Panel", t: "RPASP — developing binding SARPs", d: "Drafting standards for international IFR RPAS operations." },
+          ].map((a) => (
+            <div key={a.n} className="flex items-start gap-3 py-2 border-b border-white/[0.05] last:border-0">
+              <Badge label={a.n} color="#06b6d4" />
+              <div className="flex-1 min-w-0">
+                <p className="text-[12.5px] font-medium text-white">{a.t}</p>
+                <p className="text-[11.5px] text-white/45 mt-0.5">{a.d}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      <Card title="How CAAP Connects to ICAO">
+        <ul className="space-y-2">
+          <Rule ok={true} text="CAAP is the Philippines' designated Civil Aviation Authority under RA 9497, acting as the ICAO State regulator." />
+          <Rule ok={true} text="PCAR (Philippine Civil Aviation Regulations) transposes ICAO Annexes/SARPs into enforceable national rules." />
+          <Rule text="Where the Philippines differs from a SARP, it files a 'difference' with ICAO under Convention Article 38." />
+          <Rule text="ICAO audits CAAP through USOAP (Universal Safety Oversight Audit Programme) to verify effective oversight." />
+        </ul>
+      </Card>
+
+      <Callout title="Scope — Domestic vs. International" color="#fbbf24">
+        For everyday Philippine flying — small drones, VLOS, recreational or commercial — <strong className="text-white">CAAP/PCAR is the complete authority</strong>;
+        you do not deal with ICAO directly. ICAO&apos;s binding RPAS standards are aimed at <em>international, IFR</em> operations.
+        Cross-border or international drone work needs additional, ICAO-aligned authorization from every State whose airspace is involved.
+      </Callout>
     </div>
   );
 }
@@ -1462,6 +1561,7 @@ export default function RegsPage() {
       {/* Content */}
       <div className="flex-1 overflow-y-auto px-6 py-5">
         {tab === "overview"     && <OverviewTab />}
+        {tab === "icao"         && <IcaoTab />}
         {tab === "registration" && <RegistrationTab />}
         {tab === "pilots"       && <PilotsTab />}
         {tab === "commercial"   && <CommercialTab />}
