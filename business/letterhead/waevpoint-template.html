@@ -1,0 +1,177 @@
+<meta charset="utf-8">
+<title>Waevpoint A4 document</title>
+<!--
+  OFFICIAL Waevpoint A4 letterhead, adopted 2026-07-21.
+
+  Waevpoint is a DIFFERENT brand from Kreativloops with its own letterhead. Do
+  not put Waevpoint content on the Kreativloops sheet or the reverse. This one is
+  the aerial-photography identity: dark teal header and footer, white body.
+
+  The page image is the letterhead itself (waevpoint-letterhead-a4.png, rendered
+  at 150dpi from Waevpoint-Official-A4-Letterhead.pdf). Nothing here redraws the
+  logo or the bands; the artwork is the source of truth.
+
+  Margins measured from the artwork:
+    header band  0 to 36.9mm      #01505e (gradient to black at left)
+    body         36.9 to 279.2mm  #ffffff
+    footer band  279.2 to 297mm   #014f5d  (AERIAL PHOTOGRAPHY SERVICES + logo)
+  Content starts at 48mm (11mm under the header) and stops at 265mm, keeping
+  14mm clear of the taller footer band. Do not shrink those numbers.
+
+  KNOWN ARTWORK ISSUE (2026-07-21): the header contact block prints
+  hello@kreativloops.com, which is the Kreativloops address, not a Waevpoint
+  one. This is in the PDF itself and cannot be fixed here. Flag it before
+  sending any Waevpoint document, or correct the source artwork.
+
+  Type: Waevpoint's brand face is Avenir, present on the Mac this renders on, so
+  the stack prefers real Avenir and falls back to a bundled sans only if it is
+  ever run elsewhere. No serif: Waevpoint is all sans, unlike Kreativloops.
+
+  Export: Chrome, File > Print > Save as PDF, A4, margins None, Background
+  graphics ON, or the letterhead will not print.
+-->
+<style>
+  @font-face {
+    font-family: "WV Fallback"; src: url("HankenGrotesk-var.woff2") format("woff2");
+    font-weight: 100 900; font-style: normal; font-display: block;
+  }
+
+  @page { size: A4; margin: 0; }
+
+  :root {
+    --ink: #16232a;         /* near-black on white body */
+    --muted: #5c6a70;
+    --teal: #01505e;        /* header/footer brand teal */
+    --teal-bright: #17a2c4; /* the bright accent in the wordmark */
+    --line: #d9e0e3;
+  }
+
+  html, body { margin: 0; background: #e9ecef; }
+
+  body {
+    font-family: "Avenir Next", "Avenir", "WV Fallback", -apple-system, system-ui, sans-serif;
+    color: var(--ink);
+    font-size: 10.5pt;
+    line-height: 1.55;
+  }
+
+  /* One A4 page, clips overflow. The script at the end warns on screen when
+     content runs into the footer, because clipped copy vanishes silently. */
+  .sheet {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+    margin: 12px auto;
+    background-image: url("waevpoint-letterhead-a4.png");
+    background-size: 210mm 297mm;
+    background-repeat: no-repeat;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, .13);
+    overflow: hidden;
+  }
+
+  .content {
+    position: absolute;
+    top: 48mm;
+    left: 22mm;
+    right: 22mm;
+    bottom: 32mm;   /* content stops at 265mm, clear of the 279mm footer */
+  }
+
+  h1, h2, h3 {
+    font-family: "Avenir Next", "Avenir", "WV Fallback", sans-serif;
+    line-height: 1.2;
+    margin: 0 0 5mm;
+    color: var(--teal);
+  }
+  h1 { font-size: 20pt; font-weight: 600; letter-spacing: -.01em; }
+  h2 { font-size: 13pt; font-weight: 600; margin: 6.5mm 0 3mm; }
+  h3 { font-size: 11.5pt; font-weight: 600; margin: 5mm 0 2.5mm; }
+
+  p { margin: 0 0 3.4mm; }
+  strong { font-weight: 600; }
+  a { color: var(--teal-bright); }
+
+  .meta { color: var(--muted); font-size: 9.5pt; margin-bottom: 5mm; }
+  .to { margin: 0 0 5.5mm; line-height: 1.5; }
+  .fineprint { color: var(--muted); font-size: 9pt; line-height: 1.55; margin-top: 3.5mm; }
+
+  .rule { height: 2px; background: var(--teal-bright); border-radius: 2px; margin: 4.5mm 0; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 10pt; }
+  th, td { text-align: left; padding: 2.1mm 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 600; color: var(--muted); font-size: 9pt; text-transform: uppercase; letter-spacing: .04em; }
+  td.num, th.num { text-align: right; white-space: nowrap; }
+
+  .sign { margin-top: 9mm; }
+  .sign .name { font-weight: 600; }
+  .sign .role { color: var(--muted); font-size: 9.5pt; }
+
+  .howto {
+    max-width: 210mm; margin: 14px auto 0; padding: 11px 15px;
+    background: #fff; border: 1px solid #dcdfe3; border-radius: 9px;
+    font: 12.5px/1.5 system-ui, sans-serif; color: #5a6068;
+  }
+  .howto b { color: #24292f; }
+
+  .overflow-warn {
+    max-width: 210mm; margin: 10px auto 0; padding: 11px 15px;
+    background: #fff4f2; border: 1px solid #ffb4a2; border-left: 4px solid #01505e;
+    border-radius: 9px; font: 13px/1.5 system-ui, sans-serif; color: #073e48;
+  }
+
+  @media print {
+    html, body { background: #fff; }
+    .howto, .overflow-warn { display: none; }
+    .sheet { margin: 0; box-shadow: none; page-break-after: always; }
+    .sheet:last-of-type { page-break-after: auto; }
+  }
+</style>
+
+<div class="howto">
+  <b>Export:</b> File &rsaquo; Print &rsaquo; Save as PDF. Paper <b>A4</b>, margins <b>None</b>,
+  <b>Background graphics ON</b> or the letterhead will not print. This note never appears in the PDF.
+</div>
+
+<div class="sheet">
+  <div class="content">
+
+    <p class="meta">21 July 2026</p>
+
+    <h1>Document title</h1>
+
+    <p>Opening paragraph. Replace this content: the page furniture is the
+      letterhead, the words are yours. Keep body copy inside the safe area.</p>
+
+    <h2>A section</h2>
+    <p>Body copy. House style: no em dashes, no tildes. Use a comma, a colon, a
+      full stop, or brackets instead.</p>
+
+    <div class="sign">
+      <p class="name">Name</p>
+      <p class="role">Waevpoint Aerial Photography Services</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Warn on screen when copy runs past the safe area, before it silently
+  // vanishes from the PDF. Measures the last block's painted bottom, allows a
+  // little slack for its own trailing margin. Hidden in print.
+  addEventListener("load", async () => {
+    if (document.fonts) await document.fonts.ready;
+    document.querySelectorAll(".content").forEach((el, i) => {
+      const last = el.lastElementChild;
+      if (!last) return;
+      const over = last.getBoundingClientRect().bottom - el.getBoundingClientRect().bottom;
+      if (over <= 15) return;
+      const mm = (over * 25.4 / 96).toFixed(0);
+      const warn = document.createElement("div");
+      warn.className = "overflow-warn";
+      warn.innerHTML = `<b>Page ${i + 1} overflows by about ${mm}mm.</b> That copy is
+        clipped and will NOT appear in the PDF. Shorten it, or move the tail into a
+        second &lt;div class="sheet"&gt; block.`;
+      document.body.prepend(warn);
+    });
+  });
+</script>
